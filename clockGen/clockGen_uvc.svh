@@ -21,9 +21,9 @@ class clockGen_uvc extends uvm_agent; // {
 
 	// supportive APIs
 	extern function void addClock(string name,real freq, real skew=0,real jitter=0);
-	extern function void setFreq(string name,real freq);
-	extern function void setJitter(string name,real jitter);
-	extern function void setSkew(string name,real skew);
+	extern function void setFreq(string name,real Freq);
+	extern function void setJitter(string name,real Jitter);
+	extern function void setSkew(string name,real Skew);
 	extern function void reset();
 
 endclass // }
@@ -33,14 +33,18 @@ function void clockGen_uvc::addClock(string name,real freq,real skew=0,real jitt
 endfunction // }
 `define setClockAttr(attr) \
 	if (end_of_elaboration_ph.get_state()<UVM_PHASE_DONE) \
-		cfg.set``attr(name,freq); \
+		cfg.set``attr(name,attr); \
 	else \
 		`uvm_warning( \
 			get_type_name(), \
 			$sformatf("attempt to set ``attr`` of clock(%s) after end_of_elaboration_phase",name) \
 		)
-function void clockGen_uvc::setFreq(string name,real freq); // {
+function void clockGen_uvc::setFreq(string name,real Freq); // {
 	`setClockAttr(Freq)
+endfunction // }
+		
+function void clockGen_uvc::setJitter(string name,real Jitter); // {
+	`setClockAttr(Jitter)
 endfunction // }
 		
 function void clockGen_uvc::build_phase (uvm_phase phase); // {
