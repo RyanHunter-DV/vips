@@ -47,7 +47,7 @@ function void clockGen_uvc::setJitter(string name,real Jitter); // {
 	`setClockAttr(Jitter)
 endfunction // }
 		
-function void clockGen_uvc::setJitter(string name,real Skew); // {
+function void clockGen_uvc::setSkew(string name,real Skew); // {
 	`setClockAttr(Skew)
 endfunction // }
 		
