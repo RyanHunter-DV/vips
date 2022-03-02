@@ -47,6 +47,10 @@ function void clockGen_uvc::setJitter(string name,real Jitter); // {
 	`setClockAttr(Jitter)
 endfunction // }
 		
+function void clockGen_uvc::setJitter(string name,real Skew); // {
+	`setClockAttr(Skew)
+endfunction // }
+		
 function void clockGen_uvc::build_phase (uvm_phase phase); // {
 	super.build_phase(phase);
 	if (is_active==UVM_ACTIVE) begin // {
