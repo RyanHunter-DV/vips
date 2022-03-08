@@ -1,0 +1,3 @@
+features supported:
+1.set reset feature of resetGen, specific resetName, active cycles of reset;
+2.call reset API to trigger a reset action, with optional active cycles and delay cycles;
