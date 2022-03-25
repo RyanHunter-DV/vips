@@ -1,0 +1,112 @@
+
+
+
+ 
+3	feature & strategy
+This is the top component of axi4_uvc, all instantiation and calls should be on this level. It’s a uvm_env, and contains a config table for axi4_uvc level.
+3.1	master/slave mode set
+3.1.1	*.enableMaster
+to enable master features
+3.1.2	*.enableSlave
+to enable slave features
+3.2	declare interface/uvc with parameters
+one way to set the interface parameters both on uvc side and interface side is to call a pre-defined macro like “AXI4_INTERFACE_PARAMS”, so we can use it when instantiate interface and uvc component, such as:
+rh_axi4_if #(`AXI4_INTERFACE_PARAMS00) xxx
+rh_axi4_uvc #(`AXI4_INTERFACE_PARAMS00) axi4
+the parameter series is: AW,DW,IW.
+•	AW: address width
+•	DW: data width, for now, write/read data use the same width
+•	IW: id width
+3.2.1	address width
+support address width: 16b-64b.
+3.2.2	data width
+supports wd width and rd width separately, within: 32b,64b,128b,256b,512b,1024b.
+3.2.3	id width
+width of id bits, by default it will be set to 4 bits, which supports maximum 16 outstanding transfers.
+3.3	full axi4 protocol support
+3.3.1	4k address boundary
+3.3.2	basic write trans
+ 
+4	common
+4.1	rh_axi4_trans
+This trans contained all fields that will be used in master/slave drivers and monitors.
+4.2	rh_axi4_monBase
+the base monitor that has reset monitoring feature.
+4.2.1	reset monitor
+detect ARESETN signal and send out the reset event from analysis port.
+
+ 
+5	rh_axi4_mst
+the master device , which contains agent, driver, sequencer, trans, interface, etc, it extends from uvm_env.
+5.1	rh_axi4mst_agt
+the master agent, as a container of all other master components
+5.2	rh_axi4mst_seqr
+normal sequencer, no extra features.
+5.3	rh_axi4mst_mon
+5.3.1	request monitor
+probe signals of write address+write data or read request channels, and assemble it into a transaction packet, send out by TLM.
+5.3.2	response monitor
+probe signals on bresp and read data channel, assemble it as a transaction, then send out by TLM.
+5.4	rh_axi4mst_drv
+5.4.1	reset control and detect
+This can be a common feature, and created in an axi base driver file, to detect reset actions from monitor TLM, and kill the main threads if reset is active.
+5.4.2	receive requests of write/read
+In run_phase, receive transactions from test level, and drive it on signals accordingly.
+5.4.3	put responses from monitor TLM
+every time receive a response from monitor, need to pop the request once pushed by driver, and copy the req information into the response trans, and then put back this response into test level.
+
+ 
+6	rh_axi4_slv
+•	customized response handler, can be overridden by users to process transactions
+•	pre-set response data, customized by response handler.
+•	response delay config
+•	response type/data info config
+6.1	rh_axi4slv_agt
+agent container
+6.2	rh_axi4slv_config
+6.2.1	awreadyDelay
+6.2.2	arreadyDelay
+6.2.3	wd2bDelay
+6.2.4	ar2rdDelay
+6.2.5	wreadyDelay
+6.3	rh_axi4slv_mon
+detect signals, then assemble it to transaction level, for requests, need send to response handler, which will give out a response and send to driver.
+6.3.1	request monitor
+for slave device, there’re 3 requests from bus: aw/wd/ar, each request will be collected separately, and will sent to response handler for triggering response trans to driver, so as the awready/wready/arready, which will only been driven by rh_axi4slv_drv once received the response packet from response handler.
+6.3.2	response monitor
+response monitor for slave UVC is collected only for high level usage, such as scoreboard, so it won’t connect any internal components.
+6.4	rh_axi4slv_drv
+•	bresp/rdata driving response from seq_item_port
+•	basic reset actions derived from base driver
+•	drive aw/ar ready
+6.4.1	aw/ar ready drive
+automatically drives these signals by getting response trans from response handler, but will have delay configures.
+6.5	rh_axi4slv_seqr
+used by response handler to drive the rh_axi4slv_drv to send response.
+6.6	response handle
+The response handle is like a component that instantiated in rh_axi4slv_agt, which can be override by factory in UVM.
+6.6.1	override mechanism
+example, in top_env’s build_phase, we can call:
+set_type_override_by_type(<new_resphandler>::get_type(),rh_axi4slv_resphandler::get_type())
+6.6.2	rh_axi4slv_base_resphandler
+has basic features:
+•	TLM connection with monitor
+•	internal sequence issue methods, to create sequence and send through sequencer the response behavior.
+•	provides APIs for users to control response, such as: sendResponse(xxx)
+
+ 
+7	rh_axi4_if
+This interface contains all axi4 interfaces that we classify different channels with modport, this interface simply contains base clocking and interface features, no advanced features due to the inflexibility of interface.
+7.1	feature & strategy
+7.1.1	API::sync(cycle=1)
+sync by ACLK, support multiple cycle sync, default is 1 cycle.
+7.1.2	API::driveWA(syncd=0, rhaxi4_wa_info wa)
+driving write address channel, used for master device, the rhaxi4_wa_info is a class declared before interface, which stores write address information. Caller can choose to sync one clock cycle before driving AWVALID, the bit syncd indicates if caller aready synced or not before calling this API.
+The end of this task will be the time detecting AWREADY signal.
+7.1.3	API::driveWD(syncd=0,rhaxi4_wd_info wd)
+driving the write data channel.
+7.1.4	API::driveRA(syncd=0,rhaxi4_ra_info ra)
+drive the read address channel
+
+ 
+
