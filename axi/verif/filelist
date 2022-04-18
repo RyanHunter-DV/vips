@@ -1,0 +1,7 @@
+-incdir /home/ryan/prj/GitHub/vips/axi/verif/env
+-incdir /home/ryan/prj/GitHub/vips/axi
+-incdir /home/ryan/prj/GitHub/vips/axi/common
+/home/ryan/prj/GitHub/vips/axi/rh_axi4_pkg.sv
+/home/ryan/prj/GitHub/vips/axi/verif/env/rhaxi4_env.svh
+/home/ryan/prj/GitHub/vips/axi/verif/tests/rhaxi4_testBase.svh
+/home/ryan/prj/GitHub/vips/axi/verif/env/tb.sv
