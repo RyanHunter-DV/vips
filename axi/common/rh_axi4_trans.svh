@@ -1,17 +1,32 @@
 `ifndef rh_axi4_trans__svh
 `define rh_axi4_trans__svh
 
+class rh_axi4_resetTrans extends uvm_sequence_item; // {
+	// TODO
+endclass // }
+
 class rh_axi4_trans extends uvm_sequence_item; // {
 
-	rhaxi4_trans_enum type;
+	rhaxi4_trans_enum transType;
 	realtime beginTime,endTime;
 	local bit[1:0] timeRecorded;
 	uint32_t id,len,size;
-	bit[63:0] addr;
+	bit[255:0] addr;
 	rhaxi4_burst_enum burst;
 	bit[63:0] user;
-	// TODO
-	cache,prot,qos,region,lock
+
+	// region is kind of a base address of one axi request, so that a real single slave can be
+	// treated as multiple logical slaves through the region signal. Address range within 4KB
+	// should has the same region signal.
+	bit[3:0] region;
+
+	// different code of the 4-bit cache has different meaning of a device type, details
+	// shall refer to the AXI4 protocol.
+	bit[3:0] cache;
+	bit lock;
+
+	bit [2:0] prot;
+	bit [3:0] qos;
 
 	bit[7:0] data[];
 	bit strobe[];

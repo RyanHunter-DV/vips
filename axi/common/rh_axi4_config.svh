@@ -19,9 +19,10 @@ class rh_axi4_config extends uvm_object; // {
 	// APIs
 	extern function uint32_t getRandwa2wdDelay();
 	extern task driveWA(reqTr_t req);
+	extern task driveWD(reqTr_t req);
 
 	// interface operation
-	extern function void _getInterfacehandle;
+	extern function void _getInterfaceHandle;
 	extern function void elaborateConfigs;
 
 
@@ -42,14 +43,22 @@ function void rh_axi4_config::elaborateConfigs;
 endfunction
 
 task rh_axi4_config::driveWA(reqTr_t req);
-	rhaxi4_wa_info wa=new(req);
-	vif.driveWA(wa)
+	vif.driveWA(
+		req.addr,
+		req.size,
+		req.burst,
+		req.cache,
+		req.prot,
+		req.region,
+		req.qos,
+		req.lock
+	);
 endtask
 
 task rh_axi4_config::driveWD(reqTr_t req);
-	rhaxi4_wd_info wd=new(req);
-	wd.wa2wdDelay = getRandwa2wdDelay();
-	vif.driveWD(wd);
+	// @RyanH,TODO, rhaxi4_wd_info wd=new(req);
+	// @RyanH,TODO, wd.wa2wdDelay = getRandwa2wdDelay();
+	// @RyanH,TODO, vif.driveWD(wd);
 endtask
 
 

@@ -1,6 +1,10 @@
 -incdir /home/ryan/prj/GitHub/vips/axi/verif/env
 -incdir /home/ryan/prj/GitHub/vips/axi
 -incdir /home/ryan/prj/GitHub/vips/axi/common
+-incdir /home/ryan/prj/GitHub/advanceUVM/originalUVMSrc
+-incdir /home/ryan/prj/GitHub/advanceUVM/originalUVMSrc/dpi
+/home/ryan/prj/GitHub/advanceUVM/originalUVMSrc/uvm.sv
+/home/ryan/prj/GitHub/advanceUVM/originalUVMSrc/dpi/uvm_dpi.cc
 /home/ryan/prj/GitHub/vips/axi/rh_axi4_pkg.sv
 /home/ryan/prj/GitHub/vips/axi/verif/env/rhaxi4_env.svh
 /home/ryan/prj/GitHub/vips/axi/verif/tests/rhaxi4_testBase.svh

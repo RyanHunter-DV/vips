@@ -14,57 +14,54 @@ interface rh_axi4_if #(`RH_AXI4_IF_PARAM) (
 	logic [7:0] AWLEN;
 	logic [1:0] AWBURST;
 	logic [3:0] AWCACHE;
-	logic [7:0] AWPROT;
-	// TODO
+	logic [2:0] AWPROT;
+	logic [3:0] AWREGION;
+	logic [3:0] AWQOS;
 
 	clocking mstClock @(posedge ACLK);
 	endclocking
 
-	typedef class rh_axi4_trans;
-	class rhaxi4_wa_info; // {{{
-		// TODO.
-		bit[1:0] awburst;
-		bit[IW-1:0] awid;
-		bit[2:0] awsize;
-		bit[7:0] awlen;
-		bit[AW-1:0] awaddr;
-		...
-		function new(rh_axi4_trans tr);
-			copy(tr);
-		endfunction
-		function void copy(rh_axi4_trans tr); // {{{
-			awburst=tr.burst;
-			awid   =tr.id[IW-1:0];
-			awsize =tr.size[2:0];
-			awlen  =tr.len[7:0];
-			awaddr =tr.addr[AW-1:0];
-			...
-		endfunction // }}}
-	endclass // }}}
+	// @RyanH typedef class rh_axi4_trans;
 
-	class rhaxi4_wd_info; // {{{
-	endclass // }}}
-
-	task driveWA(rhaxi4_wa_info wa); // {{{
-		// TODO
+	task driveWA(
+		bit [255:0] addr,
+		bit [2:0] size,
+		bit [1:0] burst,
+		bit [3:0] cache,
+		bit [3:0] prot,
+		bit [3:0] region,
+		bit [3:0] qos,
+		bit lock
+	); // {{{
 		@mstClock;
 		// raise wa info
-		AWVALID<=1'b1;
-		AWADDR<=wa.awaddr;
-		AWSIZE<=wa.awsize;
-		AWBURST<=wa.awburst;
-		...
+		AWVALID <=1'b1;
+		AWADDR  <=addr;
+		AWSIZE  <=size;
+		AWBURST <=burst;
+		AWCACHE <=cache;
+		AWREGION<=region;
+		AWPROT  <=prot;
+		AWQOS   <=qos;
+		AWLOCK  <=lock;
 		do
 			@mstClock;
 		while (AWREADY != 1'b1);
 		// drop wa info
-		AWVALID<=1'b0;
-		...
+		AWVALID <=1'b0;
+		AWADDR  <='h0;
+		AWSIZE  <='h0;
+		AWBURST <='h0;
+		AWCACHE <='h0;
+		AWREGION<='h0;
+		AWPROT  <='h0;
+		AWQOS   <='h0;
+		AWLOCK  <='h0;
 	endtask // }}}
 
-	task driveWD(rhaxi4_wd_info wd); // {{{
-		// TODO.
-	endtask // }}}
+	// @RyanH task driveWD(rh_axi4_trans wd); // {{{
+	// @RyanH 	// TODO.
+	// @RyanH endtask // }}}
 
 
 
