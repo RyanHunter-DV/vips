@@ -1,10 +1,6 @@
 `ifndef rh_axi4_trans__svh
 `define rh_axi4_trans__svh
 
-class rh_axi4_resetTrans extends uvm_sequence_item; // {
-	// TODO
-endclass // }
-
 class rh_axi4_trans extends uvm_sequence_item; // {
 
 	rhaxi4_trans_enum transType;
@@ -38,6 +34,23 @@ class rh_axi4_trans extends uvm_sequence_item; // {
 
 
 	`uvm_object_utils_begin(rh_axi4_trans)
+		`uvm_field_enum(rhaxi4_trans_enum,transType,UVM_ALL_ON)
+		`uvm_field_enum(rhaxi4_burst_enum,burst,UVM_ALL_ON)
+		`uvm_field_real(beginTime,UVM_ALL_ON)
+		`uvm_field_real(endTime,UVM_ALL_ON)
+		`uvm_field_int(timeRecorded,UVM_ALL_ON)
+		`uvm_field_int(id,UVM_ALL_ON)
+		`uvm_field_int(len,UVM_ALL_ON)
+		`uvm_field_int(size,UVM_ALL_ON)
+		`uvm_field_int(addr,UVM_ALL_ON)
+		`uvm_field_int(user,UVM_ALL_ON)
+		`uvm_field_int(region,UVM_ALL_ON)
+		`uvm_field_int(cache,UVM_ALL_ON)
+		`uvm_field_int(lock,UVM_ALL_ON)
+		`uvm_field_int(prot,UVM_ALL_ON)
+		`uvm_field_int(qos,UVM_ALL_ON)
+		`uvm_field_int(dsize,UVM_ALL_ON)
+		`uvm_field_int(delay,UVM_ALL_ON)
 	`uvm_object_utils_end
 
 	function new(string name="rh_axi4_trans");

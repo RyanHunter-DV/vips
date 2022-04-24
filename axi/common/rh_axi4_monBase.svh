@@ -4,7 +4,7 @@
 class rh_axi4_monBase extends uvm_monitor;
 
 	uvm_analysis_port #(resetTr_t) resetP;
-	rh_axi4_config cfg;
+	rh_axi4_configBase cfg;
 	resetTr_t::reset_enum currentResetState;
 	process mainThread;
 

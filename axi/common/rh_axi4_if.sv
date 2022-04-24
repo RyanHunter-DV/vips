@@ -1,7 +1,7 @@
 `ifndef rh_axi4_if__sv
 `define rh_axi4_if__sv
 
-interface rh_axi4_if #(`RH_AXI4_IF_PARAM) (
+interface rh_axi4_if #(`RH_AXI4_IF_DEFAULT_PARAM) (
 	input ACLK,
 	input ARESETN
 );
@@ -21,7 +21,10 @@ interface rh_axi4_if #(`RH_AXI4_IF_PARAM) (
 	clocking mstClock @(posedge ACLK);
 	endclocking
 
-	// @RyanH typedef class rh_axi4_trans;
+
+	task sync(int unsigned d=1);
+		repeat (d) @mstClock;
+	endtask
 
 	task driveWA(
 		bit [255:0] addr,

@@ -5,9 +5,8 @@ class rh_axi4_drvBase #(type REQ=rh_axi4_trans,RSP=REQ) extends uvm_driver#(REQ,
 
 	uvm_analysis_imp_rhaxi4_reset#(resetTr_t,rh_axi4_drvBase#(REQ,RSP)) resetI;
 
-	rh_axi4_config cfg;
-	string configPath;
-	process mainProcess;
+	rh_axi4_configBase cfg;
+	process mainThread;
 	uvm_event resetInactive;
 
 
@@ -23,7 +22,6 @@ class rh_axi4_drvBase #(type REQ=rh_axi4_trans,RSP=REQ) extends uvm_driver#(REQ,
 
 	// phases
 	extern function void build_phase(uvm_phase phase);
-	extern function void end_of_elaboration_phase(uvm_phase phase);
 	extern task run_phase(uvm_phase phase);
 
 	// imp actions
@@ -36,25 +34,14 @@ class rh_axi4_drvBase #(type REQ=rh_axi4_trans,RSP=REQ) extends uvm_driver#(REQ,
 	virtual task mainProcess(); endtask
 
 	// APIs
-	extern function void setConfigPath(string path);
 
 endclass // }
 
-function void rh_axi4_drvBase::setConfigPath(string path); // {
-	configPath = path;
-endfunction // }
 
 function void rh_axi4_drvBase::build_phase(uvm_phase phase); // {
 	super.build_phase(phase);
 	resetI=new("resetI",this);
 	resetInactive=new("ri");
-endfunction // }
-
-function void rh_axi4_drvBase::end_of_elaboration_phase(uvm_phase phase); // {
-	cfg=null;
-	uvm_config_db#(rh_axi4_config)::get(null,configPath,cfg);
-	if (cfg==null)
-		`uvm_fatal("NCFG","no configure got")
 endfunction // }
 
 function void rh_axi4_drvBase::write_reset(resetTr_t _t); // {

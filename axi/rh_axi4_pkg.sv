@@ -2,7 +2,7 @@
 `define rh_axi4_pkg__sv
 
 `include "common/rh_axi4_global_macros.svh"
-`include "rh_axi4_if.sv"
+`include "common/rh_axi4_if.sv"
 package rh_axi4_pkg; // {
 
 	import uvm_pkg::*;
@@ -10,9 +10,13 @@ package rh_axi4_pkg; // {
 
 	`include "common/rh_axi4_types.svh"
 	`include "common/rh_axi4_trans.svh"
+	`include "common/rh_axi4_configBase.svh"
 	`include "common/rh_axi4_config.svh"
 	`include "common/rh_axi4_drvBase.svh"
 	`include "common/rh_axi4_monBase.svh"
+
+	// seqlib
+	`include "seqlib/rh_axi4_testseq_base.svh"
 
 	// mst
 	`include "mst/rh_axi4mst_drv.svh"
@@ -22,7 +26,7 @@ package rh_axi4_pkg; // {
 
 
 	// vip container
-	`include "common/rh_axi4Vip.svh"
+	`include "common/rh_axi4_vip.svh"
 
 endpackage // }
 

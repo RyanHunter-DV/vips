@@ -50,7 +50,17 @@ class rh_axi4mst_drv extends rh_axi4_drvBase; // {
 	// req information incase 
 	extern function void reqRecord(reqTr_t req);
 
+	// func: legalityCheck
+	// A function to check the legality of req, such as the address cross 4KB boundary or not
+	//
+	extern function bit legalityCheck(reqTr_t req);
+
 endclass // }
+
+function bit rh_axi4mst_drv::legalityCheck(reqTr_t req); // {
+	// TODO
+	return 1;
+endfunction // }
 
 function void rh_axi4mst_drv::write_resp(respTr_t _t);
 	reqTr_t _tmp;
@@ -76,14 +86,16 @@ task rh_axi4mst_drv::mainProcess(); // {
 	seq_item_port.get_next_item(req);
 	legal = legalityCheck(req);
 	if (legal) begin // {
+		`uvm_info(get_type_name(),$sformatf("get seq:\n%s",req.sprint()),UVM_LOW)
+		// MARKER
 		if (req.delay) cfg.sync(req.delay);
-		case (req.type)
+		case (req.transType)
 			rhaxi4_write_req:
 				raiseChannels(WAChannel|WDChannel);
 			rhaxi4_read_req:
 				raiseChannels(RAChannel);
 			default:
-				`uvm_error(get_type_name(),$sformatf("unsupported req type(%s)",req.type.name()))
+				`uvm_error(get_type_name(),$sformatf("unsupported req type(%s)",req.transType.name()))
 		endcase
 	end // }
 	seq_item_port.item_done();
@@ -121,5 +133,9 @@ task rh_axi4mst_drv::processReadAddress; // {
 	cfg.driveRA(req);
 	req.recordTime($time);
 endtask // }
+
+function void rh_axi4mst_drv::connect_phase(uvm_phase phase); // {
+	// TODO
+endfunction // }
 
 `endif

@@ -61,7 +61,7 @@ task rh_axi4mst_mon::monitorRsps; // ##{{{
 	fork
 		listenWriteRsp;
 		listenReadRsp;
-	end
+	join
 endtask // ##}}}
 
 task rh_axi4mst_mon::listenWriteRsp; // ##{{{
