@@ -20,9 +20,10 @@ class rhaxi4_testBase extends uvm_test; // {
 	task run_phase(uvm_phase phase);
 		rh_axi4_testseq_base seq=new("seq");
 		phase.raise_objection(this);
-		`uvm_info(get_type_name(),"run_phase ...",UVM_LOW)
+		`uvm_info(get_type_name(),"start run_phase ...",UVM_LOW)
 		seq.start(env.axim.mst.seqr);
-		#100ns;
+		#1000ns;
+		`uvm_info(get_type_name(),"exit run_phase ...",UVM_LOW)
 		phase.drop_objection(this);
 	endtask
 

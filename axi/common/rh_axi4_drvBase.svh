@@ -22,7 +22,7 @@ class rh_axi4_drvBase #(type REQ=rh_axi4_trans,RSP=REQ) extends uvm_driver#(REQ,
 
 	// phases
 	extern function void build_phase(uvm_phase phase);
-	extern task run_phase(uvm_phase phase);
+	extern virtual task run_phase(uvm_phase phase);
 
 	// imp actions
 	extern function void write_reset(resetTr_t _t);
@@ -45,12 +45,15 @@ function void rh_axi4_drvBase::build_phase(uvm_phase phase); // {
 endfunction // }
 
 function void rh_axi4_drvBase::write_reset(resetTr_t _t); // {
+	`uvm_info("DEBUG",$sformatf("reset trans got:\n%s",_t.sprint()),UVM_LOW)
 	case (_t.reset)
 		resetTr_t::inactive: begin
+			`uvm_info("DEBUG","resetInactive triggered",UVM_LOW)
 			resetInactive.trigger();
 		end
 		default: begin
 			// all other actions are treated as reset active
+			`uvm_info("DEBUG","resetInactive reset",UVM_LOW)
 			resetInactive.reset();
 			mainThreadControl();
 		end
@@ -58,18 +61,21 @@ function void rh_axi4_drvBase::write_reset(resetTr_t _t); // {
 endfunction // }
 
 function void rh_axi4_drvBase::mainThreadControl(); // {
+	`uvm_info("DEBUG","call main thread kill",UVM_LOW)
 	if (mainThread == null) return;
 	if (mainThread.status() == process::RUNNING) mainThread.kill();
+	`uvm_info("DEBUG","main thread kill exit",UVM_LOW)
 endfunction // }
 
 task rh_axi4_drvBase::run_phase(uvm_phase phase); // {
-	fork
-		forever begin // {
-			resetInactive.wait_on();
-			mainThread = process::self();
-			mainProcess();
-		end // }
-	join
+	`uvm_info("DEBUG","entering run_phase ...",UVM_LOW)
+	forever begin // {
+		mainThread = process::self();
+		`uvm_info("DEBUG","waiting for resetInactive",UVM_LOW)
+		resetInactive.wait_trigger();
+		`uvm_info("DEBUG","resetInactive status reached",UVM_LOW)
+		mainProcess();
+	end // }
 endtask // }
 
 

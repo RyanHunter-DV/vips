@@ -34,7 +34,9 @@ interface rh_axi4_if #(`RH_AXI4_IF_DEFAULT_PARAM) (
 		bit [3:0] prot,
 		bit [3:0] region,
 		bit [3:0] qos,
-		bit lock
+		bit lock,
+		bit [3:0] len,
+		bit [IW-1:0] id,
 	); // {{{
 		@mstClock;
 		// raise wa info
@@ -47,6 +49,8 @@ interface rh_axi4_if #(`RH_AXI4_IF_DEFAULT_PARAM) (
 		AWPROT  <=prot;
 		AWQOS   <=qos;
 		AWLOCK  <=lock;
+		AWID    <=id;
+		AWLEN   <=len;
 		do
 			@mstClock;
 		while (AWREADY != 1'b1);
@@ -60,6 +64,8 @@ interface rh_axi4_if #(`RH_AXI4_IF_DEFAULT_PARAM) (
 		AWPROT  <='h0;
 		AWQOS   <='h0;
 		AWLOCK  <='h0;
+		AWID    <='h0;
+		AWLEN   <='h0;
 	endtask // }}}
 
 	// @RyanH task driveWD(rh_axi4_trans wd); // {{{

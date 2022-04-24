@@ -11,6 +11,7 @@ class rh_axi4_testseq_base extends uvm_sequence; // {
 
 	virtual task body(); // {
 		rh_axi4_trans tr=new("tr");
+		tr.addr='h20;
 		tr.randomize();
 		`uvm_info(get_type_name(),$sformatf("send tr:\n%s",tr.sprint()),UVM_LOW)
 		start_item(tr);

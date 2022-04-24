@@ -44,6 +44,7 @@ function void rh_axi4mst_mon::build_phase(uvm_phase phase);
 endfunction
 
 task rh_axi4mst_mon::runStage;
+	`uvm_info("DEBUG","start runStage",UVM_LOW)
 	fork
 		monitorReqs;
 		monitorRsps;

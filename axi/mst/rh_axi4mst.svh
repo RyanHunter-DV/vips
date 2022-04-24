@@ -38,6 +38,7 @@ endfunction // }
 function void rh_axi4mst::connect_phase(uvm_phase phase); // {
 	if (is_active==UVM_ACTIVE) begin // {
 		drv.seq_item_port.connect(seqr.seq_item_export);
+		mon.resetP.connect(drv.resetI);
 	end // }
 endfunction // }
 

@@ -62,6 +62,7 @@ endtask
 
 task rh_axi4_monBase::resetDetector;
 	forever begin // {
+		`uvm_info("DEBUG","wait for next reset state change",UVM_LOW)
 		waitResetStateChange;
 		updateCurrentResetStateToAll;
 	end // }
@@ -70,6 +71,7 @@ endtask
 task rh_axi4_monBase::waitResetStateChange;
 	cfg.waitResetNotEqualTo(logic'(currentResetState));
 	currentResetState = resetTr_t::reset_enum'(cfg.getResetValue());
+	`uvm_info("DEBUG",$sformatf("reset state change to %s",currentResetState.name()),UVM_LOW)
 endtask
 
 task rh_axi4_monBase::updateCurrentResetStateToAll;

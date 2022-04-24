@@ -55,6 +55,11 @@ class rh_axi4mst_drv extends rh_axi4_drvBase; // {
 	//
 	extern function bit legalityCheck(reqTr_t req);
 
+
+	virtual task run_phase(uvm_phase phase);
+		super.run_phase(phase);
+	endtask
+
 endclass // }
 
 function bit rh_axi4mst_drv::legalityCheck(reqTr_t req); // {

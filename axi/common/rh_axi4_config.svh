@@ -45,22 +45,27 @@ endclass // }
 
 task rh_axi4_config::waitReadDataValid(ref respTr_t req);
 	// TODO
+	forever #1;
 endtask // }
 
 task rh_axi4_config::waitBrespValid(ref respTr_t rsp);
 	// TODO
+	forever #1;
 endtask // }
 
 task rh_axi4_config::waitWriteDataValid(ref reqTr_t req);
 	// TODO
+	forever #1;
 endtask // }
 
 task rh_axi4_config::waitReadAddressValid(ref reqTr_t req);
 	// TODO
+	forever #1;
 endtask // }
 
 task rh_axi4_config::waitWriteAddressValid(ref reqTr_t req);
 	// TODO
+	forever #1;
 endtask // }
 
 task rh_axi4_config::driveRA(reqTr_t req); // {
