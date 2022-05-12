@@ -7,9 +7,9 @@ class rh_axi4_trans extends uvm_sequence_item; // {
 	realtime beginTime,endTime;
 	local bit[1:0] timeRecorded;
 	uint32_t id,len,size;
-	bit[255:0] addr;
+	bit [255:0] addr;
 	rhaxi4_burst_enum burst;
-	bit[63:0] user;
+	bit [63:0] user;
 
 	// region is kind of a base address of one axi request, so that a real single slave can be
 	// treated as multiple logical slaves through the region signal. Address range within 4KB

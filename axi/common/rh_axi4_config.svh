@@ -108,7 +108,9 @@ task rh_axi4_config::driveWA(reqTr_t req);
 		req.prot,
 		req.region,
 		req.qos,
-		req.lock
+		req.lock,
+		req.len,
+		req.id
 	);
 endtask
 

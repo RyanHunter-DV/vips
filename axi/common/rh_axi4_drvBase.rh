@@ -1,0 +1,45 @@
+svclass = 'rh_axi4_drvBase'
+trans = 'rh_axi4_trans'
+
+
+vip.base.driver(
+	:name=>svclass,
+	:req=>trans,
+	:rsp=>'REQ'
+)
+
+
+assembly "#{svclass}.svh"
+
+## sv.fileMacro do |s|
+## 	s.config :macro => "#{svclass}__svh"
+## end
+## uvm.comp.declareDriver :name=>:rh_axi4_drvBase do |s|
+## 	fields =<<~CODE
+## 	rh_axi4_configBase cfg;
+## 	process mainThread;
+## 	uvm_event resetInactive;
+## 	CODE
+## 	s.config :req => trans;
+## 	s.config :rsp => trans;
+## 	s.config :extra => fields;
+## end
+## uvm.comp.utils do |s|
+## 	f =<<-CODE
+## 		`uvm_field_object(resetInactive,UVM_ALL_ON)
+## 		`uvm_field_object(cfg,UVM_ALL_ON)
+## 	CODE
+## 	s.config :field=>f
+## end
+## uvm.comp.new do |s|
+## 	s.config :name=>svclass;
+## end
+## uvm.phase.build do |s|
+## 	c =<<-CODE
+## 	resetI=new("resetI",this);
+## 	resetInactive=new("ri");
+## 	CODE
+## 	s.config :extracode => c;
+## end
+## sv.endclass
+## sv.fileMacroEnd

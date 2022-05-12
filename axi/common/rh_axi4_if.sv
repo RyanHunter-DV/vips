@@ -35,8 +35,8 @@ interface rh_axi4_if #(`RH_AXI4_IF_DEFAULT_PARAM) (
 		bit [3:0] region,
 		bit [3:0] qos,
 		bit lock,
-		bit [3:0] len,
-		bit [IW-1:0] id,
+		int unsigned len,
+		int unsigned id
 	); // {{{
 		@mstClock;
 		// raise wa info
@@ -49,8 +49,8 @@ interface rh_axi4_if #(`RH_AXI4_IF_DEFAULT_PARAM) (
 		AWPROT  <=prot;
 		AWQOS   <=qos;
 		AWLOCK  <=lock;
-		AWID    <=id;
-		AWLEN   <=len;
+		AWID    <=id[IW-1:0];
+		AWLEN   <=len[3:0];
 		do
 			@mstClock;
 		while (AWREADY != 1'b1);
