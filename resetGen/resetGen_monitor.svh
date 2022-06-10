@@ -1,7 +1,7 @@
 `ifndef resetGen_monitor__svh
 `define resetGen_monitor__svh
 
-class resetGen_monitor #(type REQ=resetGen_trans) extends uvm_monitor#(REQ);
+class resetGen_monitor #(type REQ=resetGen_trans) extends uvm_monitor;
 
 	resetGen_config cfg;
 
