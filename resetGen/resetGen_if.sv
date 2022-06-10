@@ -4,9 +4,12 @@
 `define MAXRSTS 2048
 // PS: one reset uvc only supports all reset outputs that within the same
 // clock domain, async reset outputs shoulbe achieved by multiple resetGen UVCs
-interface resetGen_if (input logic iClk); // {
+interface resetGen_if (
+	input logic iClk,
+	output logic [`MAXRSTS-1:0] oReset
+); // {
 
-	logic [`MAXRSTS-1:0] oReset;
+
 	int resetIndex[string];
 
 	// repeat <c> cycles of iClk
