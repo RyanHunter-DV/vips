@@ -13,6 +13,7 @@ package resetGen_pkg;
 	} resetActive_enum;
 
 	`include "resetGen_trans.svh"
+	`include "resetGen_configBase.svh"
 	`include "resetGen_config.svh"
 	`include "resetGen_seqr.svh"
 	`include "resetGen_seqlib.svh"
