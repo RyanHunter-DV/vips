@@ -15,6 +15,11 @@ class resetGen_configBase extends uvm_object;
         super.new(name);
     endfunction
 
+    virtual function void updateActiveCycle(string n,int ac); endfunction
+	// driveResetThroughInterface, the API to call interface tasks to drive a reset event.
+	virtual task driveResetThroughInterface(string n); endtask
+	virtual task sync(int cyc); endtask
+
 endclass
 
 
