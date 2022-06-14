@@ -3,7 +3,7 @@
 
 class resetGen_monitor #(type REQ=resetGen_trans) extends uvm_monitor;
 
-	resetGen_config cfg;
+	resetGen_configBase cfg;
 
 	`uvm_component_utils_begin(resetGen_monitor#(REQ))
 	`uvm_component_utils_end
