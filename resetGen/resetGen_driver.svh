@@ -3,7 +3,7 @@
 
 class resetGen_driver #(type REQ=resetGen_trans,RSP=REQ) extends uvm_driver #(REQ,RSP); // {
 
-	resetGen_config cfg;
+	resetGen_configBase cfg;
 
 	`uvm_component_utils_begin(resetGen_driver#(REQ,RSP))
 	`uvm_component_utils_end
