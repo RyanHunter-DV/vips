@@ -1,20 +1,15 @@
 `ifndef resetGen_config__svh
 `define resetGen_config__svh
 
-typedef struct {
-	resetActive_enum active;
-	int activeCycles;
-} resetInfo;
 
-class resetGen_config extends uvm_object; // {
+
+class resetGen_config#(MAXRSTS=2048) extends resetGen_configBase; // {
 	
 
-	virtual resetGen_if vif;
+	virtual resetGen_if#(MAXRSTS) vif;
 	string intfPath="defaultResetPath";
-	resetInfo resets[string];
 
-
-	`uvm_object_utils_begin(resetGen_config)
+	`uvm_object_utils_begin(resetGen_config#(MAXRSTS))
 	`uvm_object_utils_end
 	
 	
@@ -49,7 +44,7 @@ function void resetGen_config::updateActiveCycle(string n,int ac);
 endfunction
 
 function void resetGen_config::_getInterfaceHandle;
-	if (!uvm_config_db#(virtual resetGen_if)::get(null,intfPath,"resetGen_if",vif))
+	if (!uvm_config_db#(virtual resetGen_if#(MAXRSTS))::get(null,intfPath,"resetGen_if",vif))
 		`uvm_fatal(get_type_name(),$sformatf("cannot get interface(%s)",intfPath))
 endfunction
 
