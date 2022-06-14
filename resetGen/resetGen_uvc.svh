@@ -1,20 +1,20 @@
 `ifndef resetGen_uvc__svh
 `define resetGen_uvc__svh
 
-class resetGen_uvc extends uvm_agent; // {
+class resetGen_uvc#(MAXRSTS=2048) extends uvm_agent; // {
 	
 	resetGen_driver  drv;
 	resetGen_monitor mon;
 	resetGen_seqr    seqr;
-	resetGen_config  cfg;
+	resetGen_config#(MAXRSTS)  cfg;
 
-	`uvm_component_utils_begin(resetGen_uvc)
+	`uvm_component_utils_begin(resetGen_uvc#(MAXRSTS))
 	`uvm_component_utils_end
 	
 	function new (string name="resetGen_uvc",uvm_component parent=null);
 		super.new(name,parent);
 		// create config table
-		cfg = resetGen_config::type_id::create("cfg");
+		cfg = resetGen_config#(MAXRSTS)::type_id::create("cfg");
 	endfunction
 
 	// phases
