@@ -28,10 +28,10 @@ class resetGen_config#(MAXRSTS=2048) extends resetGen_configBase; // {
 	// elaborate, to apply configs in config table to interface level, such as get interface
 	//
 	extern function void elaborate;
-	extern function void updateActiveCycle(string n,int ac);
+	extern virtual function void updateActiveCycle(string n,int ac);
 	// driveResetThroughInterface, the API to call interface tasks to drive a reset event.
-	extern task driveResetThroughInterface(string n);
-	extern task sync(int cyc);
+	extern virtual task driveResetThroughInterface(string n);
+	extern virtual task sync(int cyc);
 
 	// internal methods
 	extern function void _getInterfaceHandle;
