@@ -3,8 +3,8 @@
 
 class rh_axi4_vip extends uvm_env;
 
-    rh_axi4mst_agt mst;
-    rh_axi4slv_agt slv;
+    rh_axi4mst_agt mstAgent;
+    rh_axi4slv_agt slvAgent;
     rh_axi4_vip_configBase cfg;
     rh_axi4_baseSeqr seqr;
 
@@ -15,6 +15,8 @@ class rh_axi4_vip extends uvm_env;
         rh_axi4_ifcontrol_base ifctrl;
         super.new(name,parent);
         uvm_config_db#(rh_axi4_ifcontrol_base)::get(uvm_root::get(),"","rh_axi4_ifcontrol",ifctrl);
+		if (ifctrl==null)
+			`uvm_fatal("NOIFCTRL","cannot get ifctrl from interface")
         cfg = ifctrl.createConfig("cfg");
     endfunction
 
@@ -59,11 +61,11 @@ endfunction
 function void rh_axi4_vip::build_phase(uvm_phase phase);
 
     if (cfg.is_master==axi4_master) begin
-        mst = rh_axi4mst_agt::type_id::create("mst",this);
-        mst.cfg = cfg;
+        mstAgent = rh_axi4mst_agt::type_id::create("mstAgent",this);
+        mstAgent.cfg = cfg;
     end else begin
-        slv = rh_axi4slv_agt::type_id::create("slv",this);
-        slv.cfg = cfg;
+        slvAgent = rh_axi4slv_agt::type_id::create("slvAgent",this);
+        // @RyanH,TODO, slvAgent.cfg = cfg;
     end
 endfunction
 
@@ -73,9 +75,9 @@ endfunction
 
 function void rh_axi4_vip::setReferenceSeqr;
     if (cfg.is_master==axi4_master) begin
-        $cast(seqr,mst.seqr);
+        $cast(seqr,mstAgent.seqr);
     end else begin
-        $cast(seqr,slv.seqr);
+        // @RyanH,TODO, $cast(seqr,slvAgent.seqr);
     end
 endfunction
 

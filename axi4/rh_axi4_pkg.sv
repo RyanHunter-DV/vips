@@ -9,13 +9,15 @@ package rh_axi4_vip; // {
 
     `include "rh_stdint.svh"
 
+	// global types & macros
     `include "common/rh_axi4_types.svh"
-    `include "common/rh_axi4_trans.svh"
+
     `include "common/rh_reset_handler.svh"
+    `include "common/rh_axi4_trans.svh"
     `include "common/rh_axi4_baseSeqr.svh"
     `include "common/rh_axi4_vip_configBase.svh"
     `include "common/rh_axi4_ifcontrol_base.svh"
-    `include "common/rh_axi4_channels.svh"
+	`include "common/rh_axi4_driverBase.svh"
 
 
     // seqlib

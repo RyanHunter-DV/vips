@@ -6,7 +6,7 @@ class rh_axi4mst_agt extends uvm_agent; // {
     parameter type REQ=rh_axi4_trans;
     parameter type RSP=rh_axi4_trans;
 
-    rh_axi4mst_drv#(REQ,RSP)  drv;
+    rh_axi4mst_drv  drv;
     rh_axi4mst_mon  mon;
     rh_axi4mst_seqr seqr;
     rh_axi4_vip_configBase cfg;
@@ -32,11 +32,12 @@ function void rh_axi4mst_agt::build_phase(uvm_phase phase); // {
 
     // TODO, need enhance for active/passive
     if (cfg.is_active) begin
-        drv = rh_axi4mst_drv#(REQ,RSP)::type_id::create("drv",this);
+        drv = rh_axi4mst_drv::type_id::create("drv",this);
         seqr= rh_axi4mst_seqr::type_id::create("seqr",this);
         drv.cfg = cfg;
     end
     mon = rh_axi4mst_mon::type_id::create("mon",this);
+	mon.cfg = cfg;
 
 
 endfunction // }

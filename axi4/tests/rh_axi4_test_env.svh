@@ -2,6 +2,8 @@
 `define rh_axi4_test_env__svh
 
 // TODO
+import uvm_pkg::*;
+import rh_axi4_vip::*;
 
 class rh_axi4_test_env extends uvm_env; // {
 
@@ -17,14 +19,13 @@ class rh_axi4_test_env extends uvm_env; // {
 
     function void build_phase(uvm_phase phase);
         mst   = rh_axi4_vip::type_id::create("mst",this);
-        mst.setInterfacePath("tb.mstif");
+        mst.setInterfacePath("tb.udut.mstif");
         mst.setMode(axi4_active_master);
 
         slv   = rh_axi4_vip::type_id::create("slv",this);
-        /* placeholder
-        slv.setInterfacepath("tb.slvif");
+        // @RyanH TODO,slv.setInterfacePath("tb.udut.slvif");
         slv.setMode(axi4_active_slave);
-        slv.slaveType(axi4_memory);*/
+        // @RyanH,TODO,slv.slaveType(axi4_memory);
     endfunction
 
     function void connect_phase(uvm_phase phase);

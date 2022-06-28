@@ -18,6 +18,7 @@ class rh_axi4_test_base extends uvm_test; // {
 
     task run_phase(uvm_phase phase);
         rh_axi4mst_bseq seq=new("seq");
+		phase.phase_done.set_drain_time(uvm_root::get(),10000);
         phase.raise_objection(this);
         `uvm_info("TESTRUN","starting base test",UVM_LOW)
         seq.randomize();

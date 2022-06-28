@@ -26,13 +26,13 @@ class rh_reset_handler #(type TR=rh_reset_trans) extends uvm_object; // {
         currentState=rh_reset_unkown;
     endfunction
 
-    extern task start(process p);
-    extern task detectAndKill(process p);
+    extern task threadControl(process p);
+    extern local task __detectAndKill(process p);
     extern function void updateResetState(ref TR tr);
 
 endclass // }
 
-task rh_reset_handler::detectAndKill(process p); // {
+task rh_reset_handler::__detectAndKill(process p); // {
     wait(currentState==rh_reset_active);
     if (p==null)
         `uvm_fatal("NOPROC","no main process found while reset active")
@@ -40,10 +40,10 @@ task rh_reset_handler::detectAndKill(process p); // {
         p.kill();
 endtask // }
 
-task rh_reset_handler::start(process p); // {
+task rh_reset_handler::threadControl(process p); // {
     wait(currentState==rh_reset_inactive);
     fork
-        detectAndKill(p);
+        __detectAndKill(p);
     join_none
 endtask // }
 
