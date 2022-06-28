@@ -1,0 +1,16 @@
+puts "call fileset #{self}"
+compopt :xlm,'-64bit','-sv','-timescale 1ns/1ps','-uvm'
+##compopt :xlm,'-uvmnoautocompile'
+##compopt :xlm,'-incdir /home/ryan/prj/GitHub/advanceUVM/originalUVMSrc'
+##compopt :xlm,'/home/ryan/prj/GitHub/advanceUVM/originalUVMSrc/uvm.sv'
+##compopt :xlm,'-I/home/ryan/prj/GitHub/advanceUVM/originalUVMSrc/dpi'
+##compopt :xlm,'/home/ryan/prj/GitHub/advanceUVM/originalUVMSrc/dpi/uvm_dpi.cc'
+compopt :xlm,'-incdir /home/ryan/prj/GitHub/vips/axi4'
+compopt :xlm,'-incdir /home/ryan/prj/GitHub/libs/dvlibs'
+compopt :xlm,'-access rwc'
+compopt :xlm,'+UVM_VERBOSITY=UVM_HIGH'
+
+fileset '../rh_axi4_pkg.sv'
+fileset 'rh_axi4_test_env.svh'
+fileset 'rh_axi4_test_base.svh'
+fileset 'tb.sv'
