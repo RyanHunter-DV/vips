@@ -1,18 +1,21 @@
 interface rh_ahbIf #(AW=32,DW=32)(
-	input logic HClk,
-	input logic HResetN
+	input logic HCLK,
+	input logic HRESETN
 ); // {
 
-	logic HSel;
-	logic HMaster;
-	logic HMasterLock;
+	logic HSEL;
+	logic HMASTER;
+	logic HMASTERLOCK;
 
-	logic HTrans;
-	logic HBurst;
-	logic [AW-1:0] HAddr;
+	logic HTRANS;
+	logic HBURST;
+	logic [AW-1:0] HADDR;
 
 
 
+
+	modport master(
+	);
 
 
 endinterface // }

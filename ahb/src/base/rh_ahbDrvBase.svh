@@ -23,7 +23,7 @@ class rh_ahbDrvBase #(type REQ=rh_ahbTransBase, RSP=REQ)
 	extern function void resetDriverProcess();
 	extern virtual function void userResetProcess();
 	extern task mainProcess;
-	virtual task activeDriverProcess; endtask
+	virtual task mainProcessTask; endtask
 
 endclass // }
 
@@ -54,7 +54,7 @@ endfunction // }
 task rh_ahbDrvBase::mainProcess; // {
 	if (mainThread) return; // if has ongoing thread, then never issue a new one.
 	mainThread = process::self();
-	forever activeDriverProcess;
+	forever mainProcessTask;
 endtask // }
 
 
