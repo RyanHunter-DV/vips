@@ -30,8 +30,39 @@ class rh_axi4_vip_config#(`RH_AXI4_IF_PARAM_DECL) extends rh_axi4_vip_configBase
 	extern task driveWDBeat(ref rh_axi4_dchnl_t wd);
 	extern virtual task sync(input uint32_t c);
 	extern virtual function uint32_t genBeatDelay(rh_axi4_device_t dev);
-    // TODO
+
+	extern task startBChannel(rh_axi4_trans tr);
+	extern task startRDChannel(rh_axi4_trans tr);
+
+	extern virtual task drive(string sig,logic [1023:0] val);
+
 endclass // }
+
+task rh_axi4_vip_config::drive(string sig,logic [1023:0] val); // {
+	case (sig)
+		"AWREADY": vif.driveAWREADY(val[0]);
+		"ARREADY": vif.driveARREADY(val[0]);
+		"WREADY" : vif.driveWREADY(val[0]);
+	endcase
+endtask // }
+
+task rh_axi4_vip_config::startRDChannel(rh_axi4_trans tr); // {
+	// PLACEHOLDER, auto generated task, add content here
+	vif.driveRDChannel(
+		bit_vector_t'(tr.resp),
+		tr.id,
+		tr.user,
+		tr.data // data is dynamical array, will be sent all element of data
+	);
+endtask // }
+
+task rh_axi4_vip_config::startBChannel(rh_axi4_trans tr); // {
+	vif.driveBChannel(
+		bit_vector_t'(tr.resp),
+		tr.id,
+		tr.user
+	);
+endtask // }
 
 function uint32_t rh_axi4_vip_config::genBeatDelay(rh_axi4_device_t dev);
 	case (dev)

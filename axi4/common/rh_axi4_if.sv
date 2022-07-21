@@ -192,6 +192,19 @@ interface rh_axi4_if #(`RH_AXI4_IF_PARAM_DECL) (
 		$display("TBD, driveMasterWDBeat do nothing");
 	endtask
 
+	task driveAWREADY(logic v);
+		sync();
+		AWREADY<=v;
+	endtask
+	task driveWREADY(logic v);
+		sync();
+		WREADY<=v;
+	endtask
+	task driveARREADY(logic v);
+		sync();
+		RREADY<=v;
+	endtask
+
 
     `include "common/rh_axi4_protocol_check.sv"
     `include "common/rh_axi4_ifcontrol.svh"

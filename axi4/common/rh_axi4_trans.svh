@@ -21,6 +21,7 @@ class rh_axi4_trans extends uvm_sequence_item; // {
 	rand bit[3:0] qos;
 	rand rh_axi4_burst_e burst;
 	rand uint32_t processDelay;
+	rand rh_axi4_resp_enum resp;
 
 	constraint len_cst {
 		if (burst==rhaxi4_incr) {

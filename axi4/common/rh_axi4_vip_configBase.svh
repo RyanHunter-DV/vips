@@ -3,9 +3,8 @@
 
 virtual class rh_axi4_vip_configBase extends uvm_object;
 
-    uvm_active_passive_enum is_active;
-    // string interface_path;
-    rh_axi4_master_slave_enum is_master;
+	rh_axi4_device_enum dev;
+
     bit respEn = 1'b0;
 
 
@@ -13,6 +12,11 @@ virtual class rh_axi4_vip_configBase extends uvm_object;
         super.new(name);
     endfunction
 
+	// return 1 when dev:
+	// is *active*
+	extern function bit isActive( );
+	// return if device is a master
+	extern function bit isMaster( );
     pure virtual function void getInterface(string p);
 	pure virtual task waitResetSignalChange(output logic v);
 
@@ -29,7 +33,30 @@ virtual class rh_axi4_vip_configBase extends uvm_object;
 	// device type, can drive master's wd beat delay or slave's rd beat delay
 	pure virtual function uint32_t genBeatDelay(rh_axi4_device_t dev);
 	pure virtual task sync(input uint32_t c);
+
+
+	// configs for slave 
+	pure virtual task drive(string sig,logic [1023:0] val);
+	pure virtual function uint32_t getLowDuration(string sig);
+	pure virtual function uint32_t getHighDuration(string sig);
+
+	pure virtual task driveBChannel(rh_axi4_trans tr);
+
 endclass
+
+function bit rh_axi4_vip_configBase::isMaster( ); // {
+	// PLACEHOLDER, auto generated function, add content here
+	if (dev==rh_axi4_active_master || dev==rh_axi4_passive_master)
+		return 1;
+	else return 0;
+endfunction // }
+
+function bit rh_axi4_vip_configBase::isActive( ); // {
+	// PLACEHOLDER, auto generated function, add content here
+	if (dev==rh_axi4_active_master || dev==rh_axi4_active_slave)
+		return 1;
+	else return 0;
+endfunction // }
 
 
 `endif

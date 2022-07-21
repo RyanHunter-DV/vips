@@ -22,8 +22,8 @@ typedef rh_axi4_trans rspTr_t;
 typedef enum {
 	rhaxi4_write_req,
 	rhaxi4_read_req,
-	rhaxi4_write_rsp,
-	rhaxi4_read_rsp
+	rhaxi4_write_rsp, // bresp
+	rhaxi4_read_rsp   // rresp
 } rh_axi4_trans_e;
 
 typedef enum bit[1:0] {
@@ -36,6 +36,13 @@ typedef enum {
 	axi4_master,
 	axi4_slave
 } rh_axi4_master_slave_enum;
+
+typedef enum bit[1:0] {
+	axi4_okay  =2'h0,
+	axi4_exokay=2'h1,
+	axi4_slverr=2'h2,
+	axi4_decerr=2'h3
+} rh_axi4_resp_enum;
 
 typedef enum logic {
     rh_reset_unkown   = 1'bx,
@@ -77,9 +84,16 @@ typedef struct {
 
 
 `define placeholder(MSG) `uvm_info("PLACEHOLDER",MSG,UVM_NONE)
+`ifdef DEVELOP_VERSION
+	`define debug(MSG) `uvm_info("DEBUG",MSG,UVM_NONE)
+`else
+	`define debug(MSG) ;
+`endif
 `define RH_AXI4_IF_PARAM_DECL AW=32,DW=32,IW=16,UW=32
 `define RH_AXI4_IF_PARAM_MAP .AW(AW),.DW(DW),.IW(IW),.UW(UW)
 
+
+typedef bit[1023:0] bit_vector_t;
 
 typedef rh_axi4_master_slave_enum rh_axi4_device_t;
 
