@@ -1,0 +1,3 @@
+`ifndef Axi4ResponseHandlerBase__svh
+`define Axi4ResponseHandlerBase__svh
+`endif
