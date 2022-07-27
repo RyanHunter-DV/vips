@@ -6,6 +6,10 @@ package RHAxi4Vip;
 	`include "uvm_macros.svh"
 	import uvm_pkg::*;
 
+	// standard types defined
+	// such as bool type
+	`include "rhstd.svh"
+
 	`include "common/Axi4Types.svh"
 	`include "common/Axi4ConfigBase.svh"
 	`include "common/Axi4SeqItem.svh"
