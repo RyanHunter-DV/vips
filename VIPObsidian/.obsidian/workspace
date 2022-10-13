@@ -1,0 +1,133 @@
+{
+  "main": {
+    "id": "0732b8fd998b4eda",
+    "type": "split",
+    "children": [
+      {
+        "id": "59e93cb4728cfab2",
+        "type": "leaf",
+        "state": {
+          "type": "markdown",
+          "state": {
+            "file": "RHAxi4Vip-Overview.md",
+            "mode": "source",
+            "source": false
+          }
+        }
+      }
+    ],
+    "direction": "vertical"
+  },
+  "left": {
+    "id": "2937c6a2cb4e4028",
+    "type": "split",
+    "children": [
+      {
+        "id": "d48152afd031041f",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "02204f1156d909c8",
+            "type": "leaf",
+            "state": {
+              "type": "file-explorer",
+              "state": {}
+            }
+          },
+          {
+            "id": "748ef34f2660d76a",
+            "type": "leaf",
+            "state": {
+              "type": "search",
+              "state": {
+                "query": "",
+                "matchingCase": false,
+                "explainSearch": false,
+                "collapseAll": false,
+                "extraContext": false,
+                "sortOrder": "alphabetical"
+              }
+            }
+          },
+          {
+            "id": "bc14c38c11240e09",
+            "type": "leaf",
+            "state": {
+              "type": "starred",
+              "state": {}
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "horizontal",
+    "width": 300
+  },
+  "right": {
+    "id": "c161fa4671b7829b",
+    "type": "split",
+    "children": [
+      {
+        "id": "824230498f19eeda",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "48b7ef36de8fa169",
+            "type": "leaf",
+            "state": {
+              "type": "backlink",
+              "state": {
+                "file": "RHAxi4Vip-Overview.md",
+                "collapseAll": false,
+                "extraContext": false,
+                "sortOrder": "alphabetical",
+                "showSearch": false,
+                "searchQuery": "",
+                "backlinkCollapsed": false,
+                "unlinkedCollapsed": true
+              }
+            }
+          },
+          {
+            "id": "585913d981f72545",
+            "type": "leaf",
+            "state": {
+              "type": "outgoing-link",
+              "state": {
+                "file": "RHAxi4Vip-Overview.md",
+                "linksCollapsed": false,
+                "unlinkedCollapsed": true
+              }
+            }
+          },
+          {
+            "id": "d59ae60dbb170ccf",
+            "type": "leaf",
+            "state": {
+              "type": "tag",
+              "state": {
+                "sortOrder": "frequency",
+                "useHierarchy": true
+              }
+            }
+          },
+          {
+            "id": "892efce8c8e56889",
+            "type": "leaf",
+            "state": {
+              "type": "outline",
+              "state": {
+                "file": "RHAxi4Vip-Overview.md"
+              }
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "horizontal",
+    "width": 300,
+    "collapsed": true
+  },
+  "active": "59e93cb4728cfab2",
+  "lastOpenFiles": []
+}
