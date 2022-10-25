@@ -7,7 +7,7 @@ request transaction [[RHAxi4ReqTrans]], used for all AXI4 VIPs, as a request tra
 **base** RHAxi4DriverBase#(REQ,RSP)
 **field**
 ```
-
+// TODO
 ```
 
 ## mainProcess
@@ -42,25 +42,37 @@ if (req.type==AXI4_READ)
 The task to detect reqs from `awReqs`, and drive it onto write address channel.
 **proc**
 ```
-REQ _r;
-wait (awReqs.size());
-_r = awReqs.pop_front();
-config.vif.driveAWSignals(
-	_r.burst,
-	_r.addr,
-	_r.
-);
+forever begin
+	REQ _r;
+	wait (awReqs.size());
+	_r = awReqs.pop_front();
+	config.vif.driveAWSignals(
+		_r.burst,
+		_r.addr,
+		_r.size,
+		_r.len,
+		_r.lock,
+		_r.cache,
+		_r.prot,
+		_r.region,
+		_r.user,
+		_r.id,
+		_r.qos
+	);
+end
 ```
 ## startWDChannel
 **ltask** startWDChannel()
 The task to detect reqs from `wdReqs`, and drive it onto write data channel.
 **proc**
 ```
+// TODO
 ```
 ## startARChannel
 **ltask** startARChannel()
 **proc**
 ```
+// TODO
 ```
 #TBD 
 ## startBChannel

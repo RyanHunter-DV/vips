@@ -3,7 +3,7 @@
 **trans** RHAxi4ReqTrans
 **field**
 ```
-rand rhaxi4_burst_enum burst;
+rand bit [1:0] burst;
 rand bit [2:0] size;
 rand bit [7:0] len;
 rand bit lock;
