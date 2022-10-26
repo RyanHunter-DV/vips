@@ -2,16 +2,13 @@ The driver base is a typical driver component directly derived from uvm_driver, 
 
 # Source Code
 **driver** RHAxi4DriverBase
+**tparam** REQ=RHAxi4ReqTrans,RSP=RHAxi4RspTrans
+request transaction [[RHAxi4ReqTrans]], used for all AXI4 VIPs, as a request transaction. 
+**base** RHDriverBase#(REQ,RSP)
+[[RHDriverBase]] is the base driver component for VIPs.
 **field**
 ```
 RHAxi4ConfigBase config;
-```
-
-## mainProcess
-This is the main process for processing actions
-**vtask**
-```
-mainProcess() 
 ```
 
 ## build_phase

@@ -4,10 +4,11 @@
 - [[RHAxi4ReqTrans]]
 - 
 # Source Code
-**package** RHAxi4VipPackage
+**package** RHAxi4Vip
 **imports**
 ```
-uvm_pkg::*
+uvm_pkg::*;
+RHVipBase::*;
 ```
 **includes**
 ```

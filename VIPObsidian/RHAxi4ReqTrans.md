@@ -14,7 +14,7 @@ rand bit [3:0] qos;
 rand bit [`AW_MAX-1:0] addr;
 rand bit [`UW_MAX-1:0] user;
 rand bit [`IW_MAX-1:0] id;
-
+rand bit [`UW_MAX-1:0]   duser[];
 rand bit [`DW_MAX-1:0]   data[];
 rand bit [`DW_MAX/8-1:0] strobe[];
 

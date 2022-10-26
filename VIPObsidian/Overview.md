@@ -90,5 +90,5 @@ endpackage
 ```
 # Architecture
 
-[[RHAxi4VipPackage.sv]]
+[[RHAxi4Vip]]
 [[RHAxi4MstDriver]]
