@@ -10,7 +10,8 @@ The transaction of this master driver is pre-defined in [[RHAxi4DriverBase]].
 ```systemverilog
 // TODO
 semaphore wdControl;
-semaphore outstandingControl
+semaphore outstandingControl;
+RHAxi4MstConfigBase config;
 ```
 ## build_phase
 To build the basic internal fields
