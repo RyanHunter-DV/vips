@@ -58,7 +58,7 @@ seq_item_port.item_done(req);
 ```
 
 ## startAWChannel
-**ltask** startAWChannel()
+**ltask** `startAWChannel()`
 The task to detect reqs from `awReqs`, and drive it onto write address channel.
 **proc**
 ```systemverilog
@@ -82,7 +82,7 @@ forever begin
 end
 ```
 ## startWDChannel
-**ltask** startWDChannel()
+**ltask** `startWDChannel()`
 The task to detect reqs from `wdReqs`, and drive it onto write data channel.
 **proc**
 ```systemverilog
@@ -116,7 +116,7 @@ outstandingControl.put(1);
 ```
 ## sendDataBeat
 This is a task to send one beat of data for the granted transaction. This task will use the `__accessed__` task to access the interface API to drive signals for write data channel.
-**ltask** 
+**ltask**
 ```systemverilog
 sendDataBeat(
 	logic[`IW_MAX-1:0] id,
@@ -145,7 +145,7 @@ wdControl.get(1);
 wdControl.put(1);
 ```
 ## startARChannel
-**ltask** startARChannel()
+**ltask** `startARChannel()`
 **proc**
 ```systemverilog
 // TODO
@@ -185,7 +185,7 @@ forever begin
 end
 ```
 ## startRDChannel
-**task** startRDChannel()
+**task** `startRDChannel()`
 This task starts a thread to drive `RREADY`, which is similar as driving BREADY isgnal, configures use `lowRDCycleMin, lowRDCycleMax` and `highRDCycleMin, highRDCycleMax`.
 **proc**
 ```systemverilog

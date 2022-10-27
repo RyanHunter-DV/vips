@@ -1,6 +1,6 @@
-
+need a common base transaction for recording time features, [[RHAxi4TransBase]]
 # Source Code
-**trans** RHAxi4ReqTrans
+**transaction** RHAxi4ReqTrans
 **field**
 ```
 rand bit [1:0] burst;
@@ -18,21 +18,6 @@ rand bit [`UW_MAX-1:0]   duser[];
 rand bit [`DW_MAX-1:0]   data[];
 rand bit [`DW_MAX/8-1:0] strobe[];
 
-realtime startTime,endTime;
-
 ```
 macros used in field are declared in [[RHAxi4Types]].
 
-## APIs recording time
-**func** void start(realtime t)
-A function to record the start time of this transaction.
-**proc**
-```
-startTime = t;
-```
-**func** void finish(realtime t)
-A function to record the end time of this transaction.
-**proc**
-```
-endTime =t;
-```
