@@ -1,4 +1,6 @@
+
 # Source Code
+resest enum declared in [[RHTypes#ResetEnum]]
 **transaction** RHResetTransBase
 **field**
 ```
