@@ -1,11 +1,16 @@
 The monitor used to collect requests/response of AXI protocol, besides, it monitors the reset events according to the [[RHMonitorBase]].
-
+## reference
+- [[RHAxi4If]]
+- 
 # Source Code
 **monitor** RHAxi4MstMonitor
+**tparam** `REQ=RHAxi4ReqTrans,RSP=RHAxi4RspTrans`
 **base** RHMonitorBase
 **field**
 ```
+
 logic currentResetSignal;
+RHAxi4MstConfigBase config;
 ```
 ## reqP
 A TLM port for sending all request channel information when detected, both for AW/AR channel, that means once the write address valid and ready detected, the transaction will be sent through this port.
@@ -16,6 +21,8 @@ A specific TLM for write request, collected both the write address and write dat
 ## rspP
 The response TLM, for sending write/read response information, read response means the read data channel information, while the write response means the bresp channel. No request information will be recorded.
 **tlm-ap** `RHAxi4RspTrans rspP`
+
+## build phase
 **build**
 ```systemverilog
 currentResetSignal = 'bx;
@@ -50,6 +57,12 @@ This task can send a request of AW channel information only, by reqP.
 **task** `startAWChannel()`
 **proc**
 ```systemverilog
+REQ aw = new("aw");
+config.vif.waitAWValid(); // wait awvalid and arvalid synchronized
+aw.burst = config.vif.AWBURST;
+aw.id    = config.vif.AWID;
+aw.lock  = config.vif.AWLOCK;
+aw.addr  = config.vif.AWADDR;
 // TODO
 ```
 
@@ -61,3 +74,8 @@ Monitoring write data channel information from signal to transaction. When detec
 // TODO
 ```
 ## startARChannel
+#TBD 
+## startRDChannel
+#TBD 
+## startBChannel
+#TBD 
