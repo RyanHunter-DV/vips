@@ -3,7 +3,7 @@
 ## ResetEnum
 **raw**
 ```
-typedef enum bit {
+typedef enum logic {
 	RHResetUnknow   = 'bx,
 	RHResetActive   = 'b1,
 	RHResetInactive = 'b0
