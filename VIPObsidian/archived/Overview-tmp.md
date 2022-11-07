@@ -38,37 +38,6 @@ interface
 ```
 [[strategy-createInterfaceParameteredComponent]]
 
-# Using Example
-## basic usage of master device
-```
-RHAxi4Vip dev;
-RHAxi4VipConfigBase devConfig;
-dev = RHAxi4Vip::type_id::create("mst",this);
-devConfig=RHAxi4VipConfigBase::type_id::create("mstConfig");
-devConfig.deviceMode = AXI4_MASTER;
-xxx
-dev.setConfig(devConfig);
-
-// in case
-RHAxi4BaseSeq seq=new("seq");
-seq.randomize() with {
-	xxxx
-};
-seq.start(dev.seqr);
-```
-
-**send a random axi trans**
-```
-RHAxi4Vip mst;
-mst = RHAxi4Vip::type_id::create(xxx);
-mst.setup(AXI4_ACTIVE_MASTER,"tb.mst_if");
-/* optional configs
-mst.sendDelay(<min>,<max>);
-*/
--------------------------
-RHAxi4SeqBase seq=new(xx); seq.randomize();
-seq.start(mst.seqr);
-```
 
 # File Structure
 declaring a package for this VIP, named RHAxi4VipPackage;
@@ -90,5 +59,5 @@ endpackage
 ```
 # Architecture
 
-[[RHAxi4Vip]]
-[[RHAxi4MstDriver]]
+[[RHAxi4Vip-Overview]]
+[[src-RHAxi4MstDriver.svh]]

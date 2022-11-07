@@ -1,10 +1,10 @@
-RHAxi4MstDriver is a uvm_driver, based on [[RHAxi4DriverBase]].
+RHAxi4MstDriver is a uvm_driver, based on [[src-RHAxi4DriverBase.svh]], which is a common driver base for master and slave axi4 device.
 
 # Source Code
 **codeType** `systemverilog`
 
 **driver** RHAxi4MstDriver
-The transaction of this master driver is pre-defined in [[RHAxi4DriverBase]].
+The transaction of this master driver is pre-defined in [[src-RHAxi4DriverBase.svh]].
 **base** RHAxi4DriverBase
 **field**
 ```systemverilog
@@ -172,7 +172,7 @@ end
 **task** `startBChannel()`
 This task will be started once the run_phase started, and will forever active to drive the `BREADY` signal of a master randomly according to the `lowBCycleMin,lowBCycleMax` and `highBCycleMin, highBCycleMax` in config table.
 **ref**
-[[RHAxi4MstConfigBase#BCycleConfig]]
+[[src-RHAxi4MstConfigBase.svh#BCycleConfig]]
 **proc**
 ```systemverilog
 forever begin
