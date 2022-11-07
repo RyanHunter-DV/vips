@@ -1,5 +1,5 @@
 # base features
-- [[#Base Architecture]], indciates the basic vip package and file structures.
+- [[#Base Architecture]], indicates the basic vip package and file structures.
 - [[#Master Device]], supports axi master behavior
 - [[#Slave Device]], supports axi slave device behavior.
 
