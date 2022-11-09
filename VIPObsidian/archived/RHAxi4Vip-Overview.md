@@ -1,3 +1,4 @@
+
 # Common
 - [[RHAxi4Types]]
 - [[RHAxi4ConfigBase]]
@@ -5,8 +6,9 @@
 - 
 
 # Master Device
-- [[RHAxi4MstConfigBase]]
-- [[RHAxi4MstDriver]]
+
+- [[src-RhAxi4MstConfigBase.svh]]
+- [[src-rhAxi4MstDriver.svh]]
 - [[RHAxi4MstMonitor]]
 - [[RHAxi4MstAgent]]
 - [[RHAxi4MstSeqr]]
