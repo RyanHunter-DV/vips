@@ -22,6 +22,7 @@ logic [AW-1:0] AWADDR;
 logic [UW-1:0] AWUSER;
 logic [IW-1:0] AWID;
 logic [7:0] AWLEN;
+logic [3:0] AWQOS; // TODO
 ```
 ## write data channel
 **field**
@@ -48,6 +49,7 @@ logic [AW-1:0] ARADDR;
 logic [UW-1:0] ARUSER;
 logic [IW-1:0] ARID;
 logic [7:0] ARLEN;
+logic [3:0] ARQOS; // TODO
 ```
 ## read data channel
 **field**
@@ -92,5 +94,13 @@ wait for the ARVALID signal synchronized by ACLK
 **proc**
 ```systemverilog
 while (ARVALID !== 1'b1)
+	@(posedge ACLK);
+```
+## waitWValid
+wait for WVALID signal similar to waitARValid
+**task** `waitWValid()`
+**proc**
+```systemverilog
+while (WVALID !== 1'b1)
 	@(posedge ACLK);
 ```
