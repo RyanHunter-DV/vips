@@ -45,7 +45,7 @@ called when in `build_phase`, re-create the `config` field according to the exis
 **func** `void setupConfigureTable()`
 **proc**
 ```systemverilog
-if (!uvm_config_db#(RhAhb5IfControlBase)::get(null,config.interfacePath,config.ifCtrl))
+if (!uvm_config_db#(RhAhb5IfControlBase)::get(null,"*",config.interfacePath,config.ifCtrl))
 	`uvm_fatal("NIFC","no interface controller get")
 ```
 For `config.ifCtrl`, refer to [[src-rhAhb5MstConfig.svh#Interface Controller]].

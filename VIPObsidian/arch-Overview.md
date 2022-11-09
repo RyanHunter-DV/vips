@@ -15,13 +15,13 @@ The `RHAxi4Vip` locates in axi4 of vips project, it has file structures:
 # Master Device
 #TBD 
 using examples are in [[#Using example of master]]
-master device is part of the `RHAxi4Vip`, which will be activated by configurations of the `RHAxi4Vip`.
-The device itself is declared by a `uvm_agent` called `RHAxi4MstAgent`, which locates in [[src-RHAxi4MstAgent.svh]]. It has following components/objects:
-- [[src-RHAxi4MstDriver.svh]], the driver of master device, instantiated in the agent
-- [[src-RHAxi4MstConfig.svh]], the config table of master.
-- [[src-RHAxi4MstMonitor.svh]], the monitor of the master
-- [[src-RHAxi4If.sv]], the common interface both for master and slave
-- [[src-RHAxi4MstSeqr.svh]], the sequencer.
+master device is part of the `RHAxi4Vip`, which will be activated by configurations of the `RhAxi4Vip`.
+The device itself is declared by a `uvm_agent` called `RhAxi4MstAgent`, which locates in [[src-rhAxi4MstAgent.svh]]. It has following components/objects:
+- [[src-rhAxi4MstDriver.svh]], the driver of master device, instantiated in the agent
+- [[src-rhAxi4MstConfig.svh]], the config table of master.
+- [[src-rhAxi4MstMonitor.svh]], the monitor of the master
+- [[src-rhAxi4If.sv]], the common interface both for master and slave
+- [[src-rhAxi4MstSeqr.svh]], the sequencer.
 
 # Slave Device
 #TBD 

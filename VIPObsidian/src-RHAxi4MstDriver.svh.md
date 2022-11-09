@@ -1,11 +1,11 @@
-RHAxi4MstDriver is a uvm_driver, based on [[src-RHAxi4DriverBase.svh]], which is a common driver base for master and slave axi4 device.
+RHAxi4MstDriver is a uvm_driver, based on [[src-rhAxi4DriverBase.svh]], which is a common driver base for master and slave axi4 device.
 
 # Source Code
 **codeType** `systemverilog`
 
-**driver** RHAxi4MstDriver
-The transaction of this master driver is pre-defined in [[src-RHAxi4DriverBase.svh]].
-**base** RHAxi4DriverBase
+**driver** RhAxi4MstDriver
+The transaction of this master driver is pre-defined in [[src-rhAxi4DriverBase.svh]].
+**base** RhAxi4DriverBase
 **field**
 ```systemverilog
 // TODO
@@ -36,10 +36,11 @@ join
 ```
 ## init the interface to default value
 To set the idle value of the interface, or other initialization if necessary.
+By calling the setDefault API in interface controller, a default value bit will be set, and all corresponding idle for this caller will be the default bit.
 **ltask** `__initInterface()`
 **proc**
 ```systemverilog
-config.vif.setDefault(config.defaultSignalValue);
+config.setMasterDefault(config.defaultSignalValue);
 ```
 ## startTransProcessor
 **task** `startTransProcess()`
@@ -66,7 +67,7 @@ forever begin
 	REQ _r;
 	wait (awReqs.size());
 	_r = awReqs.pop_front();
-	config.vif.driveAWSignals(
+	config.driveAWSignals(
 		_r.burst,
 		_r.addr,
 		_r.size,
@@ -129,7 +130,7 @@ sendDataBeat(
 **proc**
 ```systemverilog
 __access__();
-config.vif.driveWDSignals(id,user,data,strobe,last);
+config.driveWDSignals(id,user,data,strobe,last);
 __release__();
 ```
 ## control for sending data beat
@@ -153,7 +154,7 @@ forever begin
 	REQ _r;
 	wait (arReqs.size());
 	_r = arReqs.pop_front();
-	config.vif.driveARSignals(
+	config.driveARSignals(
 		_r.burst,
 		_r.addr,
 		_r.size,
@@ -172,16 +173,16 @@ end
 **task** `startBChannel()`
 This task will be started once the run_phase started, and will forever active to drive the `BREADY` signal of a master randomly according to the `lowBCycleMin,lowBCycleMax` and `highBCycleMin, highBCycleMax` in config table.
 **ref**
-[[src-RHAxi4MstConfigBase.svh#BCycleConfig]]
+[[src-RhAxi4MstConfig.svh#BCycleConfig]]
 **proc**
 ```systemverilog
 forever begin
 	int low = $urandom_range(config.lowBCycleMin,config.lowBCycleMax);
 	int high= $urandom_range(config.highBCycleMin,config.highBCycleMax);
-	config.vif.drive("BREADY",0);
-	config.vif.sync(low);
-	config.vif.drive("BREADY",1);
-	config.vif.sync(high);
+	config.drive("BREADY",0);
+	config.sync(low);
+	config.drive("BREADY",1);
+	config.sync(high);
 end
 ```
 ## startRDChannel
@@ -192,10 +193,10 @@ This task starts a thread to drive `RREADY`, which is similar as driving BREADY 
 forever begin
 	int low = $urandom_range(config.lowRDCycleMin,config.lowRDCycleMax);
 	int high= $urandom_range(config.highRDCycleMin,config.highRDCycleMax);
-	config.vif.drive("RREADY",0);
-	config.vif.sync(low);
-	config.vif.drive("RREADY",1);
-	config.vif.sync(high);
+	config.drive("RREADY",0);
+	config.sync(low);
+	config.drive("RREADY",1);
+	config.sync(high);
 end
 ```
 

@@ -60,4 +60,4 @@ endpackage
 # Architecture
 
 [[RHAxi4Vip-Overview]]
-[[src-RHAxi4MstDriver.svh]]
+[[src-rhAxi4MstDriver.svh]]

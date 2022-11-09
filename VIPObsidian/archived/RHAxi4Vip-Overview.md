@@ -7,8 +7,8 @@
 
 # Master Device
 
-- [[src-RHAxi4MstConfigBase.svh]]
-- [[src-RHAxi4MstDriver.svh]]
+- [[src-RhAxi4MstConfigBase.svh]]
+- [[src-rhAxi4MstDriver.svh]]
 - [[RHAxi4MstMonitor]]
 - [[RHAxi4MstAgent]]
 - [[RHAxi4MstSeqr]]
