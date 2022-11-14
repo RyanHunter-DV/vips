@@ -54,6 +54,7 @@ forever begin
 	outstandingData++;
 end
 ```
+reference: [[src-rhAhb5MstConfig.svh#sendAddressPhase]];
 In data phase driving, the `outstandingData` will be decreased when each data beat is sent (here sent means got by slave with HREADY high);
 ```systemverilog
 data = dataQue.pop_front();
@@ -70,9 +71,21 @@ Per above shows, to create a task that will be triggered at `mainProcess` and In
 **task** `startDataPhaseThread()`
 **proc**
 ```systemverilog
-
+forever begin
+	RhAhb5TransBeat beat;
+	bit isError;
+	wait(dataQue.size());
+	beat = dataQue.pop_front();
+	config.sendDataPhase(beat,isError);
+	if (isError) begin
+		processError();
+		outstandingData = 0;
+	end else outstandingData--;
+end
 ```
-
+reference:
+- [[#processError]];
+- [[src-rhAhb5MstConfig.svh#sendDataPhase]];
 
 ## random delay before sending a transaction
 For a master, only the start of an entire transaction can have delay, once the first beat is sent, the master should not insert any delay, special idle state by inserting BUSY trans should be given by the test create through a sequence, the driver itself cannot support this feature.
@@ -98,12 +111,16 @@ if (error) begin
 end else continueNextDataBeats();
 ```
 So the driver will define a task to process those kind of errors after sending each data beat.
+### processError
 **task** `processError()`
-#TBD 
 **proc**
 ```systemverilog
-
+dataQue.delete();
+addressQue.delete();
+config.driveIdleBeat(1);
 ```
+reference:
+- [[src-rhAhb5MstConfig.svh#driveIdleBeat]]; #TODO 
 
 ## build_phase
 Doing basic initializations for driver component as  described in above.
@@ -124,8 +141,8 @@ fork
 join
 ```
 reference:
-- [[#startAddressPhaseThread]]; #TODO 
-- [[#startDataPhaseThread]]; #TODO
+- [[#startAddressPhaseThread]]; 
+- [[#startDataPhaseThread]];
 ## startSeqProcess
 This is a forever loop for waiting and processing sequence items from test level. After processed the delay action, will then push to address phase queue for address processing.
 #TBD,shall add support for response later.
