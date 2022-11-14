@@ -1,0 +1,3 @@
+dir = File.dirname(File.absolute_path(__FILE__));
+setenv('clockGen',dir);
+##loadString = "setenv clockGen #{dir}"
