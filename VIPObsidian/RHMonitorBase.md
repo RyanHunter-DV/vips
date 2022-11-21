@@ -2,7 +2,7 @@
 **monitor** RHMonitorBase
 ## support for monitoring reset actions
 We'll use a report port to send the reset change event through the TLM port, after detecting by a subclass's API `waitResetStateChanged`
-**ap-port** `RHResetTransBase resetP`
+**tlm-ap** `RHResetTransBase resetP`
 **field**
 ```systemverilog
 RHResetState_enum currentResetState;
@@ -15,6 +15,7 @@ currentResestState = RHResetUnknow;
 ## waitResetStateChanged
 A virtual task to wait and get the changed reset state, this task will be overidden by sub-class.
 **vtask** `waitResetStateChanged(output RHResetState_enum s)`
+**proc**
 ```systemverilog
 // subclass should override this task
 ```
