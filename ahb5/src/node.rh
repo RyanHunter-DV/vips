@@ -1,0 +1,3 @@
+component :RhAhb5Vip do
+	fileset 'rhAhb5Vip.sv'
+end
