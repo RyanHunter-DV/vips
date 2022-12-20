@@ -1,1 +1,2 @@
 rhload 'src/node'
+rhload 'examples/node'

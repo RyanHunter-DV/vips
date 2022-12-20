@@ -1,0 +1,6 @@
+config :masterOnly do
+	need :rhAhb5Vip
+	need :masterTB
+	need :masterEnv
+	need :masterTests
+end
