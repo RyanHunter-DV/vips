@@ -1,0 +1,4 @@
+## the node.rh is called by users to get the VIP component into their
+## simulation flow, attention that the root.rh is not available for users
+## it is only available for running VIP examples
+rhload 'src/node'

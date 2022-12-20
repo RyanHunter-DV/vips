@@ -1,6 +1,6 @@
-config :masterOnly do
+config :masterOnly, :tool=>:xlm do
 	need :rhAhb5Vip
-	need :masterTB
 	need :masterEnv
 	need :masterTests
+	need :masterTB
 end

@@ -1,0 +1,3 @@
+component :masterTests do
+	fileset 'masterTestPkg.sv','masterTest.list'
+end
