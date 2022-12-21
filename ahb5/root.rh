@@ -1,2 +1,5 @@
+rhload "#{ENV['UVMHOME']}/root"
+rhload "#{ENV['RHUVMDBG']}/root"
+rhload "#{ENV['RHLIB']}/root"
 rhload 'src/node'
 rhload 'examples/node'

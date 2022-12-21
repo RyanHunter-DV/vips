@@ -1,5 +1,8 @@
 config :masterOnly, :tool=>:xlm do
-	need :rhAhb5Vip
+	need :uvm
+	need :rhuvmdbg
+	need :Rhlib
+	need :RhAhb5Vip
 	need :masterEnv
 	need :masterTests
 	need :masterTB
