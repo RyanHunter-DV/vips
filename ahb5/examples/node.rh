@@ -1,3 +1,4 @@
 rhload 'env/node'
 rhload 'tb/node'
 rhload 'manifest/node'
+rhload 'tests/node'

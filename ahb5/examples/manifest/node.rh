@@ -4,6 +4,8 @@ config :masterOnly, :tool=>:xlm do
 	need :Rhlib
 	need :RhAhb5Vip
 	need :masterEnv
-	need :masterTests
+	need :MasterTests
 	need :masterTB
+	## dpihome = "#{ENV['UVMHOME']}/dpi"
+	## compopt :xlm,"-I#{dpihome} -cc #{dpihome}/uvm_dpi.cc"
 end
