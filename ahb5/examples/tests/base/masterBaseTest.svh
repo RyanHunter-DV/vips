@@ -26,7 +26,10 @@ function void MasterBaseTest::build_phase(uvm_phase phase);
 endfunction
 
 task MasterBaseTest::run_phase(uvm_phase phase);
+	phase.raise_objection(this);
 	`uvm_info(get_type_name(),"starting run_phase ...",UVM_NONE)
 	test_sim();
+	#200ns;
 	`uvm_info(get_type_name(),"finishing run_phase ...",UVM_NONE)
+	phase.drop_objection(this);
 endtask

@@ -1,13 +1,15 @@
 conf := masterOnly
 test := masterBaseTest
-xbuild: mdbuild
+xbuild:
 	simf -e 'buildflow(:${conf}).run'
 
 mdbuild:
 	mdcs ~/GitHub/Obsidian/vips/ahb5/src/ ./src
 
-sim:
+run:
 	simf -e 'runtest(:${test}).run'
+sim:
+	simf -e 'runtest(:${test}).sim'
 
 clean:
 	rm -rf out/
