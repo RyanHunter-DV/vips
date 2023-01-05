@@ -1,3 +1,0 @@
-`ifndef Axi4VipLocalConfig__svh
-`define Axi4VipLocalConfig__svh
-`endif
