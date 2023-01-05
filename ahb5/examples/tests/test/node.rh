@@ -1,0 +1,10 @@
+test :masterBaseTest do
+	config :masterOnly
+	simopt :xlm, '+UVM_TESTNAME=MasterBaseTest'
+	simopt :xlm, '+UVM_VERBOSITY=UVM_MEDIUM'
+	dpihome="/home/ryan/prj/GitHub/advanceUVM/refactoredUVM/lib/64bit"
+	simopt :xlm,"-loadpli #{dpihome}/libuvmdpi.so:*"
+	simopt :xlm,"-SV_LIB #{dpihome}/libuvmdpi.so"
+	simopt :xlm,"+RHUDBG=\"uvm_test_top.env.mst.mon,*\""
+	simopt :xlm,"-SVSEED random"
+end

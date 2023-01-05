@@ -1,0 +1,6 @@
+component :masterTB do
+	fileset 'masterTB.sv','tb.list'
+end
+
+## @RyanH, TODO,  component :slaveTB do
+## @RyanH, TODO,  end
