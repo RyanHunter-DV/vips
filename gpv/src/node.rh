@@ -1,0 +1,7 @@
+component :RhGpVip do
+    need :Rhlib
+
+	cwd = File.dirname(File.absolute_path(__FILE__))
+	incdir cwd
+	fileset 'rhGpVip.sv'
+end
