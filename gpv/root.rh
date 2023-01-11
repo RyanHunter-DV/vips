@@ -4,7 +4,7 @@
 rhload 'src/node'
 rhload 'examples/node'
 
-context :rhGpv do
-	component :src
+context :selfTest do
+	component :RhGpVip
 	component :examples
 end

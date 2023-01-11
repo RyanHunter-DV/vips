@@ -1,5 +1,4 @@
 component :RhAhb5Vip do
-	cwd = File.dirname(File.absolute_path(__FILE__))
-	incdir cwd
+	required 'uvm.standard'
 	fileset 'rhAhb5Vip.sv'
 end

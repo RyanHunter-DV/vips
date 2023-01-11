@@ -1,0 +1,6 @@
+rhload 'ahb5/node'
+rhload 'gpv/node'
+context :vip do
+	component :RhAhb5Vip
+	component :RhGpVip
+end

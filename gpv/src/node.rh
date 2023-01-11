@@ -1,4 +1,4 @@
-component :src do
+component :RhGpVip do
 	required 'uvm.standard'
 	required 'rhlib.base'
 

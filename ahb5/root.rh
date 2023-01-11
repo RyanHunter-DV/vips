@@ -1,5 +1,9 @@
-rhload "#{ENV['UVMHOME']}/root"
-rhload "#{ENV['RHUVMDBG']}/root"
-rhload "#{ENV['RHLIB']}/root"
+## rhload "#{ENV['UVMHOME']}/root"
+## rhload "#{ENV['RHUVMDBG']}/root"
+## rhload "#{ENV['RHLIB']}/root"
 rhload 'src/node'
 rhload 'examples/node'
+
+context :selfTest do
+	component :RhAhb5Vip
+end

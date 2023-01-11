@@ -1,0 +1,3 @@
+rhudbg = rhVM, version = latest
+uvm    = advanceUVM, version = latest
+rhlib  = libs, version = latest
