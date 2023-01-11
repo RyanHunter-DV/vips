@@ -1,4 +1,5 @@
 component :RhAhb5Vip do
 	required 'uvm.standard'
+	required 'rhVM.rhudbg'
 	fileset 'rhAhb5Vip.sv'
 end
