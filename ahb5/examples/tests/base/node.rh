@@ -1,5 +1,3 @@
 component :MasterTests do
-	cwd = File.dirname(File.absolute_path(__FILE__))
-	incdir cwd
-	fileset 'masterTestPkg.sv','masterTests.list'
+	fileset 'masterTestPkg.sv'
 end

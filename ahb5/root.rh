@@ -6,4 +6,10 @@ rhload 'examples/node'
 
 context :selfTest do
 	component :RhAhb5Vip
+	component :masterEnv
+	component :masterTB
+	component :MasterTests
+
+	config :masterOnly
+	test :masterBaseTest
 end

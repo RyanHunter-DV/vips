@@ -1,5 +1,5 @@
 component :masterTB do
-	fileset 'masterTB.sv','tb.list'
+	fileset 'masterTB.sv'
 end
 
 ## @RyanH, TODO,  component :slaveTB do

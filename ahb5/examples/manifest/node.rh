@@ -1,7 +1,7 @@
 config :masterOnly, :tool=>:xlm do
-	component :uvm
-	component :rhuvmdbg
-	component :Rhlib
+	## component :uvm
+	## component :rhuvmdbg
+	## component :Rhlib
 	component :RhAhb5Vip
 	component :masterEnv
 	component :MasterTests

@@ -1,5 +1,3 @@
 component :masterEnv do
-	cwd = File.dirname(File.absolute_path(__FILE__))
-	incdir cwd
-	fileset 'masterEnvPkg.sv','masterEnv.list'
+	fileset 'masterEnvPkg.sv'
 end
