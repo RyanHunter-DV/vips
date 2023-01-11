@@ -1,7 +1,6 @@
-component :RhGpVip do
-    need :Rhlib
+component :src do
+	required 'uvm.standard'
+	required 'rhlib.base'
 
-	cwd = File.dirname(File.absolute_path(__FILE__))
-	incdir cwd
 	fileset 'rhGpVip.sv'
 end

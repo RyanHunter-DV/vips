@@ -1,6 +1,4 @@
 app load xcelium/current
-app load rhuvmdbg/current
-app load rhlib/current
 export STEM=`pwd`
 export PROJECT_ROOT=$STEM
 export OUT_ANCHOR="${STEM}/out"
