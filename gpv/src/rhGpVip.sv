@@ -9,6 +9,7 @@ package RhGpVip;
 	// type/macro definition
 	`include "rhGpvTypes.svh"
 
+	`include "rhGpvSignal.svh"
 	`include "rhGpvTrans.svh"
 	`include "rhGpvDataObj.svh"
 
@@ -17,11 +18,15 @@ package RhGpVip;
 	// the interface controller, contained interface and passed to vip
 	`include "rhGpvIfCtrl.svh"
 
+
+	`include "rhGpvConfig.svh"
 	`include "rhGpvProtocolBase.svh"
 	`include "rhGpvConfig.svh"
 
 	// the main driver object to process incoming transactions
 	`include "rhGpvDriver.svh"
+	`include "rhGpvMonitor.svh"
+	`include "rhGpvAgent.svh"
 
 endpackage
 

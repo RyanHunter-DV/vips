@@ -20,10 +20,8 @@ endclass
 //-----------------------CLASS BODY-----------------------//
 task RhGpvDriever::mainProcess();
 	forever begin
-		RhGpvDataObj dobj=new("dobj");
 		seq_item_port.get_next_item(req);
-		dobj = protocol.req2dobj(req);
-		config.driveTransaction(dobj);
+		protocol.driveTransaction(req);
 	end
 endtask
 

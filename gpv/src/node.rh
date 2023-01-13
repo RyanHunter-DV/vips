@@ -1,6 +1,5 @@
 component :RhGpVip do
 	required 'uvm.standard'
-	required 'rhlib.base'
-
+	required 'rhlib.dvbase'
 	fileset 'rhGpVip.sv'
 end
