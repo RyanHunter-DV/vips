@@ -1,0 +1,9 @@
+component :example do
+	required 'uvm.standard'
+
+	fileset 'DUT.v'
+	fileset 'rwaccessProtocol.svh'
+	fileset 'top.sv'
+	fileset 'env_pkg.sv'
+	fileset 'test_pkg.sv'
+end
