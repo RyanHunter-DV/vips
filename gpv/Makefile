@@ -1,5 +1,5 @@
-conf := masterOnly
-test := masterBaseTest
+conf := compileConfig
+test := sanityTest
 xbuild:
 	simf -e 'xcelium.build(:${conf})'
 run:

@@ -1,1 +1,1 @@
-rjob -x remote 'cd ../vips/gpv;bootenv default 0;make xbuild'
+rjob -x remote 'cd ../vips/gpv;bootenv default 0;make run'

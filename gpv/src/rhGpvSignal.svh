@@ -15,7 +15,7 @@ class RhGpvSignal extends uvm_object;
 		super.new(name);
 	endfunction
 
-	extern function void position(int s,int e,string group);
+	extern function void position(int s,int e,string g);
 endclass
 
 function void RhGpvSignal::position(int s,int e,string g);

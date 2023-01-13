@@ -2,6 +2,9 @@
 `define rhGpVip__sv
 
 `include "uvm_macros.svh"
+// the basic interface 
+`include "rhGpvDefine.svh"
+`include "rhGpvIf.sv"
 package RhGpVip;
 	import uvm_pkg::*;
 	import Rhlib::*; // required
@@ -13,8 +16,6 @@ package RhGpVip;
 	`include "rhGpvTrans.svh"
 	`include "rhGpvDataObj.svh"
 
-	// the basic interface 
-	`include "rhGpvIf.sv"
 	// the interface controller, contained interface and passed to vip
 	`include "rhGpvIfCtrl.svh"
 
