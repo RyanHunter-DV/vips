@@ -1,15 +1,11 @@
 conf := masterOnly
 test := masterBaseTest
 xbuild:
-	simf -e 'buildflow(:${conf}).run'
-
-mdbuild:
-	mdcs ~/GitHub/Obsidian/vips/ahb5/src/ ./src
-
+	simf -e 'xcelium.build(:${conf})'
 run:
-	simf -e 'runtest(:${test}).run'
+	simf -e 'xcelium.run(:${test})'
 sim:
-	simf -e 'runtest(:${test}).sim'
+	simf -e 'xcelium.sim(:${test})'
 
 clean:
 	rm -rf out/

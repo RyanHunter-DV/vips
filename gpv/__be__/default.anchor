@@ -3,3 +3,4 @@ export STEM=`pwd`
 export PROJECT_ROOT=$STEM
 export OUT_ANCHOR="${STEM}/out"
 export SIMF_ENTRY="${PROJECT_ROOT}/root.rh"
+export SIMF_CONTEXT="selfTest"

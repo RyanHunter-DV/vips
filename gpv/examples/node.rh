@@ -1,4 +1,4 @@
-component :example do
+component :examples do
 	required 'uvm.standard'
 
 	fileset 'DUT.v'
