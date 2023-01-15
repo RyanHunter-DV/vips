@@ -1,16 +1,18 @@
 `ifndef rhGpvProtocolBase__svh
 `define rhGpvProtocolBase__svh
 
-virtual class RhGpvProtocolBase extends uvm_object;
+class RhGpvProtocolBase#(type ITRANS=RhGpvTrans,OTRANS=ITRANS) extends uvm_object;
 
-	parameter ITRANS = RhGpvTrans;
-	parameter OTRANS = RhGpvTrans;
+	// parameter ITRANS = RhGpvTrans;
+	// parameter OTRANS = RhGpvTrans;
 
 
 	RhGpvSignal vectormaps[$];
 	RhGpvSignal clockmaps[$];
 
 	RhGpvConfig config;
+
+	`uvm_object_utils(RhGpvProtocolBase)
 
 	function new(string name="RhGpvProtocolBase");
 		super.new(name);
@@ -21,10 +23,10 @@ virtual class RhGpvProtocolBase extends uvm_object;
 		setupMapping;
 	endfunction
 
-	pure virtual function void setupMapping;
-	pure virtual task driveTransaction(RhGpvTrans req);
-	pure virtual task monitorOutcome(output OTRANS trans);
-	pure virtual task monitorIncome (output ITRANS trans);
+	virtual function void setupMapping; endfunction
+	virtual task driveTransaction(RhGpvTrans req); endtask
+	virtual task monitorOutcome(output OTRANS trans); endtask
+	virtual task monitorIncome (output ITRANS trans); endtask
 
 	extern function void driveSignal(string name,logicVector_t vector);
 	// the return vector is simply data bits from position 0 to size of the vector
@@ -49,14 +51,14 @@ function void RhGpvProtocolBase::updateValueToVector(
 
 	RhGpvSignal map = __getVectorMap__(name);
 	if (map==null) return;
-	for (int pos=map.spos,pos<=map.epos;pos++) begin
+	for (int pos=map.spos;pos<=map.epos;pos++) begin
 		vector[pos] = value[pos-map.spos];
 	end
 	return;
 endfunction
 function logicVector_t RhGpvProtocolBase::getSignal(string name);
 	RhGpvSignal map = __getVectorMap__(name);
-	if (map==null) return;
+	if (map==null) return 'hx;
 	return config.getSignal(map.spos,map.epos);
 endfunction
 task RhGpvProtocolBase::sync(string name,int cycle=1);
@@ -70,6 +72,13 @@ function RhGpvSignal RhGpvProtocolBase::__getVectorMap__(string name);
 		if (vectormaps[i].get_name()==name) return vectormaps[i];
 
 	`uvm_fatal("NOSIGMAP",$sformatf("signal %s not found in vector map",name))
+	return null;
+endfunction
+function RhGpvSignal RhGpvProtocolBase::__getClockMap__(string name);
+	foreach (clockmaps[i])
+		if (clockmaps[i].get_name()==name) return clockmaps[i];
+
+	`uvm_fatal("NOSIGMAP",$sformatf("signal %s not found in clock map",name))
 	return null;
 endfunction
 

@@ -3,7 +3,7 @@ module DUT(
 	input valid_i,
 	input[31:0] data_i,
 	output ack_o
-)
+);
 
 	reg ack_r;
 	reg [3:0] counter_r;

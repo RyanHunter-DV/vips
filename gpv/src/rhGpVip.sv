@@ -3,7 +3,7 @@
 
 `include "uvm_macros.svh"
 // the basic interface 
-`include "rhGpvDefine.svh"
+`include "rhGpvDefines.svh"
 `include "rhGpvIf.sv"
 package RhGpVip;
 	import uvm_pkg::*;

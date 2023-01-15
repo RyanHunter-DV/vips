@@ -2,13 +2,13 @@
 `define rhGpvAgent__svh
 
 class RhGpvAgent extends uvm_agent;
-	parameter REQ = RhGpvTrans;
-	parameter RSP = RhGpvTrans;
+	parameter type REQ = RhGpvTrans;
+	parameter type RSP = RhGpvTrans;
 
-	RhlibBaseSeqr#(REQ,RSP) seqr;
+	RhSeqrBase#(REQ,RSP) seqr;
 
-	RhGpvDriever drv;
-	RhGpvMonitor mon;
+	RhGpvDriever#(REQ,RSP) drv;
+	RhGpvMonitor#(REQ,RSP) mon;
 	RhGpvConfig  config;
 	RhGpvProtocolBase protocol;
 
@@ -36,11 +36,12 @@ function void RhGpvAgent::build_phase(uvm_phase phase);
 	protocol = RhGpvProtocolBase::type_id::create("protocol");
 
 	if (is_active) begin
-		drv = RhGpvDriever::type_id::create("drv",this);
-		seqr= RhlibBaseSeqr#(REQ,RSP)::type_id::create("seqr",this);
+		drv = RhGpvDriever#(REQ,RSP)::type_id::create("drv",this);
+		seqr= RhSeqrBase#(REQ,RSP)::type_id::create("seqr",this);
 		drv.protocol = protocol;
 	end
-	mon   = RhGpvMonitor::type_id::create("mon",this);
+	mon   = RhGpvMonitor#(REQ,RSP)::type_id::create("mon",this);
+	mon.protocol = protocol;
 	
 	protocol.setup(config);
 

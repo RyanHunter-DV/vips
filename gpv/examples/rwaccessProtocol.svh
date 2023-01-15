@@ -1,10 +1,10 @@
 `ifndef rwaccessProtocol__svh
 `define rwaccessProtocol__svh
 
-class RwaccessProtocol extends RhGpvProtocolBase;
+class RwaccessProtocol#(type OTRANS=RhGpvTrans,ITRANS=OTRANS) extends RhGpvProtocolBase;
 
 	`uvm_object_utils_begin(RwaccessProtocol)
-	`uvm_object_utils_begin
+	`uvm_object_utils_end
 
 
 	function new(string name="RwaccessProtocol");
@@ -23,13 +23,13 @@ task RwaccessProtocol::monitorOutcome(output OTRANS trans);
 	logicVector_t value;
 	while(getSignal("valid")!==1) sync("tb_clk",1);
 	value = getSignal("data");
-	updateValueToVector("valid",1,trans.vector);
-	updateValueToVector("data",value,trans.vector);
+	updateValueToVector("valid",1,trans.vector[0]);
+	updateValueToVector("data",value,trans.vector[0]);
 	return;
 endtask
 task RwaccessProtocol::monitorIncome(output ITRANS trans);
-	while(getSignal("ack")!===1) sync("tb_clk",1);
-	updateValueToVector("ack",1,trans.vector);
+	while(getSignal("ack")!==1) sync("tb_clk",1);
+	updateValueToVector("ack",1,trans.vector[0]);
 	return;
 endtask
 function void RwaccessProtocol::setupMapping;

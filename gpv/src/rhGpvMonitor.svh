@@ -1,20 +1,17 @@
 `ifndef rhGpvMonitor__svh
 `define rhGpvMonitor__svh
 
-class RhGpvMonitor extends RhMonitorBase;
-
-	parameter OTRANS = RhGpvTrans;
-	parameter ITRANS = RhGpvTrans;
-
+class RhGpvMonitor#(type OTRANS=RhGpvTrans,ITRANS=OTRANS) extends RhMonitorBase;
 
 	uvm_analysis_port#(OTRANS) apOutcome;
 	uvm_analysis_port#(ITRANS) apIncome;
+	RhGpvProtocolBase protocol;
 
 	`uvm_component_utils_begin(RhGpvMonitor)
 	`uvm_component_utils_end
 
-	function new(string name="RhGpvMonitor");
-		super.new(name);
+	function new(string name="RhGpvMonitor",uvm_component parent=null);
+		super.new(name,parent);
 	endfunction
 
 	extern virtual function void build_phase(uvm_phase phase);
@@ -29,12 +26,12 @@ function void RhGpvMonitor::build_phase(uvm_phase phase);
 	apIncome  = new("apIncome",this);
 endfunction
 task RhGpvMonitor::__outcomeProcess__;
-	OTRANS trans=new("trans");
+	RhGpvMonitor::OTRANS trans=new("trans");
 	protocol.monitorOutcome(trans);
 	apOutcome.write(trans);
 endtask
 task RhGpvMonitor::__incomeProcess__;
-	ITRANS trans=new("trans");
+	RhGpvMonitor::ITRANS trans=new("trans");
 	protocol.monitorIncome(trans);
 	apIncome.write(trans);
 endtask

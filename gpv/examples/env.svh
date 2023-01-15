@@ -12,7 +12,7 @@ class Env extends uvm_env;
 
 	function void build_phase(uvm_phase phase);
 		super.build_phase(phase);
-		uvm_object_registry#(RhGpvProtocolBase)::set_inst_override(rwaccessProtocol::get_type(),"gpv.protocol",this);
+		uvm_object_registry#(RhGpvProtocolBase)::set_inst_override(RwaccessProtocol::get_type(),"gpv.protocol",this);
 	endfunction
 		
 

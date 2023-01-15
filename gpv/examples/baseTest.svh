@@ -7,7 +7,7 @@ class baseTest extends uvm_test;
 	`uvm_component_utils(baseTest)
 
 	function new(string name="baseTest",uvm_component parent=null);
-		super.new(name);
+		super.new(name,parent);
 	endfunction
 
 	function void build_phase(uvm_phase phase);

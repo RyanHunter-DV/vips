@@ -12,8 +12,8 @@ class SelfTestSeq extends uvm_sequence;
 
 	task body();
 		RhGpvTrans tr=new("trans");
-		tr.vector[32:1] = $urandom();
-		tr.vector[0] = 1'b1;
+		tr.vector[0][32:1] = $urandom();
+		tr.vector[0][0] = 1'b1;
 		start_item(tr);
 		finish_item(tr);
 	endtask

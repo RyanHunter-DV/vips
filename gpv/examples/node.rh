@@ -1,9 +1,10 @@
 component :examples do
 	required 'uvm.standard'
+	required 'selfTest.RhGpVip'
 
 	fileset 'DUT.v'
-	fileset 'rwaccessProtocol.svh'
-	fileset 'top.sv'
+	## fileset 'rwaccessProtocol.svh'
 	fileset 'env_pkg.sv'
 	fileset 'test_pkg.sv'
+	fileset 'top.sv'
 end

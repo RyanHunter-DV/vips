@@ -3,7 +3,7 @@
 
 class RhGpvIfCtrl;
 
-	virtual vif;
+	virtual RhGpvIf vif;
 	string name;
 
 	function new(string n="RhGpvIfCtrl");
