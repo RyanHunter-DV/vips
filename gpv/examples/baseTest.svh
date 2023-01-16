@@ -12,15 +12,19 @@ class baseTest extends uvm_test;
 
 	function void build_phase(uvm_phase phase);
 		super.build_phase(phase);
+		`uvm_info("baseTest","starting build_phase ...",UVM_LOW)
 		env = Env::type_id::create("env",this);
 	endfunction
 
 	task run_phase(uvm_phase phase);
 		SelfTestSeq seq=new("seq");
-		phase.phase_done.set_drain_time(2000ns);
+		`uvm_info("run_phase",$sformatf("starting run_phase ......"),UVM_LOW)
+		phase.get_objection().set_drain_time(uvm_root::get(),2000ns);
 		phase.raise_objection(this);
+		`uvm_info("run_phase",$sformatf("send sequence:\n%s",seq.sprint()),UVM_LOW)
 		seq.start(env.gpv.seqr);
 		phase.drop_objection(this);
+		`uvm_info("run_phase",$sformatf("finish run_phase"),UVM_LOW)
 	endtask
 endclass
 

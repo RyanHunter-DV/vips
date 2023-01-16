@@ -9,6 +9,8 @@ class RhGpvTrans extends uvm_sequence_item;
 	int clockIndex; // using which clock index
 
 	`uvm_object_utils_begin(RhGpvTrans)
+		`uvm_field_array_int(vector,UVM_ALL_ON)
+		`uvm_field_array_int(mask,UVM_ALL_ON)
 	`uvm_object_utils_end
 
 	function new(string name="RhGpvTrans");

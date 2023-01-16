@@ -4,6 +4,7 @@
 class RhGpvDriever #(type REQ=uvm_sequence_item,RSP=REQ) extends RhDriverBase#(REQ,RSP);
 
 	RhGpvProtocolBase protocol;
+	RhGpvConfig config;
 
 	`uvm_component_utils(RhGpvDriever#(REQ,RSP))
 
@@ -22,11 +23,13 @@ task RhGpvDriever::mainProcess();
 	forever begin
 		seq_item_port.get_next_item(req);
 		protocol.driveTransaction(req);
+		seq_item_port.item_done();
 	end
 endtask
 
 function void RhGpvDriever::build_phase(uvm_phase phase);
 	super.build_phase(phase);
+	if (!config.resetFeature) resetDisable();
 endfunction
 function void RhGpvDriever::connect_phase(uvm_phase phase);
 	super.connect_phase(phase);

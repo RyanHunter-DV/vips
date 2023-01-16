@@ -18,10 +18,13 @@ interface RhGpvIf();
 		end
 	endfunction
 
-	function getVector (int s,int e);
+	function logic[`RHGPV_MAX_VECTOR_WIDTH-1:0] getVector (int s,int e);
 		logic[`RHGPV_MAX_VECTOR_WIDTH-1:0] rtn;
 		for (int pos=0;pos<e-s+1;pos++) rtn[pos]=vector[pos+s];
 		return rtn;
+	endfunction
+	function logic getReset(int s);
+		return reset[s];
 	endfunction
 
 	task sync(int pos,int cycle);
