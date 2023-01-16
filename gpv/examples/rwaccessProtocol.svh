@@ -61,7 +61,7 @@ function void RwaccessProtocol::setupMapping;
 	clockmaps.push_back(map);
 	map = new("ref_resetn");
 	map.position(0,0,"reset");
-	clockmaps.push_back(map);
+	resetmaps.push_back(map);
 endfunction
 /* to be deleted
 function RhGpvDataObj RwaccessProtocol::req2dobj(RhGpvTrans req);

@@ -14,7 +14,8 @@ class Env extends uvm_env;
 	function void build_phase(uvm_phase phase);
 		super.build_phase(phase);
 		`uvm_info(get_type_name(),"starting build_phase ...",UVM_LOW)
-		uvm_object_registry#(RhGpvProtocolBase)::set_inst_override(RwaccessProtocol::get_type(),"gpv.protocol",this);
+		uvm_object_registry#(RhGpvProtocolBase,"RhGpvProtocolBase")::set_inst_override(RwaccessProtocol::get_type(),"gpv.protocol",this);
+		// RhGpvProtocolBase::get_type()
 		gpv = RhGpvAgent::type_id::create("gpv",this);
 		gpvc = gpv.createConfig("tb.rif0");
 		gpvc.enableReset();
