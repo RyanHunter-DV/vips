@@ -17,7 +17,9 @@ class baseTest extends uvm_test;
 
 	task run_phase(uvm_phase phase);
 		SelfTestSeq seq=new("seq");
+		phase.raise_objection(this);
 		seq.start(env.gpv.seqr);
+		phase.drop_objection(this);
 	endtask
 endclass
 
