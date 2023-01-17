@@ -44,6 +44,25 @@ typedef struct {
 	bit nonsec;
 	bit excl;
 } RhAhb5TransBeat;
+
+typedef enum {
+	RHAHB5_MASTER,
+	RHAHB5_SLAVE
+} RhAhb5MS_t;
+
+typedef enum bit[1:0] {
+	RHAHB5_OKAY = 1'b0,
+	RHAHB5_ERROR= 1'b1
+} RhAhb5Resp_enum;
+
+typedef enum {
+	RHAHB5_RANDOM,
+	RHAHB5_RESPONDER
+} RhAhb5Response_t;
+
+
 `uvm_analysis_imp_decl(_selfcheckExp)
+
+
 
 `endif

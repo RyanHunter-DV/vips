@@ -9,7 +9,7 @@
 // dir structure in Git/Obsidian/...
 /************************************************************************************/
 
-class RhAhb5MstConfig extends uvm_object;
+class RhAhb5MstConfig extends RhAhb5ConfigBase;
 	RhAhb5IfControlBase ifCtrl;
 	string interfacePath;
 	`uvm_object_utils_begin(RhAhb5MstConfig)

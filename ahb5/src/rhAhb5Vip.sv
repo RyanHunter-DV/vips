@@ -18,20 +18,29 @@ package RhAhb5Vip;
 	
 	import rhudbg::*;
 	`include "rhAhb5Types.svh"
+
 	`include "rhAhb5IfControlBase.svh"
 	`include "rhAhb5IfControl.svh"
 	
 	`include "rhAhb5TransBase.svh"
 	`include "rhAhb5ReqTrans.svh"
 	`include "rhAhb5RspTrans.svh"
+	`include "rhAhb5ConfigBase.svh"
 	
-	`include "rhAhb5MstConfig.svh"
-	`include "rhAhb5MstSeqr.svh"
-	`include "rhAhb5MstDriver.svh"
-	`include "rhAhb5MstMonitor.svh"
-	`include "rhAhb5MstAgent.svh"
+	// master
+	`include "master/rhAhb5MstConfig.svh"
+	`include "master/rhAhb5MstSeqr.svh"
+	`include "master/rhAhb5MstDriver.svh"
+	`include "master/rhAhb5MstMonitor.svh"
+	`include "master/rhAhb5MstAgent.svh"
 	`include "seqlib/rhAhb5SingleBurstSeq.svh"
-	//
+
+	// slave
+	`include "slave/rhAhb5SlvConfig.svh"
+
+
+	// top env
+	`include "rhAhb5Vip.svh"
 endpackage
 
 `endif

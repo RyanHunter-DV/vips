@@ -10,17 +10,17 @@
 /************************************************************************************/
 
 class RhAhb5ReqTrans extends RhAhb5TransBase;
-	rand bit [2:0] burst;
-	rand bit [`RHAHB5_AW_MAX-1:0] addr;
-	rand bit [6:0] prot;
-	rand bit lock;
-	rand bit [2:0] size;
-	rand bit nonsec;
-	rand bit excl;
-	rand bit [3:0] master;
-	rand bit [1:0] trans;
-	rand bit [`RHAHB5_DW_MAX-1:0] wdata;
-	rand bit write;
+	rand logic [2:0] burst;
+	rand logic [`RHAHB5_AW_MAX-1:0] addr;
+	rand logic [6:0] prot;
+	rand logic lock;
+	rand logic [2:0] size;
+	rand logic nonsec;
+	rand logic excl;
+	rand logic [3:0] master;
+	rand logic [1:0] trans;
+	rand logic [`RHAHB5_DW_MAX-1:0] wdata;
+	rand logic write;
 	rand int delay;
 	
 	constraint delay_cst {
