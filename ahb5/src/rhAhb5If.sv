@@ -21,11 +21,35 @@ interface RhAhb5If #( AW=32,DW=32)(input logic HCLK,input logic HRESETN);
 	logic HNONSEC;
 	logic HEXCL;
 	logic HWRITE;
-	logic HLOCK;
-	logic [1:0] HRESP;
+	logic HRESP;
 	logic [DW-1:0] HRDATA;
 	logic HREADY;
 	logic HEXOKAY;
+
+	function logic[DW-1:0] getValue(string name);
+		logic[DW-1:0] lvalue='h0;
+		case (name)
+			"HREADY": lvalue[0] = HREADY;
+		endcase
+		return lvalue;
+	endfunction
+	// set hrdata randomly
+	rand logic [DW-1:0] randrdata;
+	task randomHRDATA();
+		// TODO, this may cause a lot of performance issue
+		std::randomize(randrdata);
+		HRDATA <= randrdata;
+	endfunction
+	task clock(int cycle=1); repeat (cycle) @(posedge HCLK); endtask
+	task sync(string signal,logic[DW-1:0] target);
+		logic [DW-1:0] v = getValue(name);
+		while (v !== target) begin
+			clock();
+			v = getValue(name);
+		end
+	endtask
+
+
 endinterface
 
 `endif
