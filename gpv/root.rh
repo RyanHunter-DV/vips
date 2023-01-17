@@ -15,6 +15,7 @@ test :sanityTest do
 	config :compileConfig
 	simopt :xlm,'+UVM_TESTNAME=baseTest'
 	simopt :xlm,'+UVM_TIMEOUT=3000ns'
+	simopt :xlm,'+RHUDBG=RhGpvDriver'
 end
 
 context :selfTest do

@@ -7,7 +7,7 @@ class RhGpvAgent extends uvm_agent;
 
 	RhSeqrBase#(REQ,RSP) seqr;
 
-	RhGpvDriever#(REQ,RSP) drv;
+	RhGpvDriver#(REQ,RSP) drv;
 	RhGpvMonitor#(REQ,RSP) mon;
 	RhGpvConfig  config;
 	RhGpvProtocolBase protocol;
@@ -46,7 +46,7 @@ function void RhGpvAgent::build_phase(uvm_phase phase);
 	`uvm_info("DEBUG",$sformatf("protocol name: %s",protocol.testname),UVM_LOW)
 
 	if (is_active) begin
-		drv = RhGpvDriever#(REQ,RSP)::type_id::create("drv",this);
+		drv = RhGpvDriver#(REQ,RSP)::type_id::create("drv",this);
 		seqr= RhSeqrBase#(REQ,RSP)::type_id::create("seqr",this);
 		drv.protocol = protocol;
 		drv.config = config;

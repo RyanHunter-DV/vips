@@ -1,15 +1,17 @@
 `ifndef rhGpvDriver__svh
 `define rhGpvDriver__svh
 
-class RhGpvDriever #(type REQ=uvm_sequence_item,RSP=REQ) extends RhDriverBase#(REQ,RSP);
+class RhGpvDriver #(type REQ=uvm_sequence_item,RSP=REQ) extends RhDriverBase#(REQ,RSP);
 
 	RhGpvProtocolBase protocol;
 	RhGpvConfig config;
+	RhuDebugger debug;
 
-	`uvm_component_utils(RhGpvDriever#(REQ,RSP))
+	`uvm_component_utils(RhGpvDriver#(REQ,RSP))
 
-	function new(string name="RhGpvDriever",uvm_component parent=null);
+	function new(string name="RhGpvDriver",uvm_component parent=null);
 		super.new(name,parent);
+		debug = new(this,"component");
 	endfunction
 	extern function void build_phase (uvm_phase phase);
 	extern function void connect_phase (uvm_phase phase);
@@ -19,7 +21,7 @@ endclass
 
 
 //-----------------------CLASS BODY-----------------------//
-task RhGpvDriever::mainProcess();
+task RhGpvDriver::mainProcess();
 	forever begin
 		seq_item_port.get_next_item(req);
 		`uvm_info("DRIVER",$sformatf("getting req:\n%s",req.sprint()),UVM_LOW)
@@ -29,14 +31,15 @@ task RhGpvDriever::mainProcess();
 	end
 endtask
 
-function void RhGpvDriever::build_phase(uvm_phase phase);
+function void RhGpvDriver::build_phase(uvm_phase phase);
 	super.build_phase(phase);
+	`debug($sformatf("build_phase starting"))
 	if (!config.resetFeature) resetDisable();
 endfunction
-function void RhGpvDriever::connect_phase(uvm_phase phase);
+function void RhGpvDriver::connect_phase(uvm_phase phase);
 	super.connect_phase(phase);
 endfunction
-task RhGpvDriever::run_phase(uvm_phase phase);
+task RhGpvDriver::run_phase(uvm_phase phase);
 	super.run_phase(phase);
 endtask
 

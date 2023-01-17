@@ -8,6 +8,7 @@
 package RhGpVip;
 	import uvm_pkg::*;
 	import Rhlib::*; // required
+	import rhudbg::*;
 
 	// type/macro definition
 	`include "rhGpvTypes.svh"
