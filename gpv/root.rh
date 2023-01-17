@@ -8,12 +8,13 @@ rhload 'examples/node'
 config :compileConfig do
 	component :RhGpVip
 	component :examples
+	elabopt :xlm,'-TIMESCALE 1ns/1ps'
 end
 
 test :sanityTest do
 	config :compileConfig
 	simopt :xlm,'+UVM_TESTNAME=baseTest'
-	simopt :xlm,'+UVM_TIMEOUT=1us'
+	simopt :xlm,'+UVM_TIMEOUT=1000ns'
 end
 
 context :selfTest do
