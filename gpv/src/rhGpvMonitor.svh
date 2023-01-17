@@ -16,14 +16,16 @@ class RhGpvMonitor#(type OTRANS=RhGpvTrans,ITRANS=OTRANS) extends RhMonitorBase;
 	endfunction
 
 	extern virtual function void build_phase(uvm_phase phase);
-	extern virtual task waitResetStateChanged (output RhResetState_enum s);
+	extern virtual task waitResetStateChanged (input RhResetState_enum c,output RhResetState_enum s);
 	extern task mainProcess();
 
 	extern task __outcomeProcess__;
 	extern task __incomeProcess__;
 endclass
-task RhGpvMonitor::waitResetStateChanged(output RhResetState_enum s);
-	protocol.waitResetStateChanged(s);
+task RhGpvMonitor::waitResetStateChanged(input RhResetState_enum c,output RhResetState_enum s);
+	`uvm_info("DEBUG",$sformatf("call waitResetStateChanged, s:%s",s.name()),UVM_LOW)
+	`uvm_info("DEBUG",$sformatf("call waitResetStateChanged, c:%s",c.name()),UVM_LOW)
+	protocol.waitResetStateChanged(c,s);
 endtask
 function void RhGpvMonitor::build_phase(uvm_phase phase);
 	super.build_phase(phase);

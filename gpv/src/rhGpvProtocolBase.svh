@@ -48,25 +48,28 @@ class RhGpvProtocolBase#(type ITRANS=RhGpvTrans,OTRANS=ITRANS) extends uvm_objec
 	// to the giving arg: ref logic[MAX-1:0] vector
 	extern function void updateValueToVector(string name,logicVector_t value,ref logicVector_t vector);
 	extern virtual function void corereset (ref string rname,ref string cname);
-	extern task waitResetStateChanged (RhResetState_enum s);
+	extern task waitResetStateChanged (input RhResetState_enum c,output RhResetState_enum s);
 	extern function logic getReset (string name);
 endclass
 function void RhGpvProtocolBase::corereset(ref string rname,ref string cname); // ##{{{
 	`uvm_warning("RhGpvProtocolBase","no corereset override, it's not expected to happend")
 	return;
 endfunction // ##}}}
-task RhGpvProtocolBase::waitResetStateChanged(RhResetState_enum s);
+task RhGpvProtocolBase::waitResetStateChanged(input RhResetState_enum c,output RhResetState_enum s);
 	string rname,cname;
-	logic currentValue = logic'(s);
+	logic currentValue = logic'(c);
 	corereset(rname,cname);
-	`uvm_info("DEBUG","start waitResetStateChanged",UVM_LOW)
+	`uvm_info("DEBUG",$sformatf("start waitResetStateChanged,currentValue %p",currentValue),UVM_LOW)
+	`uvm_info("DEBUG",$sformatf("start waitResetStateChanged,getReset: %p",getReset(rname)),UVM_LOW)
 	while (getReset(rname) === currentValue) begin
 		`uvm_info("DEBUG","start sync cycle",UVM_LOW)
 		sync(cname,1);
 		`uvm_info("DEBUG","sync cycle done",UVM_LOW)
 		currentValue = getReset(rname);
 	end
+	if (getReset(rname)!==currentValue) currentValue=getReset(rname);
 	s = RhResetState_enum'(currentValue);
+	`uvm_info("DEBUG",$sformatf("set s: %s",s.name()),UVM_LOW)
 	return;
 endtask
 function void RhGpvProtocolBase::updateValueToVector(
@@ -83,7 +86,7 @@ function void RhGpvProtocolBase::updateValueToVector(
 endfunction
 function logic RhGpvProtocolBase::getReset(string name); // ##{{{
 	RhGpvSignal map = __getResetMap__(name);
-	`uvm_info("DEBUG","getReset called",UVM_LOW)
+	// `uvm_info("DEBUG","getReset called",UVM_LOW)
 	if (map==null) begin
 		`uvm_fatal("NOMAP",$sformatf("get null map for reset:%s",name))
 		return 'bx;
@@ -112,7 +115,7 @@ function RhGpvSignal RhGpvProtocolBase::__getVectorMap__(string name);
 	return null;
 endfunction
 function RhGpvSignal RhGpvProtocolBase::__getResetMap__(string name); // ##{{{
-	`uvm_info("RhGpvProtocolBase",$sformatf("getting reset from resetmap by name(%s)",name),UVM_LOW)
+	// `uvm_info("RhGpvProtocolBase",$sformatf("getting reset from resetmap by name(%s)",name),UVM_LOW)
 	foreach (resetmaps[i])
 		if (resetmaps[i].get_name()==name) return resetmaps[i];
 
