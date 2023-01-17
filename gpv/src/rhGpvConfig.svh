@@ -34,6 +34,7 @@ function logicVector_t RhGpvConfig::getSignal(int s,int e);
 endfunction
 
 task RhGpvConfig::sync(int pos, int cycle);
+	`uvm_info("sync",$sformatf("calling ifCtrl.vif.sync(%0d,%0d)",pos,cycle),UVM_LOW)
 	ifCtrl.vif.sync(pos,cycle);
 endtask
 

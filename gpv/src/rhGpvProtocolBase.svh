@@ -59,8 +59,14 @@ task RhGpvProtocolBase::waitResetStateChanged(RhResetState_enum s);
 	string rname,cname;
 	logic currentValue = logic'(s);
 	corereset(rname,cname);
-	while (getReset(rname) === currentValue) sync(cname,1);
-	s = RhResetState_enum'(getReset(rname));
+	`uvm_info("DEBUG","start waitResetStateChanged",UVM_LOW)
+	while (getReset(rname) === currentValue) begin
+		`uvm_info("DEBUG","start sync cycle",UVM_LOW)
+		sync(cname,1);
+		`uvm_info("DEBUG","sync cycle done",UVM_LOW)
+		currentValue = getReset(rname);
+	end
+	s = RhResetState_enum'(currentValue);
 	return;
 endtask
 function void RhGpvProtocolBase::updateValueToVector(
@@ -77,7 +83,11 @@ function void RhGpvProtocolBase::updateValueToVector(
 endfunction
 function logic RhGpvProtocolBase::getReset(string name); // ##{{{
 	RhGpvSignal map = __getResetMap__(name);
-	if (map==null) return 'bx;
+	`uvm_info("DEBUG","getReset called",UVM_LOW)
+	if (map==null) begin
+		`uvm_fatal("NOMAP",$sformatf("get null map for reset:%s",name))
+		return 'bx;
+	end
 	return config.getReset(map.spos);
 endfunction // ##}}}
 function logicVector_t RhGpvProtocolBase::getSignal(string name);
@@ -87,7 +97,10 @@ function logicVector_t RhGpvProtocolBase::getSignal(string name);
 endfunction
 task RhGpvProtocolBase::sync(string name,int cycle=1);
 	RhGpvSignal map = __getClockMap__(name);
-	if (map==null) return;
+	if (map==null) begin
+		`uvm_fatal("NOMAP",$sformatf("get null map for clock:%s",name))
+		return;
+	end
 	config.sync(map.spos,cycle);
 endtask
 
