@@ -28,13 +28,14 @@ class RhGpvProtocolBase#(type ITRANS=RhGpvTrans,OTRANS=ITRANS) extends uvm_objec
 
 	virtual function void setupMapping; endfunction
 	virtual task driveTransaction(RhGpvTrans req); endtask
-	virtual task monitorOutcome(output OTRANS trans); endtask
-	virtual task monitorIncome (output ITRANS trans); endtask
+	virtual task monitorOutcome(ref OTRANS trans); endtask
+	virtual task monitorIncome (ref ITRANS trans); endtask
 
 	extern function void driveSignal(string name,logicVector_t vector);
 	// the return vector is simply data bits from position 0 to size of the vector
 	// nomatter where this signal belongs to in the interface.vector.
-	extern function logicVector_t getSignal(string name);
+	extern function logicVector_t getOutSignal(string name);
+	extern function logicVector_t getInSignal (string name);
 	extern local function RhGpvSignal __getVectorMap__(string name);
 	// get the clock position for accessing through interface, according to the
 	// input clock name, clock always has 1 bit, so just the start position is enough
@@ -58,17 +59,22 @@ endfunction // ##}}}
 task RhGpvProtocolBase::waitResetStateChanged(input RhResetState_enum c,output RhResetState_enum s);
 	string rname,cname;
 	logic currentValue = logic'(c);
+	logic resetSignal;
 	corereset(rname,cname);
 	`uvm_info("DEBUG",$sformatf("start waitResetStateChanged,currentValue %p",currentValue),UVM_LOW)
-	`uvm_info("DEBUG",$sformatf("start waitResetStateChanged,getReset: %p",getReset(rname)),UVM_LOW)
-	while (getReset(rname) === currentValue) begin
+	`uvm_info("DEBUG",$sformatf("start waitResetStateChanged,getReset: %p",getReset(rname)),UVM_DEBUG)
+	resetSignal = getReset(rname);
+	if (resetSignal!==currentValue) begin
+		s = RhResetState_enum'(resetSignal);
+		return;
+	end
+	while (resetSignal === currentValue) begin
 		`uvm_info("DEBUG","start sync cycle",UVM_LOW)
 		sync(cname,1);
 		`uvm_info("DEBUG","sync cycle done",UVM_LOW)
-		currentValue = getReset(rname);
+		resetSignal = getReset(rname);
 	end
-	if (getReset(rname)!==currentValue) currentValue=getReset(rname);
-	s = RhResetState_enum'(currentValue);
+	s = RhResetState_enum'(resetSignal);
 	`uvm_info("DEBUG",$sformatf("set s: %s",s.name()),UVM_LOW)
 	return;
 endtask
@@ -93,10 +99,15 @@ function logic RhGpvProtocolBase::getReset(string name); // ##{{{
 	end
 	return config.getReset(map.spos);
 endfunction // ##}}}
-function logicVector_t RhGpvProtocolBase::getSignal(string name);
+function logicVector_t RhGpvProtocolBase::getInSignal(string name); // ##{{{
 	RhGpvSignal map = __getVectorMap__(name);
 	if (map==null) return 'hx;
-	return config.getSignal(map.spos,map.epos);
+	return config.getInSignal(map.spos,map.epos);
+endfunction // ##}}}
+function logicVector_t RhGpvProtocolBase::getOutSignal(string name);
+	RhGpvSignal map = __getVectorMap__(name);
+	if (map==null) return 'hx;
+	return config.getOutSignal(map.spos,map.epos);
 endfunction
 task RhGpvProtocolBase::sync(string name,int cycle=1);
 	RhGpvSignal map = __getClockMap__(name);
@@ -133,6 +144,7 @@ endfunction
 function void RhGpvProtocolBase::driveSignal(string name,logicVector_t vector);
 	RhGpvSignal map = __getVectorMap__(name);
 	if (map==null) return;
+	`uvm_info("DEBUG",$sformatf("drive vector[%0d:%0d] => %0h",map.spos,map.epos,vector),UVM_LOW)
 	config.driveVector(map.spos,map.epos,vector);
 endfunction
 

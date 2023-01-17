@@ -19,8 +19,8 @@ module top;
 	DUT udut (
 		.clk_i  (rif0.clock[0]),
 		.rstn_i (rif0.reset[0]),
-		.valid_i(rif0.vector[0]),
-		.data_i (rif0.vector[32:1]),
+		.valid_i(rif0.vector_out[0]),
+		.data_i (rif0.vector_out[32:1]),
 		.ack_o  (rif0.vector_in[33]) // TODO, tmp workaround
 	);
 

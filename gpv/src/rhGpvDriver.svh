@@ -22,7 +22,9 @@ endclass
 task RhGpvDriever::mainProcess();
 	forever begin
 		seq_item_port.get_next_item(req);
+		`uvm_info("DRIVER",$sformatf("getting req:\n%s",req.sprint()),UVM_LOW)
 		protocol.driveTransaction(req);
+		`uvm_info("DRIVER",$sformatf("procotol.driveTransaction done"),UVM_LOW)
 		seq_item_port.item_done();
 	end
 endtask

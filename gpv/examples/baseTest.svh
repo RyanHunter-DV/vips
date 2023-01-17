@@ -21,6 +21,7 @@ class baseTest extends uvm_test;
 		`uvm_info("run_phase",$sformatf("starting run_phase ......"),UVM_LOW)
 		phase.get_objection().set_drain_time(uvm_root::get(),2000ns);
 		phase.raise_objection(this);
+		#600ns;
 		`uvm_info("run_phase",$sformatf("send sequence:\n%s",seq.sprint()),UVM_LOW)
 		seq.start(env.gpv.seqr);
 		phase.drop_objection(this);

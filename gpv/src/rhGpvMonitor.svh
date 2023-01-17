@@ -35,11 +35,13 @@ function void RhGpvMonitor::build_phase(uvm_phase phase);
 endfunction
 task RhGpvMonitor::__outcomeProcess__;
 	RhGpvMonitor::OTRANS trans=new("trans");
+	foreach (trans.vector[i]) trans.vector[i] = 'h0; // initialize with 0
 	protocol.monitorOutcome(trans);
 	apOutcome.write(trans);
 endtask
 task RhGpvMonitor::__incomeProcess__;
 	RhGpvMonitor::ITRANS trans=new("trans");
+	foreach (trans.vector[i]) trans.vector[i] = 'h0; // initialize with 0
 	protocol.monitorIncome(trans);
 	apIncome.write(trans);
 endtask

@@ -16,8 +16,8 @@ class RwaccessProtocol#(type OTRANS=RhGpvTrans,ITRANS=OTRANS) extends RhGpvProto
 
 	extern function void setupMapping;
 	extern virtual task driveTransaction(RhGpvTrans req);
-	extern virtual task monitorOutcome(output OTRANS trans);
-	extern virtual task monitorIncome (output ITRANS trans);
+	extern virtual task monitorOutcome(ref OTRANS trans);
+	extern virtual task monitorIncome (ref ITRANS trans);
 	// extern task waitResetStateChanged (output RhResetState_enum s);
 	extern virtual function void corereset (ref string rname,ref string cname);
 endclass
@@ -31,29 +31,29 @@ endfunction // ##}}}
 // 	s = RhResetState_enum'(getReset("ref_resetn"));
 // 	return;
 // endtask
-task RwaccessProtocol::monitorOutcome(output OTRANS trans);
+task RwaccessProtocol::monitorOutcome(ref OTRANS trans);
 	logicVector_t value;
-	while(getSignal("valid")!==1) sync("tb_clk",1);
-	value = getSignal("data");
+	while(getOutSignal("valid")[0]!==1) sync("tb_clk",1);
+	value = getOutSignal("data");
 	updateValueToVector("valid",1,trans.vector[0]);
 	updateValueToVector("data",value,trans.vector[0]);
 	return;
 endtask
-task RwaccessProtocol::monitorIncome(output ITRANS trans);
-	while(getSignal("ack")!==1) sync("tb_clk",1);
+task RwaccessProtocol::monitorIncome(ref ITRANS trans);
+	while(getInSignal("ack")[0]!==1) sync("tb_clk",1);
 	updateValueToVector("ack",1,trans.vector[0]);
 	return;
 endtask
 function void RwaccessProtocol::setupMapping;
 	RhGpvSignal map = new("valid");
 	// setup vector mapping
-	map.position(0,0,"vector");
+	map.position(0,0,"vector_out");
 	vectormaps.push_back(map);
 	map = new("data");
-	map.position(1,32,"vector");
+	map.position(1,32,"vector_out");
 	vectormaps.push_back(map);
 	map = new("ack");
-	map.position(33,33,"vector");
+	map.position(33,33,"vector_in");
 	vectormaps.push_back(map);
 	// setup clock mapping
 	map = new("tb_clk");
@@ -73,10 +73,14 @@ function RhGpvDataObj RwaccessProtocol::req2dobj(RhGpvTrans req);
 endfunction
 */
 task RwaccessProtocol::driveTransaction(RhGpvTrans req);
+	`uvm_info("DEBUG",$sformatf("start user driveTransaction"),UVM_LOW)
 	sync("tb_clk",1);
+	`uvm_info("DEBUG",$sformatf("driveSigna(valid/data) => %0h",req.vector[0]),UVM_LOW)
 	driveSignal("valid",req.vector[0]);
 	driveSignal("data",req.vector[0]);
-	while (getSignal("ack")!==1) sync("tb_clk",1);
+	`uvm_info("DEBUG",$sformatf("waiting for ack"),UVM_LOW)
+	while (getInSignal("ack")[0]!==1) sync("tb_clk",1);
+	`uvm_info("DEBUG",$sformatf("ack waited"),UVM_LOW)
 	driveSignal("valid",0);
 	driveSignal("data",0);
 endtask
