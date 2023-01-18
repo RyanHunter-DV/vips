@@ -19,6 +19,25 @@ class RhAhb5IfControlBase extends uvm_object;
 	extern virtual task sync(int cycle);
 	extern virtual function uvm_bitstream_t getSignal(string signame);
 	extern function  new(string name="RhAhb5IfControlBase");
+	virtual task clock(int cycle=1); endtask
+	virtual task randomHRDATA(); endtask
+
+	// suppose driver never drives a signal by 'hz value
+	virtual function logic HREADY(logic val='bz); endfunction
+	virtual function logic HRESP(logic val='bz); endfunction
+	virtual function logic HEXOKAY(logic val='bz); endfunction
+	virtual function logic HBURST(logic[2:0] val='hz); endfunction
+	virtual function logic HTRANS(logic[1:0] val='hz); endfunction
+	virtual function logic HMASTER(logic[3:0] val='hz); endfunction
+	virtual function logic HSIZE(logic[2:0] val='hz); endfunction
+	virtual function logic HPROT(logic[7:0] val='hz); endfunction
+	virtual function logic HMASTLOCK(logic val='bz);endfunction
+	virtual function logic HNONSEC  (logic val='bz);endfunction
+	virtual function logic HEXCL    (logic val='bz);endfunction
+	virtual function logic HWRITE   (logic val='bz);endfunction
+	virtual function logic[`RHAHB5_DW_MAX-1:0] HWDATA(logic[`RHAHB5_DW_MAX-1:0] val='hz); endfunction
+	virtual function logic[`RHAHB5_AW_MAX-1:0] HADDR(logic[`RHAHB5_AW_MAX-1:0] val='hz); endfunction
+	virtual function logic[`RHAHB5_DW_MAX-1:0] HRDATA(logic[`RHAHB5_DW_MAX-1:0] val='hz);endfunction
 endclass
 task RhAhb5IfControlBase::driveAddressPhase(RhAhb5TransBeat b, bit waitReady);
 endtask

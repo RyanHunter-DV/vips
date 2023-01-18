@@ -36,7 +36,7 @@ function void RhAhb5SlvAgent::__setupActiveComponent__(); // ##{{{
 	seqr = RhAhb5SlvSeqr#(REQ,RSP)::type_id::create("seqr",this);
 	responder = RhAhb5ResponderBase::type_id::create("responder");
 	drv.debug = debug;
-	seqr.debug = debug;
+	// seqr.debug = debug;
 	drv.responder = responder;
 endfunction // ##}}}
 function void RhAhb5SlvAgent::build_phase(uvm_phase phase);

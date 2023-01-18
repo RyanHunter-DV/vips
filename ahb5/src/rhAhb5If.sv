@@ -26,6 +26,11 @@ interface RhAhb5If #( AW=32,DW=32)(input logic HCLK,input logic HRESETN);
 	logic HREADY;
 	logic HEXOKAY;
 
+	class randomObject;
+		// set hrdata randomly
+		rand logic [DW-1:0] hrdata;
+	endclass
+
 	function logic[DW-1:0] getValue(string name);
 		logic[DW-1:0] lvalue='h0;
 		case (name)
@@ -33,19 +38,16 @@ interface RhAhb5If #( AW=32,DW=32)(input logic HCLK,input logic HRESETN);
 		endcase
 		return lvalue;
 	endfunction
-	// set hrdata randomly
-	rand logic [DW-1:0] randrdata;
-	task randomHRDATA();
-		// TODO, this may cause a lot of performance issue
-		std::randomize(randrdata);
-		HRDATA <= randrdata;
-	endfunction
+	task automatic randomHRDATA();
+		randomObject ro = new();ro.randomize();
+		HRDATA <= ro.hrdata;
+	endtask
 	task clock(int cycle=1); repeat (cycle) @(posedge HCLK); endtask
 	task sync(string signal,logic[DW-1:0] target);
-		logic [DW-1:0] v = getValue(name);
+		logic [DW-1:0] v = getValue(signal);
 		while (v !== target) begin
 			clock();
-			v = getValue(name);
+			v = getValue(signal);
 		end
 	endtask
 

@@ -4,6 +4,7 @@ class MasterEnv extends uvm_env;
 
 	RhAhb5MstAgent mst;
 	RhAhb5MstConfig config;
+	RhuDebugger debug;
 
 
 	uvm_analysis_imp_mstReqImp#(RhAhb5ReqTrans,MasterEnv) reqI;
@@ -13,6 +14,7 @@ class MasterEnv extends uvm_env;
 
 	function new(string name="MasterEnv",uvm_component parent=null);
 		super.new(name,parent);
+		debug = new(this,"component");
 	endfunction
 
 	extern function void build_phase(uvm_phase phase);
@@ -23,10 +25,10 @@ class MasterEnv extends uvm_env;
 endclass
 
 function void MasterEnv::write_mstReqImp(RhAhb5ReqTrans _tr);
-	`rhudbg("write_mstReqImp",$sformatf("get req tr:\n%s",_tr.sprint))
+	`debug($sformatf("get req tr:\n%s",_tr.sprint))
 endfunction
 function void MasterEnv::write_mstRspImp(RhAhb5RspTrans _tr);
-	`rhudbg("write_mstRspImp",$sformatf("get rsp tr:\n%s",_tr.sprint))
+	`debug($sformatf("get rsp tr:\n%s",_tr.sprint))
 endfunction
 
 function void MasterEnv::connect_phase(uvm_phase phase);

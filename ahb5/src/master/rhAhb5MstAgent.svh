@@ -15,7 +15,8 @@ class RhAhb5MstAgent extends uvm_agent;
 	RhAhb5MstDriver  drv;
 	RhAhb5MstMonitor mon;
 	RhAhb5MstSeqr    seqr;
-	RhAhb5MstConfig config;
+	RhAhb5MstConfig  config;
+	RhuDebugger      debug;
 	`uvm_component_utils_begin(RhAhb5MstAgent)
 	`uvm_component_utils_end
 	extern virtual function void build_phase(uvm_phase phase);
@@ -45,10 +46,12 @@ function void RhAhb5MstAgent::setupSubComponents();
 	if (is_active==UVM_ACTIVE) begin
 		drv = RhAhb5MstDriver::type_id::create("drv",this);
 		drv.config = config;
+		drv.debug  = debug;
 		seqr= RhAhb5MstSeqr::type_id::create("seqr",this);
 	end
 	mon = RhAhb5MstMonitor::type_id::create("mon",this);
 	mon.config = config;
+	mon.debug  = debug;
 endfunction
 function void RhAhb5MstAgent::connect_phase(uvm_phase phase);
 	super.connect_phase(phase);
@@ -62,6 +65,7 @@ function void RhAhb5MstAgent::connect_phase(uvm_phase phase);
 endfunction
 function  RhAhb5MstAgent::new(string name="RhAhb5MstAgent",uvm_component parent=null);
 	super.new(name,parent);
+	debug = new(this,"component");
 endfunction
 task RhAhb5MstAgent::run_phase(uvm_phase phase);
 	super.run_phase(phase);

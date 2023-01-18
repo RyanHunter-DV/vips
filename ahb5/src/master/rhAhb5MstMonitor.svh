@@ -17,6 +17,7 @@ class RhAhb5MstMonitor extends RhMonitorBase;
 	RhAhb5MstConfig config;
 	bit reqWriteInfo[$];
 	RhAhb5ReqTrans expReqQue[$];
+	RhuDebugger debug;
 	`uvm_component_utils_begin(RhAhb5MstMonitor)
 	`uvm_component_utils_end
 	extern virtual task waitResetStateChanged(output RhResetState_enum s);
@@ -52,11 +53,11 @@ task RhAhb5MstMonitor::reqMonitor();
 		__waitRequestValid();
 		__collectAddressPhaseInfo(req);
 		reqWriteInfo.push_back(req.write);
-		`rhudbg("reqMonitor",$sformatf("send packet to reqP\n%s",req.sprint()))
+		`debug($sformatf("send packet to reqP\n%s",req.sprint()))
 		reqP.write(req);
 		if (req.write==1) begin
 			__collectWriteData(req);
-			`rhudbg("reqMonitor",$sformatf("send packet to wreqP,with wdata\n%s",req.sprint()))
+			`debug($sformatf("send packet to wreqP,with wdata\n%s",req.sprint()))
 			wreqP.write(req);
 		end else config.waitCycle();
 		__reqSelfCheck__(req);
@@ -64,7 +65,7 @@ task RhAhb5MstMonitor::reqMonitor();
 endtask
 function void RhAhb5MstMonitor::__reqSelfCheck__(RhAhb5ReqTrans act);
 	RhAhb5ReqTrans exp;
-	`rhudbg("__reqSelfCheck__","starting ...")
+	`debug("starting ...")
 	if (expReqQue.size()==0) begin
 		`uvm_fatal("SELFCHECK","no expected transaction should be sent by this VIP")
 		return;
@@ -73,7 +74,7 @@ function void RhAhb5MstMonitor::__reqSelfCheck__(RhAhb5ReqTrans act);
 	if (exp.compare(act))
 		`uvm_fatal("SELFCHECK",$sformatf("driver/monitor req compare failed, trans to be sent is\n%s\ntrans collected is\n%s",exp.sprint(),act.sprint()))
 	else
-		`rhudbg("CHECKPASS","driver/monitor req compare passed, driver has sent an expected transaction")
+		`debug("driver/monitor req compare passed, driver has sent an expected transaction")
 	return;
 endfunction
 task RhAhb5MstMonitor::__waitRequestValid();
@@ -131,7 +132,7 @@ task RhAhb5MstMonitor::run_phase(uvm_phase phase);
 	super.run_phase(phase);
 endtask
 function void RhAhb5MstMonitor::write_selfcheckExp(RhAhb5ReqTrans _tr);
-	`rhudbg("write_selfcheckExp",$sformatf("get the exp req:\n%s",_tr.sprint()))
+	`debug($sformatf("get the exp req:\n%s",_tr.sprint()))
 	expReqQue.push_back(_tr);
 endfunction
 

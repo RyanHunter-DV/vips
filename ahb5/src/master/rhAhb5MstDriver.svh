@@ -15,6 +15,8 @@ class RhAhb5MstDriver #( type REQ=RhAhb5ReqTrans,RSP=RhAhb5RspTrans) extends RhD
 	RhAhb5TransBeat addressQue[$];
 	RhAhb5TransBeat dataQue[$];
 	int outstandingData;
+	RhuDebugger debug;
+
 	`uvm_component_utils_begin(RhAhb5MstDriver#(REQ,RSP))
 	`uvm_component_utils_end
 	extern task startAddressPhaseThread();
@@ -35,7 +37,7 @@ task RhAhb5MstDriver::startAddressPhaseThread();
 		RhAhb5TransBeat beat;
 		wait(addressQue.size());
 		beat = addressQue.pop_front();
-		`rhudbg("startAddressPhaseThread",$sformatf("driving beat:\n%p",beat))
+		`debug($sformatf("driving beat:\n%p",beat))
 		config.sendAddressPhase(beat,outstandingData);
 		dataQue.push_back(beat);
 		outstandingData++;
@@ -80,7 +82,7 @@ task RhAhb5MstDriver::startSeqProcess();
 		REQ _reqClone;
 		seq_item_port.try_next_item(req);
 		if (req==null) begin
-			`rhudbg("startSeqProcess","driving idle beat")
+			`debug("driving idle beat")
 			__sendIdleBeat__();
 			seq_item_port.get_next_item(req);
 		end

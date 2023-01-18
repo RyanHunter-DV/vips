@@ -20,6 +20,7 @@ class RhAhb5SingleBurstSeq extends uvm_sequence;
 	rand bit [`RHAHB5_DW_MAX-1:0] __wdata;
 	rand bit __write;
 	rand int __delay;
+	RhuDebugger debug;
 	// TODO
 	`uvm_object_utils_begin(RhAhb5SingleBurstSeq)
 		`uvm_field_int(__size,UVM_ALL_ON)
@@ -48,13 +49,14 @@ task RhAhb5SingleBurstSeq::body();
 		write == __write ;
 	// @RyanH	delay == __delay ;
 	};
-	`rhudbg("body",$sformatf("start item:\n%s",_req.sprint()))
+	`debug($sformatf("start item:\n%s",_req.sprint()))
 	start_item(_req);
-	`rhudbg("body",$sformatf("item(%0d) finished",_req.get_inst_id()))
+	`debug($sformatf("item(%0d) finished",_req.get_inst_id()))
 	finish_item(_req);
 endtask
 function  RhAhb5SingleBurstSeq::new(string name="RhAhb5SingleBurstSeq");
 	super.new(name);
+	debug = new(this,"object");
 endfunction
 
 `endif
