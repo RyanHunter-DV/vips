@@ -17,7 +17,7 @@ endclass
 task MasterBaseTest::test_sim();
 	RhAhb5SingleBurstSeq seq=new("single");
 	seq.randomize();
-	seq.start(env.mst.seqr);
+	seq.start(env.ahb.mst.seqr);
 endtask
 
 function void MasterBaseTest::build_phase(uvm_phase phase);

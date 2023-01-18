@@ -20,7 +20,7 @@ class RhAhb5MstMonitor extends RhMonitorBase;
 	RhuDebugger debug;
 	`uvm_component_utils_begin(RhAhb5MstMonitor)
 	`uvm_component_utils_end
-	extern virtual task waitResetStateChanged(output RhResetState_enum s);
+	extern virtual task waitResetStateChanged(input RhResetState_enum c,output RhResetState_enum s);
 	extern virtual task mainProcess();
 	extern local task reqMonitor();
 	extern local function void __reqSelfCheck__(RhAhb5ReqTrans act);
@@ -35,8 +35,8 @@ class RhAhb5MstMonitor extends RhMonitorBase;
 	extern virtual task run_phase(uvm_phase phase);
 	extern virtual function void write_selfcheckExp(RhAhb5ReqTrans _tr);
 endclass
-task RhAhb5MstMonitor::waitResetStateChanged(output RhResetState_enum s);
-	logic sig;
+task RhAhb5MstMonitor::waitResetStateChanged(input RhResetState_enum c,output RhResetState_enum s);
+	logic sig = logic'(c);
 	config.getResetChanged(sig);
 	s = RhResetState_enum'(sig);
 endtask

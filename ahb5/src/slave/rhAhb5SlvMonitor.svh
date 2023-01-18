@@ -4,15 +4,15 @@
 class RhAhb5SlvMonitor #(type REQ=uvm_sequence_item,RSP=REQ) extends RhMonitorBase;
 
 	// request control phase port
-	uvm_analysis_port reqCtrlP;
+	uvm_analysis_port#(REQ) reqCtrlP;
 	// request data phase port, only available for write data
-	uvm_analysis_port reqDataP;
+	uvm_analysis_port#(REQ) reqDataP;
 
 	// response info, for read request, contains:
 	// - data, resp, exokay
 	// for write:
 	// - resp, exokay
-	uvm_analysis_port rspP;
+	uvm_analysis_port#(RSP) rspP;
 
 	int outstandings= 0;
 	RhAhb5SlvConfig config;

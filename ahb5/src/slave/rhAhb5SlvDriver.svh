@@ -1,7 +1,7 @@
 `ifndef rhAhb5SlvDriver__svh
 `define rhAhb5SlvDriver__svh
 
-class RhAhb5SlvDriver #(type REQ=uvm_sequence_item,RSP=REQ) extends RhDriverBase#(REQ,RSP);
+class RhAhb5SlvDriver #(type REQ=RhAhb5ReqTrans,RSP=RhAhb5RspTrans) extends RhDriverBase#(REQ,RSP);
 	`uvm_analysis_imp_decl(_reqCtrl)
 
 	RhuDebugger debug; // object from agent
@@ -10,7 +10,7 @@ class RhAhb5SlvDriver #(type REQ=uvm_sequence_item,RSP=REQ) extends RhDriverBase
 	RhAhb5ResponderBase responder;
 	uvm_event#(REQ) reqEvent;
 
-	uvm_analysis_imp_reqCtrl#(REQ) reqCtrlI;
+	uvm_analysis_imp_reqCtrl#(REQ,RhAhb5SlvDriver) reqCtrlI;
 
 	`uvm_component_utils(RhAhb5SlvDriver#(REQ,RSP))
 
@@ -61,7 +61,7 @@ task RhAhb5SlvDriver::__customResponder__; // ##{{{
 		if (RhAhb5Resp_enum'(rsp.resp)==RHAHB5_OKAY) begin
 			`debugCall("get resp=>RHAHB5_OKAY",__sendOkayResponse__(rsp))
 		end else begin
-			`debugCall($sformatf("get resp=>%s",rsp.resp.name()),__sendErrorResponse__(rsp))
+			`debugCall($sformatf("get resp=>%s",RhAhb5Resp_enum'(rsp.resp)),__sendErrorResponse__(rsp))
 		end
 	end
 endtask // ##}}}

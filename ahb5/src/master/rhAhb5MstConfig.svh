@@ -10,7 +10,7 @@
 /************************************************************************************/
 
 class RhAhb5MstConfig extends RhAhb5ConfigBase;
-	RhAhb5IfControlBase ifCtrl;
+	// RhAhb5IfControlBase ifCtrl;
 	string interfacePath;
 	`uvm_object_utils_begin(RhAhb5MstConfig)
 	`uvm_object_utils_end

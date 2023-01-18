@@ -21,7 +21,7 @@ class RhAhb5MstAgent extends uvm_agent;
 	`uvm_component_utils_end
 	extern virtual function void build_phase(uvm_phase phase);
 	extern function RhAhb5MstConfig createConfig(string name);
-	extern local function void __setupConfigureTable__();
+	// extern local function void __setupConfigureTable__();
 	extern function void setupSubComponents();
 	extern virtual function void connect_phase(uvm_phase phase);
 	extern function  new(string name="RhAhb5MstAgent",uvm_component parent=null);
@@ -31,17 +31,18 @@ function void RhAhb5MstAgent::build_phase(uvm_phase phase);
 	super.build_phase(phase);
 	reqP = new("reqP",this);
 	rspP = new("rspP",this);
-	__setupConfigureTable__();
+	// __setupConfigureTable__();
 	setupSubComponents();
+	debug.updateChildren(this);
 endfunction
 function RhAhb5MstConfig RhAhb5MstAgent::createConfig(string name);
 	config = RhAhb5MstConfig::type_id::create(name);
 	return config;
 endfunction
-function void RhAhb5MstAgent::__setupConfigureTable__();
-	if (!uvm_config_db#(RhAhb5IfControlBase)::get(null,"*",config.interfacePath,config.ifCtrl))
-		`uvm_fatal("NIFC","no interface controller get")
-endfunction
+//function void RhAhb5MstAgent::__setupConfigureTable__();
+//	if (!uvm_config_db#(RhAhb5IfControlBase)::get(null,"*",config.interfacePath,config.ifCtrl))
+//		`uvm_fatal("NIFC","no interface controller get")
+//endfunction
 function void RhAhb5MstAgent::setupSubComponents();
 	if (is_active==UVM_ACTIVE) begin
 		drv = RhAhb5MstDriver::type_id::create("drv",this);

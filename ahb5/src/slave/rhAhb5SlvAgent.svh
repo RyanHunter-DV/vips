@@ -3,14 +3,15 @@
 
 class RhAhb5SlvAgent extends uvm_agent;
 
-	parameter REQ=RhAhb5ReqTrans;
-	parameter RSP=RhAhb5RspTrans;
+	parameter type REQ=RhAhb5ReqTrans;
+	parameter type RSP=RhAhb5RspTrans;
 
 	RhAhb5SlvDriver#(REQ,RSP) drv;
 	RhAhb5SlvMonitor#(REQ,RSP) mon;
 	RhAhb5SlvSeqr#(REQ,RSP) seqr;
 	RhAhb5ResponderBase  responder;
 	RhuDebugger debug;
+	RhAhb5SlvConfig config;
 
 	`uvm_component_utils_begin(RhAhb5SlvAgent)
 		`uvm_field_object(drv,UVM_ALL_ON)
@@ -20,7 +21,6 @@ class RhAhb5SlvAgent extends uvm_agent;
 
 	function new(string name="RhAhb5SlvAgent",uvm_component parent=null);
 		super.new(name,parent);
-		debug = new(this,"component");
 	endfunction
 	extern function void build_phase (uvm_phase phase);
 	extern function void connect_phase (uvm_phase phase);

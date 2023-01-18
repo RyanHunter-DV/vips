@@ -2,8 +2,10 @@
 `uvm_analysis_imp_decl(_mstRspImp)
 class MasterEnv extends uvm_env;
 
-	RhAhb5MstAgent mst;
-	RhAhb5MstConfig config;
+	// RhAhb5MstAgent mst;
+	RhAhb5Vip ahb;
+	// RhAhb5MstConfig config;
+	RhAhb5ConfigBase config;
 	RhuDebugger debug;
 
 
@@ -33,15 +35,14 @@ endfunction
 
 function void MasterEnv::connect_phase(uvm_phase phase);
 	super.connect_phase(phase);
-	mst.reqP.connect(reqI);
-	mst.rspP.connect(rspI);
+	ahb.mst.reqP.connect(reqI);
+	ahb.mst.rspP.connect(rspI);
 endfunction
 
 function void MasterEnv::build_phase(uvm_phase phase); // {
 	super.build_phase(phase);
-	mst   = RhAhb5MstAgent::type_id::create("mst",this);
-	config= mst.createConfig("mstConfig");
-	config.interfacePath="top.ifCtrl";
-	reqI=new("mst.reqI",this);
-	rspI=new("mst.rspI",this);
+	ahb   = RhAhb5Vip::type_id::create("ahb",this);
+	config= ahb.createConfig(RHAHB5_MASTER,"top.ifCtrl");
+	reqI=new("ahb.reqI",this);
+	rspI=new("ahb.rspI",this);
 endfunction // }

@@ -34,28 +34,28 @@ function void RhAhb5SlvConfig::__setupDefaults__(); // ##{{{
 endfunction // ##}}}
 function int RhAhb5SlvConfig::lowDurationMin(string name); // ##{{{
 	if (!lowDurationMins.exists(name)) begin
-		`uvm_error("CFGE",$sformat("attempt to get lowDurationMin(%s), which not configured",name))
+		`uvm_error("CFGE",$sformatf("attempt to get lowDurationMin(%s), which not configured",name))
 		return 0;
 	end
 	return lowDurationMins[name];
 endfunction // ##}}}
 function int RhAhb5SlvConfig::lowDurationMax(string name); // ##{{{
 	if (!lowDurationMaxs.exists(name)) begin
-		`uvm_error("CFGE",$sformat("attempt to get lowDurationMax(%s), which not configured",name))
+		`uvm_error("CFGE",$sformatf("attempt to get lowDurationMax(%s), which not configured",name))
 		return 0;
 	end
 	return lowDurationMaxs[name];
 endfunction // ##}}}
 function int RhAhb5SlvConfig::highDurationMin(string name); // ##{{{
 	if (!highDurationMins.exists(name)) begin
-		`uvm_error("CFGE",$sformat("attempt to get highDurationMin(%s), which not configured",name))
+		`uvm_error("CFGE",$sformatf("attempt to get highDurationMin(%s), which not configured",name))
 		return 0;
 	end
 	return highDurationMins[name];
 endfunction // ##}}}
 function int RhAhb5SlvConfig::highDurationMax(string name); // ##{{{
 	if (!highDurationMaxs.exists(name)) begin
-		`uvm_error("CFGE",$sformat("attempt to get highDurationMax(%s), which not configured",name))
+		`uvm_error("CFGE",$sformatf("attempt to get highDurationMax(%s), which not configured",name))
 		return 0;
 	end
 	return highDurationMaxs[name];

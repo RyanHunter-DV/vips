@@ -147,7 +147,7 @@ endtask
 task RhAhb5IfControl::__responseError__(output bit e);
 	do begin
 		@(posedge vif.HCLK);
-		e = vif.HRESP[0];
+		e = vif.HRESP;
 	end while (e==1'b0);
 endtask
 task RhAhb5IfControl::getResetChanged(output logic s);
@@ -198,7 +198,7 @@ function uvm_bitstream_t RhAhb5IfControl::getSignal(string signame);
 		"HADDR": return vif.HADDR;
 		"HSIZE": return vif.HSIZE;
 		"HBURST": return vif.HBURST;
-		"HLOCK": return vif.HLOCK;
+		"HMASTLOCK": return vif.HMASTLOCK;
 		"HREADY": return vif.HREADY;
 		"HWRITE": return vif.HWRITE;
 		"HPROT" : return vif.HPROT;
