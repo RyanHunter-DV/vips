@@ -1,3 +1,6 @@
 component :MasterTests do
 	fileset 'masterTestPkg.sv'
 end
+component :omosTests do
+	fileset 'omosTestPkg.sv'
+end

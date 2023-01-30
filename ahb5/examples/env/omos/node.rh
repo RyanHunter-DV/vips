@@ -1,0 +1,4 @@
+## omos is short for one master one slave
+component :omosEnv do
+	fileset 'omosEnvPkg.sv'
+end

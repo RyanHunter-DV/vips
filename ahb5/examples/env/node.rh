@@ -1,3 +1,4 @@
+rhload 'omos/node'
 component :masterEnv do
 	fileset 'masterEnvPkg.sv'
 end

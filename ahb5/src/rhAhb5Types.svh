@@ -50,7 +50,7 @@ typedef enum {
 	RHAHB5_SLAVE
 } RhAhb5MS_t;
 
-typedef enum bit[1:0] {
+typedef enum bit {
 	RHAHB5_OKAY = 1'b0,
 	RHAHB5_ERROR= 1'b1
 } RhAhb5Resp_enum;

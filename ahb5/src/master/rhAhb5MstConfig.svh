@@ -16,7 +16,6 @@ class RhAhb5MstConfig extends RhAhb5ConfigBase;
 	`uvm_object_utils_end
 	extern task sendAddressPhase(RhAhb5TransBeat b,int outstanding);
 	extern task sendDataPhase(RhAhb5TransBeat b,output isError);
-	extern task getResetChanged(output logic s);
 	extern function uvm_bitstream_t getSignal(string signame);
 	extern task waitCycle(int c=1);
 	extern task driveIdleBeat(int cycle=1,int os);
@@ -30,9 +29,6 @@ task RhAhb5MstConfig::sendDataPhase(RhAhb5TransBeat b,output isError);
 	if (b.write)
 		ifCtrl.driveDataPhase(b,isError);
 	else ifCtrl.waitDataPhase(b,isError);
-endtask
-task RhAhb5MstConfig::getResetChanged(output logic s);
-	ifCtrl.getResetChanged(s);
 endtask
 function uvm_bitstream_t RhAhb5MstConfig::getSignal(string signame);
 	return ifCtrl.getSignal(signame);

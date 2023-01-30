@@ -4,7 +4,7 @@
 class RhAhb5ResponderBase #(type REQ=RhAhb5ReqTrans,RSP=RhAhb5RspTrans) extends uvm_object;
 	
 	RhuDebugger debug;
-	`uvm_object_utils(RhAhb5ResponderBase);
+	`uvm_object_utils(RhAhb5ResponderBase#(REQ,RSP));
 
 	function new(string name = "RhAhb5ResponderBase");
 		super.new(name);
@@ -16,6 +16,7 @@ class RhAhb5ResponderBase #(type REQ=RhAhb5ReqTrans,RSP=RhAhb5RspTrans) extends 
 endclass
 function void RhAhb5ResponderBase::addUserResponseFields(ref RSP rsp,input REQ req); // ##{{{
 	`uvm_warning("generateResponse","generate response in base responder is not suppose to happend")
+	`debug("in addUserResponseFields, nothing added")
 endfunction // ##}}}
 function RSP RhAhb5ResponderBase::generateResponse(REQ req); // ##{{{
 	RSP rsp = new("rsp");

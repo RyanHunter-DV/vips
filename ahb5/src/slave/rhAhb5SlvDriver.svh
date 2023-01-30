@@ -17,15 +17,30 @@ class RhAhb5SlvDriver #(type REQ=RhAhb5ReqTrans,RSP=RhAhb5RspTrans) extends RhDr
 	function new(string name="RhAhb5SlvDriver",uvm_component parent=null);
 		super.new(name,parent);
 	endfunction
-	extern virtual function void build_phase (uvm_phase phase);
-	extern virtual function void connect_phase (uvm_phase phase);
+
 	extern virtual task mainProcess();
-	extern function void write_reqCtrl(REQ _tr);
+
+	// method group: random responses ##{{{
+	// abstract: randomly drive the hrdata and hready by fields in config table,
+	// which can be specified by user before the driving begins.
+	// FIXME, hresp always kept OKAY, by version: v1.x
 	extern local task __randomResponder__;
+	// ##}}}
+
+	// method group: custom responses ##{{{
 	extern local task __customResponder__;
 	extern local task __sendOkayResponse__ (RSP rsp);
-	extern local task __sendErrorResponse__ (RSP rsp);
+	extern local task __sendErrorResponse__(RSP rsp);
 	extern local task __driveBusyCycles__ (int cycle);
+	// ##}}}
+
+	// phases ##{{{
+	extern virtual function void build_phase (uvm_phase phase);
+	extern virtual function void connect_phase (uvm_phase phase);
+	// ##}}}
+
+	extern function void write_reqCtrl(REQ _tr);
+
 endclass
 
 //-----------------------CLASS BODY-----------------------//
@@ -61,8 +76,10 @@ task RhAhb5SlvDriver::__customResponder__; // ##{{{
 		if (RhAhb5Resp_enum'(rsp.resp)==RHAHB5_OKAY) begin
 			`debugCall("get resp=>RHAHB5_OKAY",__sendOkayResponse__(rsp))
 		end else begin
-			`debugCall($sformatf("get resp=>%s",RhAhb5Resp_enum'(rsp.resp)),__sendErrorResponse__(rsp))
+			RhAhb5Resp_enum _resp = rsp.resp;
+			`debugCall($sformatf("get resp=>%s",_resp.name()),__sendErrorResponse__(rsp))
 		end
+		`debug("custom responder processed done, start next loop, waiting request event")
 	end
 endtask // ##}}}
 task RhAhb5SlvDriver::__sendErrorResponse__(RSP rsp);
@@ -80,6 +97,7 @@ task RhAhb5SlvDriver::__sendOkayResponse__(RSP rsp);
 	`debug($sformatf("slave drive response,HREADY=>1,HRESP=>%0h,HEXOKAY=>%0h",rsp.resp,rsp.exokay))
 	if (!rsp.iswrite) begin
 		`debug($sformatf("is read request,drive HRDATA=>%0d",rsp.rdata))
+		void'(config.ifCtrl.HRDATA(rsp.rdata));
 	end
 	void'(config.ifCtrl.HREADY(1));
 	void'(config.ifCtrl.HRESP(rsp.resp));

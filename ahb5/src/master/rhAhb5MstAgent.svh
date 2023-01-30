@@ -9,9 +9,12 @@
 // dir structure in Git/Obsidian/...
 /************************************************************************************/
 
-class RhAhb5MstAgent extends uvm_agent;
-	uvm_analysis_export #(RhAhb5ReqTrans) reqP;
-	uvm_analysis_export #(RhAhb5RspTrans) rspP;
+class RhAhb5MstAgent#(type REQ=RhAhb5ReqTrans,RSP=RhAhb5RspTrans)
+	extends uvm_agent;
+
+	uvm_analysis_export #(REQ) reqCtrlP;
+	uvm_analysis_export #(REQ) reqDataP;
+	uvm_analysis_export #(RSP) rspP;
 	RhAhb5MstDriver  drv;
 	RhAhb5MstMonitor mon;
 	RhAhb5MstSeqr    seqr;
@@ -20,7 +23,7 @@ class RhAhb5MstAgent extends uvm_agent;
 	`uvm_component_utils_begin(RhAhb5MstAgent)
 	`uvm_component_utils_end
 	extern virtual function void build_phase(uvm_phase phase);
-	extern function RhAhb5MstConfig createConfig(string name);
+	// tobe deleted, extern function RhAhb5MstConfig createConfig(string name);
 	// extern local function void __setupConfigureTable__();
 	extern function void setupSubComponents();
 	extern virtual function void connect_phase(uvm_phase phase);
@@ -29,22 +32,24 @@ class RhAhb5MstAgent extends uvm_agent;
 endclass
 function void RhAhb5MstAgent::build_phase(uvm_phase phase);
 	super.build_phase(phase);
-	reqP = new("reqP",this);
+	reqCtrlP = new("reqCtrlP",this);
+	reqDataP = new("reqDataP",this);
 	rspP = new("rspP",this);
 	// __setupConfigureTable__();
 	setupSubComponents();
 	debug.updateChildren(this);
 endfunction
-function RhAhb5MstConfig RhAhb5MstAgent::createConfig(string name);
-	config = RhAhb5MstConfig::type_id::create(name);
-	return config;
-endfunction
+//tobe deleted, function RhAhb5MstConfig RhAhb5MstAgent::createConfig(string name);
+//tobe deleted, 	config = RhAhb5MstConfig::type_id::create(name);
+//tobe deleted, 	return config;
+//tobe deleted, endfunction
 //function void RhAhb5MstAgent::__setupConfigureTable__();
 //	if (!uvm_config_db#(RhAhb5IfControlBase)::get(null,"*",config.interfacePath,config.ifCtrl))
 //		`uvm_fatal("NIFC","no interface controller get")
 //endfunction
 function void RhAhb5MstAgent::setupSubComponents();
 	if (is_active==UVM_ACTIVE) begin
+		`debug("this master agent is active building")
 		drv = RhAhb5MstDriver::type_id::create("drv",this);
 		drv.config = config;
 		drv.debug  = debug;
@@ -57,11 +62,13 @@ endfunction
 function void RhAhb5MstAgent::connect_phase(uvm_phase phase);
 	super.connect_phase(phase);
 	if (is_active==UVM_ACTIVE) begin
+		`debug("this master agent is active connecting")
 		mon.resetP.connect(drv.resetI);
 		drv.seq_item_port.connect(seqr.seq_item_export);
 		drv.reqP.connect(mon.reqI);
 	end
-	mon.reqP.connect(reqP);
+	mon.reqP.connect(reqCtrlP);
+	mon.wreqP.connect(reqDataP);
 	mon.rspP.connect(rspP);
 endfunction
 function  RhAhb5MstAgent::new(string name="RhAhb5MstAgent",uvm_component parent=null);
