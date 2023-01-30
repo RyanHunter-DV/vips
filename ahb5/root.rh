@@ -9,7 +9,12 @@ context :selfTest do
 	component :masterEnv
 	component :masterTB
 	component :MasterTests
-
 	config :masterOnly
 	test :masterBaseTest
+
+	component :omosEnv
+	component :omosTests
+	component :omosTB
+	config :omos
+	test :omosSanityTest
 end

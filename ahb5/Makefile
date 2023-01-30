@@ -1,8 +1,9 @@
-conf := :masterOnly
-test := :masterBaseTest
-xbuild:
+conf := :omos
+test := :omosSanityTest
+build:
 	simf -e 'xcelium.build(${conf})'
-
+comp:
+	simf -e 'xcelium.compile(${test})'
 run:
 	simf -e 'xcelium.run(${test})'
 sim:
