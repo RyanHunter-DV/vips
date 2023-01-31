@@ -40,7 +40,7 @@ class RhAhb5ReqTrans extends RhAhb5TransBase;
 		`uvm_field_int(excl,UVM_ALL_ON)
 		`uvm_field_int(master,UVM_ALL_ON)
 		`uvm_field_int(write,UVM_ALL_ON)
-		`uvm_field_int(delay,UVM_ALL_ON)
+		`uvm_field_int(delay,UVM_ALL_ON|UVM_NOCOMPARE)
 		`uvm_field_int(trans,UVM_ALL_ON)
 		`uvm_field_int(wdata,UVM_ALL_ON)
 	`uvm_object_utils_end

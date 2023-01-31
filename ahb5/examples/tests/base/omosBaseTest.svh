@@ -35,6 +35,8 @@ endfunction // ##}}}
 task omosBaseTest::run_phase(uvm_phase phase); // ##{{{
 	phase.raise_objection(this);
 	`uvm_info(get_type_name(),"starting run_phase ...",UVM_NONE)
+	#100ns;
+	`uvm_info(get_type_name(),$sformatf("mst's seqr: %0d",env.mst.seqr),UVM_LOW)
 	test_sim();
 	#200ns;
 	`uvm_info(get_type_name(),"finishing run_phase ...",UVM_NONE)

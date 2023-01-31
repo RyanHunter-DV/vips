@@ -82,8 +82,7 @@ task RhAhb5MstDriver::startSeqProcess();
 		REQ _reqClone;
 		seq_item_port.try_next_item(req);
 		if (req==null) begin
-			`debug("driving idle beat")
-			__sendIdleBeat__();
+			`debugCall("driving idle beat",__sendIdleBeat__())
 			seq_item_port.get_next_item(req);
 		end
 		$cast(_reqClone,req.clone());
@@ -116,6 +115,7 @@ task RhAhb5MstDriver::__sendIdleBeat__();
 	beat.nonsec= 0;
 	beat.excl  = 0;
 	// @RyanH assume this drive will not take any sim time.
+	`debug($sformatf("idle beat:\n%p",beat))
 	config.sendAddressPhase(beat,0);
 endtask
 function void RhAhb5MstDriver::convertTransToBeats(REQ tr,ref RhAhb5TransBeat beat);

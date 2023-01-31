@@ -80,39 +80,46 @@ endfunction
 task RhAhb5MstMonitor::__waitRequestValid();
 	bit done = 1'b0;
 	do begin
-		if (config.getSignal("HTRANS") && config.getSignal("HREADY")) done = 1'b1;
+		// if (config.getSignal("HTRANS") && config.getSignal("HREADY")) done = 1'b1;
+		if (config.ifCtrl.HTRANS && config.ifCtrl.HREADY) done = 1'b1;
 		else config.waitCycle();
 	end while (!done);
 endtask
 function void RhAhb5MstMonitor::__collectAddressPhaseInfo(ref RhAhb5ReqTrans r);
-	r.trans = config.getSignal("HTRANS");
-	r.burst = config.getSignal("HBURST");
-	r.addr  = config.getSignal("HADDR");
-	r.size  = config.getSignal("HSIZE");
-	r.prot  = config.getSignal("HPROT");
-	r.master= config.getSignal("HMASTER");
-	r.lock  = config.getSignal("HLOCK");
-	r.write = config.getSignal("HWRITE");
+	r.trans = config.ifCtrl.HTRANS;
+	r.burst = config.ifCtrl.HBURST;
+	r.addr  = config.ifCtrl.HADDR;
+	r.size  = config.ifCtrl.HSIZE;
+	r.prot  = config.ifCtrl.HPROT;
+	r.master= config.ifCtrl.HMASTER;
+	r.lock  = config.ifCtrl.HMASTLOCK;
+	r.write = config.ifCtrl.HWRITE;
+	r.nonsec= config.ifCtrl.HNONSEC;
+	r.excl  = config.ifCtrl.HEXCL;
 endfunction
 task RhAhb5MstMonitor::__collectWriteData(ref RhAhb5ReqTrans r);
 	config.waitCycle();
-	r.wdata = config.getSignal("HWDATA");
+	// r.wdata = config.getSignal("HWDATA");
+	r.wdata = config.ifCtrl.HWDATA;
 endtask
 task RhAhb5MstMonitor::rspMonitor();
 	forever begin
 		RhAhb5RspTrans rsp=new("rsp");
 		wait(reqWriteInfo.size()); // need wait last cycle has request.
 		__waitReadyHigh();
-		rsp.resp = config.getSignal("HRESP");
+		// rsp.resp = config.getSignal("HRESP");
+		rsp.resp = config.ifCtrl.HRESP;
 		rsp.iswrite = reqWriteInfo.pop_front();
-		if (rsp.iswrite==0 && rsp.resp==0) rsp.rdata = config.getSignal("HRDATA");
+		// if (rsp.iswrite==0 && rsp.resp==0) rsp.rdata = config.getSignal("HRDATA");
+		if (rsp.iswrite==0 && rsp.resp==0) rsp.rdata = config.ifCtrl.HRDATA;
 		rspP.write(rsp);
 	end
 endtask
 task RhAhb5MstMonitor::__waitReadyHigh();
 	bit done=1'b0;
 	while (!done) begin
-		done = (config.getSignal("HREADY")[0]==1'b1)? 1'b1 : 1'b0;
+		// done = (config.getSignal("HREADY")[0]==1'b1)? 1'b1 : 1'b0;
+		done = (config.ifCtrl.HREADY==1'b1)? 1'b1 : 1'b0;
 	end
 endtask
 function void RhAhb5MstMonitor::build_phase(uvm_phase phase);

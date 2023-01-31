@@ -46,6 +46,7 @@ function void RhAhb5Vip::connect_phase(uvm_phase phase); // ##{{{
 		mst.reqCtrlP.connect(reqCtrlP);
 		mst.reqDataP.connect(reqDataP);
 		mst.rspP.connect(rspP);
+		`debugLine("setting master sequencer from the master agent",seqr = mst.seqr)
 	end else begin
 		`debug("current is slave mode, internal connecting with slave")
 		slv.reqCtrlP.connect(reqCtrlP);
@@ -58,7 +59,6 @@ function void RhAhb5Vip::build_phase(uvm_phase phase);
 	if (config.isMaster()) begin
 		mst = RhAhb5MstAgent#(REQ,RSP)::type_id::create("mst",this);
 		mst.debug = debug;
-		`debugCall("setting master sequencer from the master agent",seqr = mst.seqr)
 		$cast(mst.config,config);
 	end else begin
 		slv = RhAhb5SlvAgent#(REQ,RSP)::type_id::create("slv",this);

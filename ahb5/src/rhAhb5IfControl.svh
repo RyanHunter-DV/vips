@@ -31,6 +31,7 @@ class RhAhb5IfControl #( AW=32,DW=32) extends RhAhb5IfControlBase;
 	extern function logic HEXOKAY (logic val='bz);
 	extern virtual function logic[1:0] HTRANS   (logic[1:0] val='hz);
 	extern virtual function logic[3:0] HMASTER  (logic[3:0] val='hz);
+	extern virtual function logic[2:0] HBURST   (logic[2:0] val='hz);
 	extern virtual function logic[2:0] HSIZE    (logic[2:0] val='hz);
 	extern virtual function logic[7:0] HPROT    (logic[7:0] val='hz);
 	extern virtual function logic[`RHAHB5_DW_MAX-1:0] HWDATA(logic[`RHAHB5_DW_MAX-1:0] val='hz);
@@ -43,79 +44,83 @@ class RhAhb5IfControl #( AW=32,DW=32) extends RhAhb5IfControlBase;
 endclass
 
 function logic RhAhb5IfControl::HWRITE(logic val='bz); // ##{{{
-	if (val !== 'bz) vif.HWRITE = val;
+	if (val !== 1'bz) vif.HWRITE = val;
 	else return vif.HWRITE;
 endfunction // ##}}}
 function logic RhAhb5IfControl::HEXCL(logic val='bz); // ##{{{
-	if (val !== 'bz) vif.HEXCL = val;
+	if (val !== 1'bz) vif.HEXCL = val;
 	else return vif.HEXCL;
 endfunction // ##}}}
 function logic RhAhb5IfControl::HNONSEC(logic val='bz); // ##{{{
-	if (val !== 'bz) vif.HNONSEC = val;
+	if (val !== 1'bz) vif.HNONSEC = val;
 	else return vif.HNONSEC;
 endfunction // ##}}}
 function logic RhAhb5IfControl::HMASTLOCK(logic val='bz); // ##{{{
-	if (val !== 'bz) vif.HMASTLOCK = val;
+	if (val !== 1'bz) vif.HMASTLOCK = val;
 	else return vif.HMASTLOCK;
 endfunction // ##}}}
-function logic[`RHAHB5_AW_MAX-1:0] RhAhb5IfControl::HADDR(logic[`RHAHB5_AW_MAX:0] val='hz); // ##{{{
-	if (val !== 'hz) vif.HADDR = val[AW:0];
+function logic[2:0] RhAhb5IfControl::HBURST(logic[2:0] val='hz); // ##{{{
+	if (val !== 3'hz) vif.HBURST = val;
+	else return vif.HBURST;
+endfunction // ##}}}
+function logic[`RHAHB5_AW_MAX-1:0] RhAhb5IfControl::HADDR(logic[`RHAHB5_AW_MAX-1:0] val='hz); // ##{{{
+	if (val !== {`RHAHB5_AW_MAX{1'bz}}) vif.HADDR = val[AW-1:0];
 	else return vif.HADDR;
 endfunction // ##}}}
-function logic[`RHAHB5_DW_MAX-1:0] RhAhb5IfControl::HRDATA(logic[`RHAHB5_DW_MAX:0] val='hz); // ##{{{
+function logic[`RHAHB5_DW_MAX-1:0] RhAhb5IfControl::HRDATA(logic[`RHAHB5_DW_MAX-1:0] val='hz); // ##{{{
 	logic [`RHAHB5_DW_MAX-1:0] rtn='h0;
-	if (val !== 'hz) vif.HRDATA = val[DW-1:0];
-	else rtn = vif.HRDATA;
+	if (val !== {`RHAHB5_DW_MAX{1'bz}}) vif.HRDATA = val[DW-1:0];
+	else rtn[DW-1:0] = vif.HRDATA;
 	return rtn;
 endfunction // ##}}}
-function logic[`RHAHB5_DW_MAX-1:0] RhAhb5IfControl::HWDATA(logic[`RHAHB5_DW_MAX:0] val='hz); // ##{{{
+function logic[`RHAHB5_DW_MAX-1:0] RhAhb5IfControl::HWDATA(logic[`RHAHB5_DW_MAX-1:0] val='hz); // ##{{{
 	logic [`RHAHB5_DW_MAX-1:0] rtn='h0;
-	if (val !== 'hz) vif.HWDATA = val[DW-1:0];
-	else rtn = vif.HWDATA;
+	if (val !== {`RHAHB5_DW_MAX{1'bz}}) vif.HWDATA = val[DW-1:0];
+	else rtn[DW-1:0] = vif.HWDATA;
 	return rtn;
 endfunction // ##}}}
 function logic[7:0] RhAhb5IfControl::HPROT(logic[7:0] val='hz); // ##{{{
-	if (val !== 'hz) vif.HPROT = val;
+	if (val !== 8'hz) vif.HPROT = val;
 	else return vif.HPROT;
 endfunction // ##}}}
 function logic[2:0] RhAhb5IfControl::HSIZE(logic[2:0] val='hz); // ##{{{
-	if (val !== 'hz) vif.HSIZE = val;
+	if (val !== 3'hz) vif.HSIZE = val;
 	else return vif.HSIZE;
 endfunction // ##}}}
 function logic[3:0] RhAhb5IfControl::HMASTER(logic[3:0] val='hz); // ##{{{
-	if (val !== 'hz) vif.HMASTER = val;
+	if (val !== 4'hz) vif.HMASTER = val;
 	else return vif.HMASTER;
 endfunction // ##}}}
 function logic[1:0] RhAhb5IfControl::HTRANS(logic[1:0] val='hz); // ##{{{
-	if (val !== 'hz) vif.HTRANS = val;
-	else return vif.HTRANS;
+	if (val !== 2'hz) begin
+		vif.HTRANS = val;
+	end else return vif.HTRANS;
 endfunction // ##}}}
 function logic RhAhb5IfControl::HEXOKAY(logic val='bz); // ##{{{
-	if (val !== 'bz) vif.HEXOKAY = val;
+	if (val !== 1'bz) vif.HEXOKAY = val;
 	else return vif.HEXOKAY;
 endfunction // ##}}}
 function logic RhAhb5IfControl::HREADY(logic val='bz); // ##{{{
-	if (val !== 'bz) vif.HREADY = val;
+	if (val !== 1'bz) vif.HREADY = val;
 	else return vif.HREADY;
 endfunction // ##}}}
 function logic RhAhb5IfControl::HRESP(logic val='bz); // ##{{{
-	if (val !== 'bz) vif.HRESP = val;
+	if (val !== 1'bz) vif.HRESP = val;
 	else return vif.HRESP;
 endfunction // ##}}}
 task RhAhb5IfControl::driveAddressPhase(RhAhb5TransBeat b, bit waitReady);
 	bit[AW-1:0] addr = __calculateCurrentAddress__(b);
-	vif.HADDR  <= addr;
-	
-	vif.HTRANS <= b.trans;
-	
-	vif.HBURST <= b.burst;
-	vif.HWRITE <= b.write;
-	vif.HSIZE  <= b.size;
-	vif.HPROT  <= b.prot;
-	vif.HMASTLOCK <= b.lock;
-	vif.HMASTER <= b.master;
-	vif.HNONSEC <= b.nonsec;
-	vif.HEXCL   <= b.excl;
+	// line delay should be added here, if necessary.
+	HADDR     (addr);
+	HTRANS    (b.trans);
+	HBURST    (b.burst);
+	HWRITE    (b.write);
+	HSIZE     (b.size);
+	HPROT     (b.prot);
+	HMASTLOCK (b.lock);
+	HMASTER   (b.master);
+	HNONSEC   (b.nonsec);
+	HEXCL     (b.excl);
 	
 	if (waitReady) __waitHREADYSyncd__(1);
 	else begin

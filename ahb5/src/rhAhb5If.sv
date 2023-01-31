@@ -10,21 +10,42 @@
 /************************************************************************************/
 
 interface RhAhb5If #( AW=32,DW=32)(input logic HCLK,input logic HRESETN);
-	logic [AW-1:0] HADDR;
-	logic [1:0] HTRANS;
-	logic [2:0] HBURST;
-	logic [3:0] HMASTER;
-	logic [2:0] HSIZE;
-	logic [7:0] HPROT;
-	logic [DW-1:0] HWDATA;
-	logic HMASTLOCK;
-	logic HNONSEC;
-	logic HEXCL;
-	logic HWRITE;
-	logic HRESP;
-	logic [DW-1:0] HRDATA;
-	logic HREADY;
-	logic HEXOKAY;
+	// logic [AW-1:0] HADDR;
+	// logic [1:0] HTRANS;
+	// logic [2:0] HBURST;
+	// logic [3:0] HMASTER;
+	// logic [2:0] HSIZE;
+	// logic [7:0] HPROT;
+	// logic [DW-1:0] HWDATA;
+	// logic HMASTLOCK;
+	// logic HNONSEC;
+	// logic HEXCL;
+	// logic HWRITE;
+	// logic HRESP;
+	// logic [DW-1:0] HRDATA;
+	// logic HREADY;
+	// logic HEXOKAY;
+
+	// @RyanH, for tracing reset, the rhuDumper didn't support dumping input signals
+	`rhuLogicSignal(HRESETN_in,1)
+	assign HRESETN_in = HRESETN;
+
+	`rhuLogicSignal(HADDR,AW)
+	`rhuLogicSignal(HBURST,3)
+	`rhuLogicSignal(HTRANS,2)
+	`rhuLogicSignal(HMASTER,4)
+	`rhuLogicSignal(HSIZE,3)
+	`rhuLogicSignal(HPROT,8)
+	`rhuLogicSignal(HWDATA,DW)
+	`rhuLogicSignal(HMASTLOCK,1)
+	`rhuLogicSignal(HNONSEC,1)
+	`rhuLogicSignal(HEXCL,1)
+	`rhuLogicSignal(HWRITE,1)
+	`rhuLogicSignal(HRESP,1)
+	`rhuLogicSignal(HRDATA,DW)
+	`rhuLogicSignal(HREADY,1)
+	`rhuLogicSignal(HEXOKAY,1)
+	`rhuDumperPostProcess
 
 	class randomObject;
 		// set hrdata randomly
