@@ -50,8 +50,8 @@ endtask
 task RhAhb5MstMonitor::reqMonitor();
 	forever begin
 		RhAhb5ReqTrans req=new("req");
-		__waitRequestValid();
-		__collectAddressPhaseInfo(req);
+		`debugCall("",__waitRequestValid())
+		`debugCall("",__collectAddressPhaseInfo(req))
 		reqWriteInfo.push_back(req.write);
 		`debug($sformatf("send packet to reqP\n%s",req.sprint()))
 		reqP.write(req);
@@ -65,7 +65,7 @@ task RhAhb5MstMonitor::reqMonitor();
 endtask
 function void RhAhb5MstMonitor::__reqSelfCheck__(RhAhb5ReqTrans act);
 	RhAhb5ReqTrans exp;
-	`debug("starting ...")
+	`debug("starting self checking ...")
 	if (expReqQue.size()==0) begin
 		`uvm_fatal("SELFCHECK","no expected transaction should be sent by this VIP")
 		return;
@@ -79,9 +79,15 @@ function void RhAhb5MstMonitor::__reqSelfCheck__(RhAhb5ReqTrans act);
 endfunction
 task RhAhb5MstMonitor::__waitRequestValid();
 	bit done = 1'b0;
+	string _file;int _line;
+	`caller0(_file,_line)
+	`debug($sformatf("__waitRequestValid called by(%0s,%0d)",_file,_line))
 	do begin
 		// if (config.getSignal("HTRANS") && config.getSignal("HREADY")) done = 1'b1;
-		if (config.ifCtrl.HTRANS && config.ifCtrl.HREADY) done = 1'b1;
+		logic[1:0] htrans = config.ifCtrl.HTRANS;
+		//for debug, `debug($sformatf("monitored HTRANS: %bb",htrans))
+		// if ((htrans==1||htrans==2||htrans==3) && config.ifCtrl.HREADY===1) done = 1'b1;
+		if ((htrans==1||htrans==2||htrans==3)) done = 1'b1;
 		else config.waitCycle();
 	end while (!done);
 endtask
@@ -106,9 +112,9 @@ task RhAhb5MstMonitor::rspMonitor();
 	forever begin
 		RhAhb5RspTrans rsp=new("rsp");
 		wait(reqWriteInfo.size()); // need wait last cycle has request.
-		__waitReadyHigh();
-		// rsp.resp = config.getSignal("HRESP");
-		rsp.resp = config.ifCtrl.HRESP;
+		`debugCall("rspMonitor: waiting for ready high",__waitReadyHigh())
+		rsp.resp  = config.ifCtrl.HRESP;
+		rsp.exokay= config.ifCtrl.HEXOKAY;
 		rsp.iswrite = reqWriteInfo.pop_front();
 		// if (rsp.iswrite==0 && rsp.resp==0) rsp.rdata = config.getSignal("HRDATA");
 		if (rsp.iswrite==0 && rsp.resp==0) rsp.rdata = config.ifCtrl.HRDATA;
@@ -119,7 +125,8 @@ task RhAhb5MstMonitor::__waitReadyHigh();
 	bit done=1'b0;
 	while (!done) begin
 		// done = (config.getSignal("HREADY")[0]==1'b1)? 1'b1 : 1'b0;
-		done = (config.ifCtrl.HREADY==1'b1)? 1'b1 : 1'b0;
+		done = (config.ifCtrl.HREADY===1'b1)? 1'b1 : 1'b0;
+		config.ifCtrl.clock();
 	end
 endtask
 function void RhAhb5MstMonitor::build_phase(uvm_phase phase);

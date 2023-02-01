@@ -19,6 +19,7 @@ class RhAhb5RspTrans extends RhAhb5TransBase;
 	rand int busyCycle; 
 	`uvm_object_utils_begin(RhAhb5RspTrans)
 		`uvm_field_int(resp,UVM_ALL_ON)
+		`uvm_field_int(iswrite,UVM_ALL_ON)
 		`uvm_field_int(exokay,UVM_ALL_ON)
 		`uvm_field_int(rdata,UVM_ALL_ON)
 		`uvm_field_int(busyCycle,UVM_ALL_ON)

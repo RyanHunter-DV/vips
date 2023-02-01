@@ -14,6 +14,11 @@ class omosEnv extends uvm_env;
 	RhAhb5SlvConfig slvc;
 	RhuDebugger debug;
 
+	RhAhb5ReqTrans mstReq;
+	RhAhb5ReqTrans slvReq;
+	RhAhb5RspTrans mstRsp;
+	RhAhb5RspTrans slvRsp;
+
 	uvm_analysis_imp_mstReqImp    #(RhAhb5ReqTrans,omosEnv) mreqI;
 	uvm_analysis_imp_mstReqDataImp#(RhAhb5ReqTrans,omosEnv) mreqDataI;
 	uvm_analysis_imp_mstRspImp    #(RhAhb5RspTrans,omosEnv) mrspI;
@@ -44,22 +49,66 @@ class omosEnv extends uvm_env;
 endclass
 function void omosEnv::write_mstReqImp(RhAhb5ReqTrans _tr);
 	`uvm_info("GETTRANS",$sformatf("get master's reqCtrl tr:\n%s",_tr.sprint),UVM_LOW)
+	if (slvReq!=null) begin
+		if (!_tr.compare(slvReq)) begin
+			`uvm_error("CHECK","request trans compare failed")
+			`uvm_info("CHECK",$sformatf("master req:\n%s\nslave req:\n%s",_tr.sprint(),slvReq.sprint()),UVM_LOW)
+		end else begin
+			`uvm_info("CHECK","request compare success",UVM_LOW)
+		end
+		slvReq=null;
+	end else begin
+		mstReq=_tr;
+	end
 endfunction
 function void omosEnv::write_mstReqDataImp(RhAhb5ReqTrans _tr);
 	`uvm_info("GETTRANS",$sformatf("get master's reqData tr:\n%s",_tr.sprint),UVM_LOW)
 endfunction
 function void omosEnv::write_mstRspImp(RhAhb5RspTrans _tr);
 	`uvm_info("GETTRANS",$sformatf("get master's rsp tr:\n%s",_tr.sprint),UVM_LOW)
+	if (slvRsp!=null) begin
+		if (!_tr.compare(slvRsp)) begin
+			`uvm_error("CHECK","request trans compare failed")
+			`uvm_info("CHECK",$sformatf("master req:\n%s\nslave req:\n%s",_tr.sprint(),slvRsp.sprint()),UVM_LOW)
+		end else begin
+			`uvm_info("CHECK","response compare success",UVM_LOW)
+		end
+		slvRsp=null;
+	end else begin
+		mstRsp=_tr;
+	end
 endfunction
 
 function void omosEnv::write_slvReqImp(RhAhb5ReqTrans _tr);
 	`uvm_info("GETTRANS",$sformatf("get slave's reqCtrl tr:\n%s",_tr.sprint),UVM_LOW)
+	if (mstReq!=null) begin
+		if (!_tr.compare(mstReq)) begin
+			`uvm_error("CHECK","request trans compare failed")
+			`uvm_info("CHECK",$sformatf("master req:\n%s\nslave req:\n%s",_tr.sprint(),mstReq.sprint()),UVM_LOW)
+		end else begin
+			`uvm_info("CHECK","request compare success",UVM_LOW)
+		end
+		mstReq=null;
+	end else begin
+		slvReq = _tr;
+	end
 endfunction
 function void omosEnv::write_slvReqDataImp(RhAhb5ReqTrans _tr);
 	`uvm_info("GETTRANS",$sformatf("get slave's reqData tr:\n%s",_tr.sprint),UVM_LOW)
 endfunction
 function void omosEnv::write_slvRspImp(RhAhb5RspTrans _tr);
 	`uvm_info("GETTRANS",$sformatf("get slave's rsp tr:\n%s",_tr.sprint),UVM_LOW)
+	if (mstRsp!=null) begin
+		if (!_tr.compare(mstRsp)) begin
+			`uvm_error("CHECK","request trans compare failed")
+			`uvm_info("CHECK",$sformatf("master req:\n%s\nslave req:\n%s",_tr.sprint(),mstRsp.sprint()),UVM_LOW)
+		end else begin
+			`uvm_info("CHECK","response compare success",UVM_LOW)
+		end
+		mstRsp=null;
+	end else begin
+		slvRsp=_tr;
+	end
 endfunction
 
 function void omosEnv::build_phase(uvm_phase phase); // ##{{{

@@ -52,6 +52,9 @@ task RhAhb5SlvDriver::__randomResponder__; // ##{{{
 		int max = config.lowDurationMax("HREADY");
 		lowDuration = $urandom_range(max,min);
 		`debug($sformatf("drive HREADY=1'b0 for %0d cycles",lowDuration))
+		`debug("driving slave response by random mode, in this mode, HRESP/HEXOKAY are always 0")
+		config.ifCtrl.HRESP(1'b0);
+		config.ifCtrl.HEXOKAY(1'b0);
 		config.ifCtrl.HREADY(1'b0);
 		config.ifCtrl.clock(lowDuration);
 

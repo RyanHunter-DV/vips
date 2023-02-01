@@ -63,12 +63,14 @@ function void RhAhb5SlvAgent::build_phase(uvm_phase phase);
 	mon.debug = debug;
 	mon.config= config;
 	`debugCall("call to init local fields",__localFieldsInitial__)
+	debug.updateChildren(this);
 endfunction
 function void RhAhb5SlvAgent::connect_phase(uvm_phase phase);
 	super.connect_phase(phase);
 	if (is_active==UVM_ACTIVE) begin
 		drv.seq_item_port.connect(seqr.seq_item_export);
 		mon.reqCtrlP.connect(drv.reqCtrlI);
+		mon.resetP.connect(drv.resetI);
 	end
 	mon.reqCtrlP.connect(reqCtrlP);
 	mon.reqDataP.connect(reqDataP);
