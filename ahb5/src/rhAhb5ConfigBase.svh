@@ -9,6 +9,7 @@ class RhAhb5ConfigBase extends uvm_object;
 	bit active = 1'b0;
 
 	RhAhb5IfControlBase ifCtrl;
+	RhuDebugger debug;
 
 	`uvm_object_utils_begin(RhAhb5ConfigBase)
 		`uvm_field_int(master,UVM_ALL_ON)
@@ -24,9 +25,13 @@ class RhAhb5ConfigBase extends uvm_object;
 	extern function void getInterface(string ifpath);
 	extern function bit isActive();
 	extern function bit isMaster();
+	extern function void setupDebug (uvm_component obj);
 	// extern task sync(string signal,logic[`RHAHB5_DW_MAX-1:0] target);
 	extern task getResetChanged(output logic s);
 endclass
+function void RhAhb5ConfigBase::setupDebug(uvm_component obj); // ##{{{
+	debug = new(obj);
+endfunction // ##}}}
 task RhAhb5ConfigBase::getResetChanged(output logic s);
 	ifCtrl.getResetChanged(s);
 endtask

@@ -9,7 +9,7 @@
 // dir structure in Git/Obsidian/...
 /************************************************************************************/
 
-class RhAhb5SingleBurstSeq extends uvm_sequence;
+class RhAhb5SingleBurstSeq extends RhAhb5SeqBase;
 	rand bit[2:0] __size;
 	rand bit[3:0] __prot;
 	rand bit [`RHAHB5_AW_MAX-1:0] __addr;
@@ -20,7 +20,6 @@ class RhAhb5SingleBurstSeq extends uvm_sequence;
 	rand bit [`RHAHB5_DW_MAX-1:0] __wdata;
 	rand bit __write;
 	rand int __delay;
-	RhuDebugger debug;
 	// TODO
 	`uvm_object_utils_begin(RhAhb5SingleBurstSeq)
 		`uvm_field_int(__size,UVM_ALL_ON)
@@ -49,14 +48,13 @@ task RhAhb5SingleBurstSeq::body();
 		write == __write ;
 	// @RyanH	delay == __delay ;
 	};
-	`debug($sformatf("start item:\n%s",_req.sprint()))
+	// `rhudbg($sformatf("start item:\n%s",_req.sprint()))
 	start_item(_req);
-	`debug($sformatf("item(%0d) finished",_req.get_inst_id()))
+	// `rhudbg($sformatf("item(%0d) finished",_req.get_inst_id()))
 	finish_item(_req);
 endtask
 function  RhAhb5SingleBurstSeq::new(string name="RhAhb5SingleBurstSeq");
 	super.new(name);
-	debug = new(this,"object");
 endfunction
 
 `endif

@@ -19,7 +19,6 @@ class RhAhb5MstAgent#(type REQ=RhAhb5ReqTrans,RSP=RhAhb5RspTrans)
 	RhAhb5MstMonitor mon;
 	RhAhb5MstSeqr    seqr;
 	RhAhb5MstConfig  config;
-	RhuDebugger      debug;
 	`uvm_component_utils_begin(RhAhb5MstAgent)
 	`uvm_component_utils_end
 	extern virtual function void build_phase(uvm_phase phase);
@@ -37,7 +36,6 @@ function void RhAhb5MstAgent::build_phase(uvm_phase phase);
 	rspP = new("rspP",this);
 	// __setupConfigureTable__();
 	setupSubComponents();
-	debug.updateChildren(this);
 endfunction
 //tobe deleted, function RhAhb5MstConfig RhAhb5MstAgent::createConfig(string name);
 //tobe deleted, 	config = RhAhb5MstConfig::type_id::create(name);
@@ -49,20 +47,18 @@ endfunction
 //endfunction
 function void RhAhb5MstAgent::setupSubComponents();
 	if (is_active==UVM_ACTIVE) begin
-		`debug("this master agent is active building")
+		`rhudbg("this master agent is active building")
 		drv = RhAhb5MstDriver::type_id::create("drv",this);
 		drv.config = config;
-		drv.debug  = debug;
 		seqr= RhAhb5MstSeqr::type_id::create("seqr",this);
 	end
 	mon = RhAhb5MstMonitor::type_id::create("mon",this);
 	mon.config = config;
-	mon.debug  = debug;
 endfunction
 function void RhAhb5MstAgent::connect_phase(uvm_phase phase);
 	super.connect_phase(phase);
 	if (is_active==UVM_ACTIVE) begin
-		`debug("this master agent is active connecting")
+		`rhudbg("this master agent is active connecting")
 		mon.resetP.connect(drv.resetI);
 		drv.seq_item_port.connect(seqr.seq_item_export);
 		drv.reqP.connect(mon.reqI);
@@ -73,7 +69,6 @@ function void RhAhb5MstAgent::connect_phase(uvm_phase phase);
 endfunction
 function  RhAhb5MstAgent::new(string name="RhAhb5MstAgent",uvm_component parent=null);
 	super.new(name,parent);
-	debug = new(this,"component");
 endfunction
 task RhAhb5MstAgent::run_phase(uvm_phase phase);
 	super.run_phase(phase);

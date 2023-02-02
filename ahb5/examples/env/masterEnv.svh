@@ -30,13 +30,13 @@ class MasterEnv extends uvm_env;
 endclass
 
 function void MasterEnv::write_mstReqImp(RhAhb5ReqTrans _tr);
-	`debug($sformatf("get reqCtrl tr:\n%s",_tr.sprint))
+	// `debug($sformatf("get reqCtrl tr:\n%s",_tr.sprint))
 endfunction
 function void MasterEnv::write_mstReqDataImp(RhAhb5ReqTrans _tr);
-	`debug($sformatf("get reqData tr:\n%s",_tr.sprint))
+	// `debug($sformatf("get reqData tr:\n%s",_tr.sprint))
 endfunction
 function void MasterEnv::write_mstRspImp(RhAhb5RspTrans _tr);
-	`debug($sformatf("get rsp tr:\n%s",_tr.sprint))
+	// `debug($sformatf("get rsp tr:\n%s",_tr.sprint))
 endfunction
 
 function void MasterEnv::connect_phase(uvm_phase phase);

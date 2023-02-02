@@ -11,7 +11,6 @@ class RhAhb5SlvAgent #(type REQ=RhAhb5ReqTrans,RSP=RhAhb5RspTrans)
 	RhAhb5SlvMonitor#(REQ,RSP) mon;
 	RhAhb5SlvSeqr#(REQ,RSP) seqr;
 	RhAhb5ResponderBase  responder;
-	RhuDebugger debug;
 	RhAhb5SlvConfig config;
 
 	uvm_analysis_export#(REQ) reqCtrlP;
@@ -51,19 +50,16 @@ function void RhAhb5SlvAgent::__setupActiveComponent__(); // ##{{{
 	drv  = RhAhb5SlvDriver#(REQ,RSP)::type_id::create("drv",this);
 	seqr = RhAhb5SlvSeqr#(REQ,RSP)::type_id::create("seqr",this);
 	responder = RhAhb5ResponderBase#(REQ,RSP)::type_id::create("responder");
-	drv.debug = debug;
+	responder.config = config;
 	drv.config= config;
-	// seqr.debug = debug;
 	drv.responder = responder;
 endfunction // ##}}}
 function void RhAhb5SlvAgent::build_phase(uvm_phase phase);
 	super.build_phase(phase);
-	if (is_active==UVM_ACTIVE) `debugCall("agent is active",__setupActiveComponent__)
+	if (is_active==UVM_ACTIVE) `rhudbgCall("agent is active",__setupActiveComponent__)
 	mon = RhAhb5SlvMonitor#(REQ,RSP)::type_id::create("mon",this);
-	mon.debug = debug;
 	mon.config= config;
-	`debugCall("call to init local fields",__localFieldsInitial__)
-	debug.updateChildren(this);
+	`rhudbgCall("call to init local fields",__localFieldsInitial__)
 endfunction
 function void RhAhb5SlvAgent::connect_phase(uvm_phase phase);
 	super.connect_phase(phase);

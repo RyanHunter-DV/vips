@@ -17,7 +17,6 @@ class RhAhb5MstMonitor extends RhMonitorBase;
 	RhAhb5MstConfig config;
 	bit reqWriteInfo[$];
 	RhAhb5ReqTrans expReqQue[$];
-	RhuDebugger debug;
 	`uvm_component_utils_begin(RhAhb5MstMonitor)
 	`uvm_component_utils_end
 	extern virtual task waitResetStateChanged(input RhResetState_enum c,output RhResetState_enum s);
@@ -50,14 +49,14 @@ endtask
 task RhAhb5MstMonitor::reqMonitor();
 	forever begin
 		RhAhb5ReqTrans req=new("req");
-		`debugCall("",__waitRequestValid())
-		`debugCall("",__collectAddressPhaseInfo(req))
+		`rhudbgCall("",__waitRequestValid())
+		`rhudbgCall("",__collectAddressPhaseInfo(req))
 		reqWriteInfo.push_back(req.write);
-		`debug($sformatf("send packet to reqP\n%s",req.sprint()))
+		`rhudbg($sformatf("send packet to reqP\n%s",req.sprint()))
 		reqP.write(req);
 		if (req.write==1) begin
 			__collectWriteData(req);
-			`debug($sformatf("send packet to wreqP,with wdata\n%s",req.sprint()))
+			`rhudbg($sformatf("send packet to wreqP,with wdata\n%s",req.sprint()))
 			wreqP.write(req);
 		end else config.waitCycle();
 		__reqSelfCheck__(req);
@@ -65,7 +64,7 @@ task RhAhb5MstMonitor::reqMonitor();
 endtask
 function void RhAhb5MstMonitor::__reqSelfCheck__(RhAhb5ReqTrans act);
 	RhAhb5ReqTrans exp;
-	`debug("starting self checking ...")
+	`rhudbg("starting self checking ...")
 	if (expReqQue.size()==0) begin
 		`uvm_fatal("SELFCHECK","no expected transaction should be sent by this VIP")
 		return;
@@ -74,18 +73,18 @@ function void RhAhb5MstMonitor::__reqSelfCheck__(RhAhb5ReqTrans act);
 	if (exp.compare(act))
 		`uvm_fatal("SELFCHECK",$sformatf("driver/monitor req compare failed, trans to be sent is\n%s\ntrans collected is\n%s",exp.sprint(),act.sprint()))
 	else
-		`debug("driver/monitor req compare passed, driver has sent an expected transaction")
+		`rhudbg("driver/monitor req compare passed, driver has sent an expected transaction")
 	return;
 endfunction
 task RhAhb5MstMonitor::__waitRequestValid();
 	bit done = 1'b0;
 	string _file;int _line;
 	`caller0(_file,_line)
-	`debug($sformatf("__waitRequestValid called by(%0s,%0d)",_file,_line))
+	`rhudbg($sformatf("__waitRequestValid called by(%0s,%0d)",_file,_line))
 	do begin
 		// if (config.getSignal("HTRANS") && config.getSignal("HREADY")) done = 1'b1;
 		logic[1:0] htrans = config.ifCtrl.HTRANS;
-		//for debug, `debug($sformatf("monitored HTRANS: %bb",htrans))
+		//for debug, `rhudbg($sformatf("monitored HTRANS: %bb",htrans))
 		// if ((htrans==1||htrans==2||htrans==3) && config.ifCtrl.HREADY===1) done = 1'b1;
 		if ((htrans==1||htrans==2||htrans==3)) done = 1'b1;
 		else config.waitCycle();
@@ -112,7 +111,7 @@ task RhAhb5MstMonitor::rspMonitor();
 	forever begin
 		RhAhb5RspTrans rsp=new("rsp");
 		wait(reqWriteInfo.size()); // need wait last cycle has request.
-		`debugCall("rspMonitor: waiting for ready high",__waitReadyHigh())
+		`rhudbgCall("rspMonitor: waiting for ready high",__waitReadyHigh())
 		rsp.resp  = config.ifCtrl.HRESP;
 		rsp.exokay= config.ifCtrl.HEXOKAY;
 		rsp.iswrite = reqWriteInfo.pop_front();
@@ -146,7 +145,7 @@ task RhAhb5MstMonitor::run_phase(uvm_phase phase);
 	super.run_phase(phase);
 endtask
 function void RhAhb5MstMonitor::write_selfcheckExp(RhAhb5ReqTrans _tr);
-	`debug($sformatf("get the exp req:\n%s",_tr.sprint()))
+	`rhudbg($sformatf("get the exp req:\n%s",_tr.sprint()))
 	expReqQue.push_back(_tr);
 endfunction
 

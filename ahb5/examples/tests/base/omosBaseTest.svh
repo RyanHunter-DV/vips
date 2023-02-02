@@ -25,9 +25,14 @@ task omosBaseTest::test_sim();
 endtask
 
 function void omosBaseTest::build_phase(uvm_phase phase); // ##{{{
+	// omosEnvConfig eConfig;
 	super.build_phase(phase);
 	//TODO,add code here
 	env = omosEnv::type_id::create("env",this);
+	void'(env.createConfig());
+	env.setDebugComp("mst");
+	env.setDebugComp("slv");
+	env.setDebugComp("env");
 endfunction // ##}}}
 function void omosBaseTest::connect_phase(uvm_phase phase); // ##{{{
 	super.connect_phase(phase);

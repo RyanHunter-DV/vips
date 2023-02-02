@@ -15,7 +15,6 @@ class RhAhb5MstDriver #( type REQ=RhAhb5ReqTrans,RSP=RhAhb5RspTrans) extends RhD
 	RhAhb5TransBeat addressQue[$];
 	RhAhb5TransBeat dataQue[$];
 	int outstandingData;
-	RhuDebugger debug;
 
 	`uvm_component_utils_begin(RhAhb5MstDriver#(REQ,RSP))
 	`uvm_component_utils_end
@@ -37,7 +36,7 @@ task RhAhb5MstDriver::startAddressPhaseThread();
 		RhAhb5TransBeat beat;
 		wait(addressQue.size());
 		beat = addressQue.pop_front();
-		`debug($sformatf("driving beat:\n%p",beat))
+		`rhudbg($sformatf("driving beat:\n%p",beat))
 		config.sendAddressPhase(beat,outstandingData);
 		dataQue.push_back(beat);
 		outstandingData++;
@@ -82,7 +81,7 @@ task RhAhb5MstDriver::startSeqProcess();
 		REQ _reqClone;
 		seq_item_port.try_next_item(req);
 		if (req==null) begin
-			`debugCall("driving idle beat",__sendIdleBeat__())
+			`rhudbgCall("driving idle beat",__sendIdleBeat__())
 			seq_item_port.get_next_item(req);
 		end
 		$cast(_reqClone,req.clone());
@@ -115,7 +114,7 @@ task RhAhb5MstDriver::__sendIdleBeat__();
 	beat.nonsec= 0;
 	beat.excl  = 0;
 	// @RyanH assume this drive will not take any sim time.
-	`debug($sformatf("idle beat:\n%p",beat))
+	`rhudbg($sformatf("idle beat:\n%p",beat))
 	config.sendAddressPhase(beat,0);
 endtask
 function void RhAhb5MstDriver::convertTransToBeats(REQ tr,ref RhAhb5TransBeat beat);

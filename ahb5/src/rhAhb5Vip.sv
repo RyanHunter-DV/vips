@@ -33,19 +33,25 @@ package RhAhb5Vip;
 	`include "master/rhAhb5MstDriver.svh"
 	`include "master/rhAhb5MstMonitor.svh"
 	`include "master/rhAhb5MstAgent.svh"
-	`include "seqlib/rhAhb5SingleBurstSeq.svh"
+
 
 	// slave
-	`include "slave/rhAhb5ResponderBase.svh"
 	`include "slave/rhAhb5SlvConfig.svh"
+	`include "slave/rhAhb5ResponderBase.svh"
 	`include "slave/rhAhb5SlvSeqr.svh"
 	`include "slave/rhAhb5SlvDriver.svh"
 	`include "slave/rhAhb5SlvMonitor.svh"
 	`include "slave/rhAhb5SlvAgent.svh"
 
+	// seqlib
+	`include "seqlib/rhAhb5SeqBase.svh"
+	`include "seqlib/rhAhb5SingleBurstSeq.svh"
 
 	// top env
 	`include "rhAhb5Vip.svh"
+
+
+
 endpackage
 
 `endif
