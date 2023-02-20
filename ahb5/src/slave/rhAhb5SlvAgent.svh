@@ -66,6 +66,7 @@ function void RhAhb5SlvAgent::connect_phase(uvm_phase phase);
 	if (is_active==UVM_ACTIVE) begin
 		drv.seq_item_port.connect(seqr.seq_item_export);
 		mon.reqCtrlP.connect(drv.reqCtrlI);
+		mon.reqDataP.connect(drv.reqDataI);
 		mon.resetP.connect(drv.resetI);
 	end
 	mon.reqCtrlP.connect(reqCtrlP);
