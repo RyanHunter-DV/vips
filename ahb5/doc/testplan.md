@@ -9,7 +9,7 @@ This testplan is for VIP feature verification, and each of passed test/env can b
 	- with delay
 **checker**
 - protocol checker, using assertion in interface
-- compare req and rsp collected by master monitor and slave monitor
+- compare req and rsp collected by master monitor and slave monitor, automatically enabled in env level.
 - compare transactions from test and with master monitor
 	- transactions in test level created by user and sent to VIP, [[#exp transaction by test, example]]
 
@@ -34,7 +34,10 @@ This is the one master one slave environment, for VIP version 1.x, we only teste
 
 
 # Tests
+## RhAhb5BaseTest
+[[RhAhb5BaseTest]]
 ## RhAhb5SingleTest
+[[RhAhb5SingleTest]]
 **stimulus**
 - int testloop, 100 by default, can be configured by plusargs
 - for each testloop, do following
