@@ -46,6 +46,7 @@ package RhAhb5Vip;
 	// seqlib
 	`include "seqlib/rhAhb5SeqBase.svh"
 	`include "seqlib/rhAhb5SingleBurstSeq.svh"
+	`include "seqlib/rhAhb5IncrBurstSeq.svh"
 	`include "seqlib/rhAhb5Incr4BurstSeq.svh"
 
 	// top env

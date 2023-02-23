@@ -36,7 +36,7 @@ task RhAhb5MstDriver::startAddressPhaseThread();
 		RhAhb5TransBeat beat;
 		wait(addressQue.size());
 		beat = addressQue.pop_front();
-		`rhudbg($sformatf("driving beat:\n%p",beat))
+		`rhudbg($sformatf("driving beat to address phase:\n%p",beat))
 		config.sendAddressPhase(beat,outstandingData);
 		dataQue.push_back(beat);
 		outstandingData++;
@@ -56,7 +56,15 @@ task RhAhb5MstDriver::startDataPhaseThread();
 	end
 endtask
 task RhAhb5MstDriver::processDelay(input int cycle);
-	config.waitCycle(cycle);
+	bit processidle = 1'b0;
+	if (outstandingData==0) `rhudbgCall("driving idle beat",__sendIdleBeat__())
+	else processidle=1'b1;
+	for (int i=0;i<cycle;i++) begin
+		config.waitCycle(1);
+		if (processidle) begin
+			if (outstandingData==0) `rhudbgCall("driving idle beat",__sendIdleBeat__())
+		end
+	end
 endtask
 task RhAhb5MstDriver::processError();
 	dataQue.delete();
@@ -85,6 +93,7 @@ task RhAhb5MstDriver::startSeqProcess();
 			seq_item_port.get_next_item(req);
 		end
 		$cast(_reqClone,req.clone());
+		`rhudbg($sformatf("sending exp trans to monitor:\n%s",_reqClone.sprint()))
 		reqP.write(_reqClone); // send to monitor for self check
 		processDelay(req.delay);
 		// @RyanH,TODO, to be deleted, splitTransToBeats(req,beats);

@@ -129,8 +129,8 @@ function void omosEnv::write_slvRspImp(RhAhb5RspTrans _tr);
 	`uvm_info("GETTRANS",$sformatf("get slave's rsp tr:\n%s",_tr.sprint),UVM_LOW)
 	if (mstRsp!=null) begin
 		if (!_tr.compare(mstRsp)) begin
-			`uvm_error("CHECK","request trans compare failed")
-			`uvm_info("CHECK",$sformatf("master req:\n%s\nslave req:\n%s",_tr.sprint(),mstRsp.sprint()),UVM_LOW)
+			`uvm_error("CHECK","rspuest trans compare failed")
+			`uvm_info("CHECK",$sformatf("master rsp:\n%s\nslave rsp:\n%s",mstRsp.sprint(),_tr.sprint()),UVM_LOW)
 		end else begin
 			`uvm_info("CHECK","response compare success",UVM_LOW)
 		end

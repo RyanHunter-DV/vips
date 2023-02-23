@@ -18,4 +18,5 @@ context :selfTest do
 	config :omos
 	test :omosSanityTest
 	test :omosIncr4Test
+	test :omosIncrTest
 end

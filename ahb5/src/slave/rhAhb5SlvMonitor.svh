@@ -82,9 +82,11 @@ task RhAhb5SlvMonitor::reqCtrlMonitor(); // ##{{{
 		req.excl  = config.ifCtrl.HEXCL();
 		req.write = config.ifCtrl.HWRITE();
 		req.master= config.ifCtrl.HMASTER();
+		req.stime = $time;
 		if (req.write===1'b1) `rhudbgCall("write request detected, trigger writeReqEvent",writeReqEvent.trigger(req))
 		`rhudbg($sformatf("collecting request by monitor:\n%s",req.sprint()))
 		reqEvent.trigger(req); // for triggering rspMonitor
+		req.etime =$time;
 		reqCtrlP.write(req);
 		`rhudbgCall($sformatf("do outstandings increment, current value(%0d)",outstandings),outstandings++)
 	end
@@ -101,6 +103,7 @@ task RhAhb5SlvMonitor::reqDataMonitor(); // ##{{{
 	req.copy(lastTr);
 	req.wdata = config.ifCtrl.HWDATA();
 	`rhudbg($sformatf("collecting full write request transaction, with wdata:\n%s",req.sprint()))
+	req.etime = $time; // flush etime
 	reqDataP.write(req);
 	// `rhudbgCall($sformatf("outstandings decrement, current value(%0d)",outstandings),outstandings--)
 endtask // ##}}}
@@ -116,11 +119,13 @@ task RhAhb5SlvMonitor::rspMonitor(); // ##{{{
 	while (config.ifCtrl.HREADY()!== 1'b1)
 		`rhudbgCall("in rspMonitor, waiting HREADY=>1",config.ifCtrl.clock(1))
 	rsp = new("rspTr");
+	rsp.stime = $time;
 	rsp.iswrite = lastTr.write;
 	rsp.exokay  = config.ifCtrl.HEXOKAY();
 	rsp.resp    = config.ifCtrl.HRESP();
 	if (lastTr.write===1'b0) rsp.rdata = config.ifCtrl.HRDATA();
 	`rhudbg($sformatf("collecting response transaction:\n%s",rsp.sprint()))
+	rsp.etime = $time;
 	rspP.write(rsp);
 	`rhudbgCall($sformatf("outstandings current value(%0d), decreasing to(%0d)",outstandings,outstandings-1),outstandings--)
 endtask // ##}}}

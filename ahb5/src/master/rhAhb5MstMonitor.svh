@@ -53,19 +53,24 @@ task RhAhb5MstMonitor::reqMonitor();
 		`rhudbgCall("",__waitRequestValid())
 		`rhudbgCall("",__collectAddressPhaseInfo(req))
 		reqWriteInfo.push_back(req.write);
-		`rhudbg($sformatf("send packet to reqP\n%s",req.sprint()))
+		`rhudbg($sformatf("monitored address phase trans:\n%s",req.sprint()))
+		req.etime = $time;
 		reqP.write(req);
 		if (req.write==1) begin
 			__collectWriteData(req);
-			`rhudbg($sformatf("send packet to wreqP,with wdata\n%s",req.sprint()))
+			`rhudbg($sformatf("write trans, monitored data phase:\n%s",req.sprint()))
+			req.etime = $time; // flush time for write data
 			wreqP.write(req);
-		end else config.waitCycle();
+		end else begin
+			config.waitCycle();
+		end
+		wait(reqWriteInfo.size()<=1);
 		__reqSelfCheck__(req);
 	end
 endtask
 function void RhAhb5MstMonitor::__reqSelfCheck__(REQ act);
 	REQ exp;
-	`rhudbg("starting self checking ...")
+	`rhudbg($sformatf("starting self checking,get act:\n%s ...",act.sprint))
 	if (expReqQue.size()==0) begin
 		`uvm_fatal("SELFCHECK","no expected transaction should be sent by this VIP")
 		return;
@@ -102,6 +107,7 @@ function void RhAhb5MstMonitor::__collectAddressPhaseInfo(ref REQ r);
 	r.write = config.ifCtrl.HWRITE;
 	r.nonsec= config.ifCtrl.HNONSEC;
 	r.excl  = config.ifCtrl.HEXCL;
+	r.stime = $time;
 endfunction
 task RhAhb5MstMonitor::__collectWriteData(ref REQ r);
 	config.waitCycle();
@@ -116,8 +122,10 @@ task RhAhb5MstMonitor::rspMonitor();
 		rsp.resp  = config.ifCtrl.HRESP;
 		rsp.exokay= config.ifCtrl.HEXOKAY;
 		rsp.iswrite = reqWriteInfo.pop_front();
+		rsp.stime = $time;
 		// if (rsp.iswrite==0 && rsp.resp==0) rsp.rdata = config.getSignal("HRDATA");
 		if (rsp.iswrite==0 && rsp.resp==0) rsp.rdata = config.ifCtrl.HRDATA;
+		rsp.etime = $time;
 		rspP.write(rsp);
 	end
 endtask

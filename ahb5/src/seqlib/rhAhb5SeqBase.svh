@@ -20,6 +20,15 @@ class RhAhb5SeqBase extends uvm_sequence;
 	
 	`uvm_object_utils_begin(RhAhb5SeqBase);
 		`uvm_field_int(__size,UVM_ALL_ON)
+		`uvm_field_int(__prot,UVM_ALL_ON)
+		`uvm_field_int(__addr,UVM_ALL_ON)
+		`uvm_field_int(__lock,UVM_ALL_ON)
+		`uvm_field_int(__nonsec,UVM_ALL_ON)
+		`uvm_field_int(__excl,UVM_ALL_ON)
+		`uvm_field_int(__master,UVM_ALL_ON)
+		`uvm_field_int(__wdata,UVM_ALL_ON)
+		`uvm_field_int(__write,UVM_ALL_ON)
+		`uvm_field_int(__delay,UVM_ALL_ON)
 	`uvm_object_utils_end
 
 	function new(string name = "RhAhb5SeqBase");

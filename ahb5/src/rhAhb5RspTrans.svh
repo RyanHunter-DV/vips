@@ -17,12 +17,15 @@ class RhAhb5RspTrans extends RhAhb5TransBase;
 	// indicates how many cycles the slave drives the
 	// HREADY to low
 	rand int busyCycle; 
+	time stime,etime;
 	`uvm_object_utils_begin(RhAhb5RspTrans)
 		`uvm_field_int(resp,UVM_ALL_ON)
 		`uvm_field_int(iswrite,UVM_ALL_ON)
 		`uvm_field_int(exokay,UVM_ALL_ON)
 		`uvm_field_int(rdata,UVM_ALL_ON)
 		`uvm_field_int(busyCycle,UVM_ALL_ON)
+		`uvm_field_real(stime,UVM_ALL_ON|UVM_NOCOMPARE)
+		`uvm_field_real(etime,UVM_ALL_ON|UVM_NOCOMPARE)
 	`uvm_object_utils_end
 	extern function  new(string name="RhAhb5RspTrans");
 endclass

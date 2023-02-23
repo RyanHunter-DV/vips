@@ -9,5 +9,6 @@ package omosTestPkg;
 	`include "omosBaseTest.svh"
 	`include "omosSingleTest.svh"
 	`include "omosIncr4Test.svh"
+	`include "omosIncrTest.svh"
 endpackage
 `endif
