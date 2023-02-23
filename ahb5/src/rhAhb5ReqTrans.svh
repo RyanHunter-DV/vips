@@ -48,6 +48,7 @@ class RhAhb5ReqTrans extends RhAhb5TransBase;
 endclass
 function  RhAhb5ReqTrans::new(string name="RhAhb5ReqTrans");
 	super.new(name);
+	// wdata = 'h0; // init
 endfunction
 
 `endif

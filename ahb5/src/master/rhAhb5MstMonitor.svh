@@ -9,30 +9,31 @@
 // dir structure in Git/Obsidian/...
 /************************************************************************************/
 
-class RhAhb5MstMonitor extends RhMonitorBase;
-	uvm_analysis_port #(RhAhb5ReqTrans) reqP;
-	uvm_analysis_port #(RhAhb5ReqTrans) wreqP;
+class RhAhb5MstMonitor#(type REQ=RhAhb5ReqTrans) extends RhMonitorBase;
+	uvm_analysis_port #(REQ) reqP;
+	uvm_analysis_port #(REQ) wreqP;
 	uvm_analysis_port #(RhAhb5RspTrans) rspP;
-	uvm_analysis_imp_selfcheckExp #(RhAhb5ReqTrans,RhAhb5MstMonitor) reqI;
+	uvm_analysis_imp_selfcheckExp #(REQ,RhAhb5MstMonitor) reqI;
 	RhAhb5MstConfig config;
 	bit reqWriteInfo[$];
-	RhAhb5ReqTrans expReqQue[$];
+	REQ expReqQue[$];
 	`uvm_component_utils_begin(RhAhb5MstMonitor)
 	`uvm_component_utils_end
 	extern virtual task waitResetStateChanged(input RhResetState_enum c,output RhResetState_enum s);
 	extern virtual task mainProcess();
 	extern local task reqMonitor();
-	extern local function void __reqSelfCheck__(RhAhb5ReqTrans act);
+	extern local function void __reqSelfCheck__(REQ act);
 	extern local task __waitRequestValid();
-	extern local function void __collectAddressPhaseInfo(ref RhAhb5ReqTrans r);
-	extern local task __collectWriteData(ref RhAhb5ReqTrans r);
+	extern local function void __collectAddressPhaseInfo(ref REQ r);
+	extern local task __collectWriteData(ref REQ r);
 	extern local task rspMonitor();
 	extern local task __waitReadyHigh();
+	// extern local task __protocolCheck__ (REQ _tr);
 	extern virtual function void build_phase(uvm_phase phase);
 	extern function  new(string name="RhAhb5MstMonitor",uvm_component parent=null);
 	extern virtual function void connect_phase(uvm_phase phase);
 	extern virtual task run_phase(uvm_phase phase);
-	extern virtual function void write_selfcheckExp(RhAhb5ReqTrans _tr);
+	extern virtual function void write_selfcheckExp(REQ _tr);
 endclass
 task RhAhb5MstMonitor::waitResetStateChanged(input RhResetState_enum c,output RhResetState_enum s);
 	logic sig = logic'(c);
@@ -48,7 +49,7 @@ task RhAhb5MstMonitor::mainProcess();
 endtask
 task RhAhb5MstMonitor::reqMonitor();
 	forever begin
-		RhAhb5ReqTrans req=new("req");
+		REQ req=new("req");
 		`rhudbgCall("",__waitRequestValid())
 		`rhudbgCall("",__collectAddressPhaseInfo(req))
 		reqWriteInfo.push_back(req.write);
@@ -62,8 +63,8 @@ task RhAhb5MstMonitor::reqMonitor();
 		__reqSelfCheck__(req);
 	end
 endtask
-function void RhAhb5MstMonitor::__reqSelfCheck__(RhAhb5ReqTrans act);
-	RhAhb5ReqTrans exp;
+function void RhAhb5MstMonitor::__reqSelfCheck__(REQ act);
+	REQ exp;
 	`rhudbg("starting self checking ...")
 	if (expReqQue.size()==0) begin
 		`uvm_fatal("SELFCHECK","no expected transaction should be sent by this VIP")
@@ -71,9 +72,9 @@ function void RhAhb5MstMonitor::__reqSelfCheck__(RhAhb5ReqTrans act);
 	end
 	exp = expReqQue.pop_front();
 	if (exp.compare(act))
-		`uvm_fatal("SELFCHECK",$sformatf("driver/monitor req compare failed, trans to be sent is\n%s\ntrans collected is\n%s",exp.sprint(),act.sprint()))
+		`uvm_fatal("SELFCHECK",$sformatf("driver/monitor req compare FAILED, trans to be sent is\n%s\ntrans collected is\n%s",exp.sprint(),act.sprint()))
 	else
-		`rhudbg("driver/monitor req compare passed, driver has sent an expected transaction")
+		`rhudbg($sformatf("driver/monitor req compare PASSED, driver has sent an expected transaction\n%s",act.sprint()))
 	return;
 endfunction
 task RhAhb5MstMonitor::__waitRequestValid();
@@ -90,7 +91,7 @@ task RhAhb5MstMonitor::__waitRequestValid();
 		else config.waitCycle();
 	end while (!done);
 endtask
-function void RhAhb5MstMonitor::__collectAddressPhaseInfo(ref RhAhb5ReqTrans r);
+function void RhAhb5MstMonitor::__collectAddressPhaseInfo(ref REQ r);
 	r.trans = config.ifCtrl.HTRANS;
 	r.burst = config.ifCtrl.HBURST;
 	r.addr  = config.ifCtrl.HADDR;
@@ -102,7 +103,7 @@ function void RhAhb5MstMonitor::__collectAddressPhaseInfo(ref RhAhb5ReqTrans r);
 	r.nonsec= config.ifCtrl.HNONSEC;
 	r.excl  = config.ifCtrl.HEXCL;
 endfunction
-task RhAhb5MstMonitor::__collectWriteData(ref RhAhb5ReqTrans r);
+task RhAhb5MstMonitor::__collectWriteData(ref REQ r);
 	config.waitCycle();
 	// r.wdata = config.getSignal("HWDATA");
 	r.wdata = config.ifCtrl.HWDATA;
@@ -144,8 +145,19 @@ endfunction
 task RhAhb5MstMonitor::run_phase(uvm_phase phase);
 	super.run_phase(phase);
 endtask
-function void RhAhb5MstMonitor::write_selfcheckExp(RhAhb5ReqTrans _tr);
+
+// task RhAhb5MstMonitor::__protocolCheck__(REQ _tr);
+// 	// wait config.ifCtrl.HTRANS == RHAHB5_NONSEQ
+// 	REQ _c = new("tr");
+// 	do
+// 		config.ifCtrl.clock();
+// 	while (config.ifCtrl.HTRANS!==RHAHB5_NONSEQ);
+// 
+// endtask
+
+function void RhAhb5MstMonitor::write_selfcheckExp(REQ _tr);
 	`rhudbg($sformatf("get the exp req:\n%s",_tr.sprint()))
+	// fork __protocolCheck__(_tr); join_none
 	expReqQue.push_back(_tr);
 endfunction
 

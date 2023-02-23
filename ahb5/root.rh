@@ -17,4 +17,5 @@ context :selfTest do
 	component :omosTB
 	config :omos
 	test :omosSanityTest
+	test :omosIncr4Test
 end

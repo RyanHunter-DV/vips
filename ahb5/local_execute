@@ -1,1 +1,1 @@
-rjob -x local 'cd vips/ahb5;bootenv default 0;make run'
+rjob -x local 'cd vips/ahb5;bootenv default 0;make run test=omosIncr4Test'

@@ -15,7 +15,7 @@ class omosBaseTest extends uvm_test;
 	extern virtual function void connect_phase(uvm_phase phase);
 	extern virtual task run_phase(uvm_phase phase);
 	// ##}}}
-	extern task test_sim ();
+	extern virtual task test_sim ();
 endclass
 
 task omosBaseTest::test_sim();

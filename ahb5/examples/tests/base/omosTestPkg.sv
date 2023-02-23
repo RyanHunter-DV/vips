@@ -7,5 +7,7 @@ package omosTestPkg;
 	import omosEnvPkg::*;
 
 	`include "omosBaseTest.svh"
+	`include "omosSingleTest.svh"
+	`include "omosIncr4Test.svh"
 endpackage
 `endif
