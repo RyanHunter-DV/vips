@@ -18,35 +18,47 @@ class RhAhb5MstDriver #( type REQ=RhAhb5ReqTrans,RSP=RhAhb5RspTrans) extends RhD
 
 	`uvm_component_utils_begin(RhAhb5MstDriver#(REQ,RSP))
 	`uvm_component_utils_end
-	extern task startAddressPhaseThread();
-	extern task startDataPhaseThread();
+	extern task addressPhaseStart();
+	extern task dataPhaseStart();
 	extern task processDelay(input int cycle);
 	extern task processError();
+	extern task waitReadyHigh();
 	extern virtual function void build_phase(uvm_phase phase);
 	extern virtual task mainProcess();
-	extern task startSeqProcess();
+	extern task seqProcessStart();
 	extern local task __sendIdleBeat__();
 	extern function void convertTransToBeats(REQ tr,ref RhAhb5TransBeat beat);
 	extern function  new(string name="RhAhb5MstDriver",uvm_component parent=null);
 	extern virtual function void connect_phase(uvm_phase phase);
 	extern virtual task run_phase(uvm_phase phase);
 endclass
-task RhAhb5MstDriver::startAddressPhaseThread();
+task RhAhb5MstDriver::addressPhaseStart();
 	forever begin
 		RhAhb5TransBeat beat;
-		wait(addressQue.size());
+		// wait(addressQue.size());
+		while (addressQue.size()==0) begin
+			__sendIdleBeat__;
+			config.ifCtrl.clock();
+		end
 		beat = addressQue.pop_front();
 		`rhudbg($sformatf("driving beat to address phase:\n%p",beat))
+		// sendAddressPhase will wait high if outstanding>0, or will wait one
+		// cycle if htrans!=0
 		config.sendAddressPhase(beat,outstandingData);
-		dataQue.push_back(beat);
+		// if (outstandingData)  waitReadyHigh();
+		// else config.ifCtrl.clock();
 		outstandingData++;
 	end
 endtask
-task RhAhb5MstDriver::startDataPhaseThread();
+task RhAhb5MstDriver::dataPhaseStart();
 	forever begin
 		RhAhb5TransBeat beat;
 		bit isError;
-		wait(dataQue.size());
+		// wait(dataQue.size());
+		while (dataQue.size()==0) begin
+			beat.data='h0;
+			config.sendDataPhase(beat,isError);
+		end
 		beat = dataQue.pop_front();
 		config.sendDataPhase(beat,isError);
 		if (isError) begin
@@ -56,15 +68,16 @@ task RhAhb5MstDriver::startDataPhaseThread();
 	end
 endtask
 task RhAhb5MstDriver::processDelay(input int cycle);
-	bit processidle = 1'b0;
-	if (outstandingData==0) `rhudbgCall("driving idle beat",__sendIdleBeat__())
-	else processidle=1'b1;
-	for (int i=0;i<cycle;i++) begin
-		config.waitCycle(1);
-		if (processidle) begin
-			if (outstandingData==0) `rhudbgCall("driving idle beat",__sendIdleBeat__())
-		end
-	end
+	config.waitCycle(cycle);
+	// backup, bit processidle = 1'b0;
+	// backup, if (outstandingData==0) `rhudbgCall("driving idle beat",__sendIdleBeat__())
+	// backup, else processidle=1'b1;
+	// backup, for (int i=0;i<cycle;i++) begin
+	// backup, 	config.waitCycle(1);
+	// backup, 	if (processidle) begin
+	// backup, 		if (outstandingData==0) `rhudbgCall("driving idle beat",__sendIdleBeat__())
+	// backup, 	end
+	// backup, end
 endtask
 task RhAhb5MstDriver::processError();
 	dataQue.delete();
@@ -78,37 +91,51 @@ function void RhAhb5MstDriver::build_phase(uvm_phase phase);
 endfunction
 task RhAhb5MstDriver::mainProcess();
 	fork
-		startSeqProcess();
-		startAddressPhaseThread();
-		startDataPhaseThread();
+		seqProcessStart();
+		addressPhaseStart();
+		dataPhaseStart();
 	join
 endtask
-task RhAhb5MstDriver::startSeqProcess();
+task RhAhb5MstDriver::seqProcessStart();
 	forever begin
-		RhAhb5TransBeat beat;
-		REQ _reqClone;
-		seq_item_port.try_next_item(req);
-		if (req==null) begin
-			`rhudbgCall("driving idle beat",__sendIdleBeat__())
-			seq_item_port.get_next_item(req);
-		end
-		$cast(_reqClone,req.clone());
-		`rhudbg($sformatf("sending exp trans to monitor:\n%s",_reqClone.sprint()))
-		reqP.write(_reqClone); // send to monitor for self check
+		// REQ _reqClone;
+		seq_item_port.get_next_item(req);
+		// $cast(_reqClone,req.clone());
 		processDelay(req.delay);
-		// @RyanH,TODO, to be deleted, splitTransToBeats(req,beats);
-		// @RyanH,TODO, to be deleted, foreach (beats[i]) addressQue.push_back(beats[i]);
-		// @RyanH,TODO, to be deleted, wait (addressQue.size()==0); // only when this trans finished, can next coming in.
-	
-		// new added steps
 		convertTransToBeats(req,beat);
 		addressQue.push_back(beat);
-		// @RyanH wait(addressQue.size()==0);
-		// need wait at least one cycle before geting next sequence
 		config.waitCycle();
+		dataQue.push_back(beat);
 		seq_item_port.item_done();
 	end
 endtask
+// backup
+// backup, task RhAhb5MstDriver::seqProcessStart();
+// backup, 	forever begin
+// backup, 		RhAhb5TransBeat beat;
+// backup, 		REQ _reqClone;
+// backup, 		seq_item_port.try_next_item(req);
+// backup, 		if (req==null) begin
+// backup, 			`rhudbgCall("driving idle beat",__sendIdleBeat__())
+// backup, 			seq_item_port.get_next_item(req);
+// backup, 		end
+// backup, 		$cast(_reqClone,req.clone());
+// backup, 		`rhudbg($sformatf("sending exp trans to monitor:\n%s",_reqClone.sprint()))
+// backup, 		reqP.write(_reqClone); // send to monitor for self check
+// backup, 		processDelay(req.delay);
+// backup, 		// @RyanH,TODO, to be deleted, splitTransToBeats(req,beats);
+// backup, 		// @RyanH,TODO, to be deleted, foreach (beats[i]) addressQue.push_back(beats[i]);
+// backup, 		// @RyanH,TODO, to be deleted, wait (addressQue.size()==0); // only when this trans finished, can next coming in.
+// backup, 	
+// backup, 		// new added steps
+// backup, 		convertTransToBeats(req,beat);
+// backup, 		addressQue.push_back(beat);
+// backup, 		// @RyanH wait(addressQue.size()==0);
+// backup, 		// need wait at least one cycle before geting next sequence
+// backup, 		config.waitCycle();
+// backup, 		seq_item_port.item_done();
+// backup, 	end
+// backup, endtask
 task RhAhb5MstDriver::__sendIdleBeat__();
 	RhAhb5TransBeat beat;
 	beat.burst = 0;
@@ -148,6 +175,14 @@ function void RhAhb5MstDriver::connect_phase(uvm_phase phase);
 endfunction
 task RhAhb5MstDriver::run_phase(uvm_phase phase);
 	super.run_phase(phase);
+endtask
+task RhAhb5MstMonitor::waitReadyHigh();
+	bit done=1'b0;
+	while (!done) begin
+		// done = (config.getSignal("HREADY")[0]==1'b1)? 1'b1 : 1'b0;
+		done = (config.ifCtrl.HREADY===1'b1)? 1'b1 : 1'b0;
+		config.ifCtrl.clock();
+	end
 endtask
 
 `endif
