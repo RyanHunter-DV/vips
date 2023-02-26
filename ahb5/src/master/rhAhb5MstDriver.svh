@@ -22,7 +22,6 @@ class RhAhb5MstDriver #( type REQ=RhAhb5ReqTrans,RSP=RhAhb5RspTrans) extends RhD
 	extern task dataPhaseStart();
 	extern task processDelay(input int cycle);
 	extern task processError();
-	extern task waitReadyHigh();
 	extern virtual function void build_phase(uvm_phase phase);
 	extern virtual task mainProcess();
 	extern task seqProcessStart();
@@ -45,8 +44,6 @@ task RhAhb5MstDriver::addressPhaseStart();
 		// sendAddressPhase will wait high if outstanding>0, or will wait one
 		// cycle if htrans!=0
 		config.sendAddressPhase(beat,outstandingData);
-		// if (outstandingData)  waitReadyHigh();
-		// else config.ifCtrl.clock();
 		outstandingData++;
 	end
 endtask
@@ -98,11 +95,14 @@ task RhAhb5MstDriver::mainProcess();
 endtask
 task RhAhb5MstDriver::seqProcessStart();
 	forever begin
-		// REQ _reqClone;
+		REQ _reqClone;
+		RhAhb5TransBeat beat;
 		seq_item_port.get_next_item(req);
-		// $cast(_reqClone,req.clone());
+		$cast(_reqClone,req.clone());
 		processDelay(req.delay);
 		convertTransToBeats(req,beat);
+		`rhudbg($sformatf("sending exp trans to monitor:\n%s",_reqClone.sprint()))
+		reqP.write(_reqClone);
 		addressQue.push_back(beat);
 		config.waitCycle();
 		dataQue.push_back(beat);
@@ -176,13 +176,13 @@ endfunction
 task RhAhb5MstDriver::run_phase(uvm_phase phase);
 	super.run_phase(phase);
 endtask
-task RhAhb5MstMonitor::waitReadyHigh();
-	bit done=1'b0;
-	while (!done) begin
-		// done = (config.getSignal("HREADY")[0]==1'b1)? 1'b1 : 1'b0;
-		done = (config.ifCtrl.HREADY===1'b1)? 1'b1 : 1'b0;
-		config.ifCtrl.clock();
-	end
-endtask
+// backup, task RhAhb5MstMonitor::waitReadyHigh();
+// backup, 	bit done=1'b0;
+// backup, 	while (!done) begin
+// backup, 		// done = (config.getSignal("HREADY")[0]==1'b1)? 1'b1 : 1'b0;
+// backup, 		done = (config.ifCtrl.HREADY===1'b1)? 1'b1 : 1'b0;
+// backup, 		config.ifCtrl.clock();
+// backup, 	end
+// backup, endtask
 
 `endif
