@@ -17,17 +17,18 @@ class RhAhb5MstMonitor#(type REQ=RhAhb5ReqTrans) extends RhMonitorBase;
 	RhAhb5MstConfig config;
 	bit reqWriteInfo[$];
 	REQ expReqQue[$];
+	int outstanding=0;
 	`uvm_component_utils_begin(RhAhb5MstMonitor)
 	`uvm_component_utils_end
 	extern virtual task waitResetStateChanged(input RhResetState_enum c,output RhResetState_enum s);
 	extern virtual task mainProcess();
 	extern local task reqMonitor();
 	extern local function void __reqSelfCheck__(REQ act);
-	extern local task __waitRequestValid();
+	extern local task waitRequestValid();
 	extern local function void __collectAddressPhaseInfo(ref REQ r);
 	extern local task __collectWriteData(ref REQ r);
 	extern local task rspMonitor();
-	extern local task __waitReadyHigh();
+	extern local task waitReadyHigh();
 	// extern local task __protocolCheck__ (REQ _tr);
 	extern virtual function void build_phase(uvm_phase phase);
 	extern function  new(string name="RhAhb5MstMonitor",uvm_component parent=null);
@@ -50,11 +51,12 @@ endtask
 task RhAhb5MstMonitor::reqMonitor();
 	forever begin
 		REQ req=new("req");
-		`rhudbgCall("",__waitRequestValid())
+		`rhudbgCall("",waitRequestValid())
 		`rhudbgCall("",__collectAddressPhaseInfo(req))
 		reqWriteInfo.push_back(req.write);
 		`rhudbg($sformatf("monitored address phase trans:\n%s",req.sprint()))
 		req.etime = $time;
+		outstanding++;
 		reqP.write(req);
 		if (req.write==1) begin
 			__collectWriteData(req);
@@ -64,7 +66,7 @@ task RhAhb5MstMonitor::reqMonitor();
 		end else begin
 			config.waitCycle();
 		end
-		wait(reqWriteInfo.size()<=1);
+		// wait(reqWriteInfo.size()<=1);
 		__reqSelfCheck__(req);
 	end
 endtask
@@ -82,15 +84,17 @@ function void RhAhb5MstMonitor::__reqSelfCheck__(REQ act);
 		`rhudbg($sformatf("driver/monitor req compare PASSED, driver has sent an expected transaction\n%s",act.sprint()))
 	return;
 endfunction
-task RhAhb5MstMonitor::__waitRequestValid();
+task RhAhb5MstMonitor::waitRequestValid();
 	bit done = 1'b0;
 	string _file;int _line;
 	`caller0(_file,_line)
-	`rhudbg($sformatf("__waitRequestValid called by(%0s,%0d)",_file,_line))
+	`rhudbg($sformatf("waitRequestValid called by(%0s,%0d)",_file,_line))
+	if (outstanding) `rhudbgCall("[waitRequestValid]",waitReadyHigh());
+	`rhudbg($sformatf("hready high waited, current done is:%0d",done))
 	do begin
 		// if (config.getSignal("HTRANS") && config.getSignal("HREADY")) done = 1'b1;
 		logic[1:0] htrans = config.ifCtrl.HTRANS;
-		//for debug, `rhudbg($sformatf("monitored HTRANS: %bb",htrans))
+		`rhudbg($sformatf("monitored HTRANS: %bb",htrans))
 		// if ((htrans==1||htrans==2||htrans==3) && config.ifCtrl.HREADY===1) done = 1'b1;
 		if ((htrans==1||htrans==2||htrans==3)) done = 1'b1;
 		else config.waitCycle();
@@ -118,7 +122,8 @@ task RhAhb5MstMonitor::rspMonitor();
 	forever begin
 		RhAhb5RspTrans rsp=new("rsp");
 		wait(reqWriteInfo.size()); // need wait last cycle has request.
-		`rhudbgCall("rspMonitor: waiting for ready high",__waitReadyHigh())
+		`rhudbgCall("[rspMonitor]: waiting for ready high",waitReadyHigh())
+		`rhudbg("[rspMonitor]: HREADY==1 now")
 		rsp.resp  = config.ifCtrl.HRESP;
 		rsp.exokay= config.ifCtrl.HEXOKAY;
 		rsp.iswrite = reqWriteInfo.pop_front();
@@ -126,16 +131,15 @@ task RhAhb5MstMonitor::rspMonitor();
 		// if (rsp.iswrite==0 && rsp.resp==0) rsp.rdata = config.getSignal("HRDATA");
 		if (rsp.iswrite==0 && rsp.resp==0) rsp.rdata = config.ifCtrl.HRDATA;
 		rsp.etime = $time;
+		outstanding--;
+		`rhudbg($sformatf("[rspMonitor]: monitored one response by master:\n%s",rsp.sprint()))
 		rspP.write(rsp);
+		config.ifCtrl.clock(); // wait at least one cycle for next response monitor.
 	end
 endtask
-task RhAhb5MstMonitor::__waitReadyHigh();
-	bit done=1'b0;
-	while (!done) begin
-		// done = (config.getSignal("HREADY")[0]==1'b1)? 1'b1 : 1'b0;
-		done = (config.ifCtrl.HREADY===1'b1)? 1'b1 : 1'b0;
-		config.ifCtrl.clock();
-	end
+task RhAhb5MstMonitor::waitReadyHigh();
+	while (!config.ifCtrl.HREADY===1'b1) config.ifCtrl.clock();
+	return;
 endtask
 function void RhAhb5MstMonitor::build_phase(uvm_phase phase);
 	super.build_phase(phase);
