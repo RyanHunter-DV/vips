@@ -43,7 +43,7 @@ task omosBaseTest::run_phase(uvm_phase phase); // ##{{{
 	#100ns;
 	`uvm_info(get_type_name(),$sformatf("mst's seqr: %0d",env.mst.seqr),UVM_LOW)
 	test_sim();
-	#200ns;
+	#2us;
 	`uvm_info(get_type_name(),"finishing run_phase ...",UVM_NONE)
 	phase.drop_objection(this);
 endtask // ##}}}

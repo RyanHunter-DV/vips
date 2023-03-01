@@ -34,6 +34,16 @@ test :omosIncr4Test do
 	simopt :xlm, '+UVM_TESTNAME=OmosIncr4Test'
 	simopt :xlm, '+RHUDBG="RhAhb5Vip"'
 end
+test :omosIncr8Test do
+	config :omos
+	simopt :xlm, '+UVM_TESTNAME=OmosIncr8Test'
+	simopt :xlm, '+RHUDBG="RhAhb5Vip"'
+end
+test :omosIncr16Test do
+	config :omos
+	simopt :xlm, '+UVM_TESTNAME=OmosIncr16Test'
+	simopt :xlm, '+RHUDBG="RhAhb5Vip"'
+end
 test :omosIncrTest do
 	config :omos
 	simopt :xlm, '+UVM_TESTNAME=OmosIncrTest'
