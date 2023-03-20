@@ -1,0 +1,23 @@
+seq '' do
+	scalar 'realtime','_stime'
+	scalar 'int','_index'
+	scalar 'logic','_value'
+	task 'reset','int idx,logic val,realtime t,uvm_sequencer_base seqr' do
+		<<-CODE.gsub(/^\s+\-/,'')
+		-_stime=t;
+		-_index=idx;
+		-_value=val;
+		-this.start(seqr);
+		CODE
+	end
+	body do
+		<<-CODE.gsub(/^\s+\-/,'')
+		-ResetGen tr=new("tr");
+		-tr.stime=_stime;
+		-tr.index=_index;
+		-tr.value=_value;
+		-start_item(tr);
+		-finish_item(tr);
+		CODE
+	end
+end

@@ -1,0 +1,12 @@
+config '' do
+	aarray 'bit','enabled','int'
+	aarray 'logic','inactive','int'
+	scalar 'ResetGenIf','vif'
+
+	func 'enable','int index,logic ia','void' do
+		<<-CODE.gsub(/^\s+\-/,'')
+		-enabled[index]=1;
+		-inactive[index]=ia;
+		CODE
+	end
+end

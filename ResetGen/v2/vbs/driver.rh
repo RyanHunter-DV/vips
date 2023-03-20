@@ -1,0 +1,35 @@
+
+driver '' do
+	tparam $REQ,$RSP
+	svclass $configType,'config'
+	run do
+		<<-CODE.gsub(/^\s+\-/,'')
+		-mainProcess();
+		CODE
+	end
+	# *mainProcess*
+	# this is the main process started when run_phase starts, it'll forever loop for:
+	# - check next sequence item.
+	# 	- start fork-join_none for next
+	# 	- issue the reset immediately, and wait for time done.
+	# 	- wait posedge of refClk, then finish this thread.
+	# - item done
+	task 'mainProcess','' do
+		<<-CODE.gsub(/^\s+\-/,'')
+		-forever begin
+		-	seq_item_port.get_next_item(req);
+		-	fork driveReset(req.index,req.value,req.stime) join_none
+		-	seq_item_port.item_done();
+		-end
+		CODE
+	end
+
+	task 'driveReset','int index,logic value,realtime stime' do
+		<<-CODE.gsub(/^\s+\-/,'')
+		-config.vif.oReset[index] = value;
+		-#stime;
+		-@(posedge config.vif.refClk[index]);
+		-config.vif.oReset[index]=config.inactive[index];
+		CODE
+	end
+end

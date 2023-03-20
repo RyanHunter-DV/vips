@@ -1,0 +1,35 @@
+
+monitor '' do
+	tparam $REQ,$RSP
+	svclass $configType,'config'
+	svclass 'uvm_analysis_port#(REQ)','resetP'
+	build do
+		<<-CODE.gsub(/^\s+\-/,'')
+		-resetP=new("resetP",this);
+		CODE
+	end
+	run do
+		<<-CODE.gsub(/^\s+\-/,'')
+		-foreach (config.enables[idx]) begin
+		-	if (config.enables[idx]==0) continue;
+		-	fork monitorThread(idx); join_none
+		-end
+		CODE
+	end
+	task 'monitorThread','int idx' do
+		<<-CODE.gsub(/^\s+\-/,'')
+		-forever begin
+		-	logic o = config.vif.oResetn[idx];
+		-	wait(config.vif.oResetn[idx]!==o);
+		-	o=config.vif.oResetn[idx];
+		-	begin
+		-		REQ tr=new("tr");
+		-		tr.stime=$time;
+		-		tr.index=idx;
+		-		tr.value=o;
+		-		resetP.write(tr);
+		-	end
+		-end
+		CODE
+	end
+end

@@ -1,0 +1,26 @@
+project :ResetGen
+$REQ = 'REQ=ResetGenTrans'
+$RSP = 'RSP=REQ'
+$configType="#{Builder.project}Config"
+
+
+trans '' do
+	scalar :logic,'value'
+	scalar :int,'index'
+	scalar :realtime,'stime'
+end
+
+
+
+rhload 'seq.rh'
+rhload 'seqr.rh'
+rhload 'agent.rh'
+rhload 'driver.rh'
+rhload 'monitor.rh'
+rhload 'config.rh'
+
+
+## not supported yet, config '' do
+## not supported yet, 	scalar 'ResetGenIf','vif'
+## not supported yet, 	sarray 'bit','enables','int'
+## not supported yet, end

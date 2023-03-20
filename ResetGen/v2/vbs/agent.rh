@@ -1,0 +1,48 @@
+
+agent '' do
+	drv = "#{@project}Driver"
+	mon = "#{@project}Monitor"
+	seqr= "#{@project}Seqr"
+
+	svclass $configType,'config'
+	svclass drv,'drv'
+	svclass seqr,'seqr'
+	svclass mon,'mon'
+	build do
+		<<-CODE.gsub(/^\s+\-/,'')
+		-if (is_active==UVM_ACTIVE) begin
+		-	drv =#{drv}::type_id::create("drv",this);
+		-	seqr=#{seqr}::type_id::create("drv",this);
+		-	drv.config=config;
+		-end
+		-mon=#{mon}::type_id::create("mon",this);
+		-mon.config=config;
+		CODE
+	end
+	connect do
+		<<-CODE.gsub(/^\s+\-/,'')
+		-if(is_active==UVM_ACTIVE) begin
+		-	drv.seq_item_prot.connect(seqr.seq_item_export);
+		-end
+		CODE
+	end
+	func 'createConfig','string ifPath',$configType do
+		<<-CODE.gsub(/^\s+\-/,'')
+		-config=#{$configType}::type_id::create("config");
+		-if(!uvm_config_db#(virtual ResetGenIf)::get(null,ifPath,"ResetGenIf",config.vif))
+		-	`uvm_fatal("NOVIF",$sformatf("cannot get interface with path: %s",ifPath))
+		-return config;
+		CODE
+	end
+	func 'init','int idx,logic val,logic ia,realtime _t','void' do
+		<<-CODE.gsub(/^\s+\-/,'')
+		-string path = {this.get_full_name(),".seqr.run_phase"};
+		-config.enable(idx,ia);
+		-ResetGenSeq seq=new("seq");
+		-seq.stime=_t;
+		-seq.value=val;
+		-seq.index=idx;
+		-uvm_config_db::(uvm_sequence_base)::set(null,path,"default_sequence",seq);
+		CODE
+	end
+end
