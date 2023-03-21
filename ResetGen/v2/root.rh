@@ -7,7 +7,7 @@ rhload 'test/node'
 config :basetestC,:tool=>:xlm do
 	component :ResetGen
 	component :env
-	component :rtl
+	component :DUT
 	component :tb
 end
 test :basetest do
@@ -18,7 +18,7 @@ end
 context :selfTest do
 	component :ResetGen
 	component :env
-	component :rtl
+	component :DUT
 	component :tb
 	config :basetestC
 	test :basetest
