@@ -1,0 +1,4 @@
+component :ResetGen do
+	required 'uvm.standard'
+	fileset 'resetGenPkg.sv'
+end

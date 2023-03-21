@@ -1,0 +1,3 @@
+component :DUT do
+	fileset 'DUT.v'
+end
