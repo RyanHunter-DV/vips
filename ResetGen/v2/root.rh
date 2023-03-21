@@ -1,0 +1,41 @@
+## rhload "#{ENV['UVMHOME']}/root"
+## rhload "#{ENV['RHUVMDBG']}/root"
+## rhload "#{ENV['RHLIB']}/root"
+rhload 'src/node'
+rhload 'test/node'
+
+config :basetestC,:tool=>:xlm do
+	component :ResetGen
+	component :env
+	component :rtl
+	component :tb
+end
+test :basetest do
+	config :basetestC
+	simopt :xlm,'+UVM_TESTNAME=Basetest'
+end
+
+context :selfTest do
+	component :ResetGen
+	component :env
+	component :rtl
+	component :tb
+	config :basetestC
+	test :basetest
+	# component :RhAhb5Vip
+	# component :masterEnv
+	# component :masterTB
+	# component :MasterTests
+	# config :masterOnly
+	# test :masterBaseTest
+
+	# component :omosEnv
+	# component :omosTests
+	# component :omosTB
+	# config :omos
+	# test :omosSanityTest
+	# test :omosIncr4Test
+	# test :omosIncr8Test
+	# test :omosIncr16Test
+	# test :omosIncrTest
+end
