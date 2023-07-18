@@ -1,0 +1,8 @@
+{
+	"nodes":[
+		{"id":"187b3c117ae72341","x":40,"y":-740,"width":400,"height":400,"type":"group","label":"RhLpiQ < uvm_agent"},
+		{"id":"d7727c00bea8b480","x":60,"y":-700,"width":250,"height":60,"type":"text","text":"build"},
+		{"id":"872f58af3f125bce","x":-680,"y":-320,"width":300,"height":120,"type":"text","text":"package RhLpi:\n- RhLpiQ -> uvm_agent\n- RhLpiP -> uvm_agent"}
+	],
+	"edges":[]
+}
