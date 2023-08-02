@@ -49,11 +49,11 @@ module tb;
 	);
 
 	initial begin
-		uvm_config_db#(virtual RhQLpiIf)::set(null,"tb.pCtrlIf","RhQlpiIf",pCtrlIf);
-		uvm_config_db#(virtual RhQLpiIf)::set(null,"tb.dev0If","RhQlpiIf",dev0If);
-		uvm_config_db#(virtual RhQLpiIf)::set(null,"tb.dev1If","RhQlpiIf",dev1If);
-		uvm_config_db#(virtual RhQLpiIf)::set(null,"tb.dev2If","RhQlpiIf",dev2If);
-		uvm_config_db#(virtual RhQLpiIf)::set(null,"tb.dev3If","RhQlpiIf",dev3If);
+		uvm_config_db#(virtual RhQLpiIf)::set(null,"tb.pCtrlIf","RhQLpiIf",pCtrlIf);
+		uvm_config_db#(virtual RhQLpiIf)::set(null,"tb.dev0If","RhQLpiIf",dev0If);
+		uvm_config_db#(virtual RhQLpiIf)::set(null,"tb.dev1If","RhQLpiIf",dev1If);
+		uvm_config_db#(virtual RhQLpiIf)::set(null,"tb.dev2If","RhQLpiIf",dev2If);
+		uvm_config_db#(virtual RhQLpiIf)::set(null,"tb.dev3If","RhQLpiIf",dev3If);
 	end
 
 	initial begin
