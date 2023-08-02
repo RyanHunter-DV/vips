@@ -1,0 +1,24 @@
+{
+	"nodes":[
+		{"id":"c7c16453338a8b8f","x":-145,"y":-220,"width":210,"height":50,"type":"text","text":"Power Interface"},
+		{"id":"a6938e9726d30ca6","x":-460,"y":-100,"width":840,"height":60,"type":"text","text":"Topology mux"},
+		{"id":"e8e3c51b5088f19a","x":-130,"y":-280,"width":180,"height":60,"type":"text","text":"PowerControl"},
+		{"type":"text","text":"Power Interface","id":"751b4c4fd7d0fd14","x":-40,"y":160,"width":210,"height":50},
+		{"type":"text","text":"Power Interface","id":"b722e2e045749506","x":170,"y":160,"width":210,"height":50},
+		{"type":"text","text":"...","id":"e436d6c7c26b6367","x":30,"y":210,"width":140,"height":60},
+		{"type":"text","text":"Device15","id":"e544f5fc6afb322e","x":240,"y":210,"width":140,"height":60},
+		{"id":"535d7d421a963f33","x":-390,"y":210,"width":140,"height":60,"type":"text","text":"Device0"},
+		{"type":"text","text":"Device1","id":"9074edd9c82bac21","x":-180,"y":210,"width":140,"height":60},
+		{"type":"text","text":"Power Interface","id":"a45787e517f0e7be","x":-460,"y":160,"width":210,"height":50},
+		{"type":"text","text":"Power Interface","id":"3a383784c8bf6876","x":-250,"y":160,"width":210,"height":50},
+		{"id":"987fd6cadd7364cb","x":540,"y":-255,"width":680,"height":370,"type":"text","text":"powerControl.qactive = device0.qactive&device1.qactive...\npowerControl.qreq -> device0.qreq, device1.qreq...\n"}
+	],
+	"edges":[
+		{"id":"e66e7fc46fc4708e","fromNode":"c7c16453338a8b8f","fromSide":"bottom","toNode":"a6938e9726d30ca6","toSide":"top"},
+		{"id":"882106f3efb11b9f","fromNode":"a6938e9726d30ca6","fromSide":"bottom","toNode":"a45787e517f0e7be","toSide":"top"},
+		{"id":"cc346acd4eb82857","fromNode":"a6938e9726d30ca6","fromSide":"bottom","toNode":"3a383784c8bf6876","toSide":"top"},
+		{"id":"202defbd224d27b3","fromNode":"a6938e9726d30ca6","fromSide":"bottom","toNode":"751b4c4fd7d0fd14","toSide":"top"},
+		{"id":"ed1e6094b2a8afcb","fromNode":"a6938e9726d30ca6","fromSide":"bottom","toNode":"b722e2e045749506","toSide":"top"},
+		{"id":"628754d5991409cc","fromNode":"a6938e9726d30ca6","fromSide":"right","toNode":"987fd6cadd7364cb","toSide":"left"}
+	]
+}
