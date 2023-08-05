@@ -6,7 +6,7 @@ module Muxer(
 	RhQLpiIf dev0,
 	RhQLpiIf dev1,
 	RhQLpiIf dev2,
-	RhQLpiIf dev3,
+	RhQLpiIf dev3
 );
 
 	wire qactive = dev0.QACTIVE&dev1.QACTIVE&dev2.QACTIVE&dev3.QACTIVE;
@@ -32,6 +32,25 @@ module tb;
 	logic pCtrlClock,pCtrlReset;
 	logic [3:0] devClock,devReset;
 
+	// clock gen block
+	initial begin
+		pCtrlClock = 1'b0;
+		devClock = 4'h0;
+	end
+	always #1ns pCtrlClock <= ~pCtrlClock;
+	always #2ns devClock[0]<= ~devClock[0];
+	always #3ns devClock[1]<= ~devClock[1];
+	always #2ns devClock[2]<= ~devClock[2];
+	always #4ns devClock[3]<= ~devClock[3];
+
+	// reset
+	initial begin
+		pCtrlReset = 1'b0;
+		devReset = 4'h0;
+		#100ns;
+		pCtrlReset = 1'b1;
+		devReset = 4'hf;
+	end
 
 	RhQLpiIf pCtrlIf(pCtrlClock,pCtrlReset);
 	RhQLpiIf dev0If(devClock[0],devReset[0]);
@@ -58,6 +77,11 @@ module tb;
 
 	initial begin
 		run_test();
+	end
+
+	initial begin
+		$fsdbDumpfile("test");
+		$fsdbDumpvars("+all",tb);
 	end
 
 endmodule
