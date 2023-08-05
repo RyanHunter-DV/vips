@@ -7,17 +7,17 @@ class RhQLpiReqTrans extends uvm_sequence_item;
 	// value of lp duration, if is -1, then will generate a random one according
 	// to the config, or else use this field.
 	rand int lpDuration;
-	rand bit active;
+	rand bit powerOn;
 	rand bit ignoreQActive;
 
 	constraint delayCst{delay inside {[0:1000]};}
 	constraint lpDurationDefaultCst {soft lpDuration == -1;}
 
 	`uvm_object_utils_begin(RhQLpiReqTrans)
-		`uvm_field_int(delay,UVM_ALL_ON)
-		`uvm_field_int(lpDuration,UVM_ALL_ON)
+		`uvm_field_int(delay,UVM_ALL_ON|UVM_DEC)
+		`uvm_field_int(lpDuration,UVM_ALL_ON|UVM_DEC)
 		`uvm_field_int(ignoreQActive,UVM_ALL_ON)
-		`uvm_field_int(active,UVM_ALL_ON)
+		`uvm_field_int(powerOn,UVM_ALL_ON)
 	`uvm_object_utils_end
 
 	function new(string name="RhQLpiReqTrans");

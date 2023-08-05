@@ -20,9 +20,15 @@ typedef enum {
 	QContinue
 } RhQLpiState;
 
+typedef enum {
+	QLpiAccept,
+	QLpiDeny
+} RhQLpiResponse;
+
 typedef class RhQLpiStateTrans;
 typedef RhQLpiStateTrans stateTrans_t;
 typedef RhQLpiMode  mode_t;
 typedef RhQLpiState state_t;
+typedef RhQLpiResponse resp_t;
 
 `endif

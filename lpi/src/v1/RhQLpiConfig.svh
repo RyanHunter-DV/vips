@@ -1,6 +1,64 @@
 `ifndef RhQLpiConfig__svh
 `define RhQLpiConfig__svh
 
+// object for operation on the manual response series
+class DeviceRespSeries;
+
+	function new();
+		current=-1;
+	endfunction
+
+// public
+
+	// add, to add a new response for next <times> times.
+	extern function void add (resp_t rsp,int times);
+
+	// pop, pop out for next response, the times will automatically decrese one,
+	// if no item available in, then return false, else return true. The response
+	// value will comming by the ref arg
+	extern function bool pop (ref resp_t rsp);
+
+// private
+
+	typedef struct {
+		resp_t rsp;
+		int times;
+	} DeviceRespStruct;
+
+	local DeviceRespStruct items[$];
+	local int current;
+
+	// updateCurrentItem, local api to update the index to next since the current index
+	// item's times are becoming 0, if current+1 >= items.size(), then current index
+	// will be flushed to -1 and the items will be deleted.
+	extern local function void updateCurrentItem ();
+
+
+endclass
+
+function void DeviceRespSeries::updateCurrentItem ();
+	current++;
+	if (current >= items.size()) begin
+		current=-1;
+		items.delete();
+	end
+endfunction
+
+function bool DeviceRespSeries::pop (ref resp_t rsp);
+	if (items[current].times==0) updateCurrentItem;
+	if (current==-1) return false;
+	rsp = items[current].rsp; items[current].times--;
+	return true;
+endfunction
+
+function void DeviceRespSeries::add (resp_t rsp,int times);
+	DeviceRespStruct newitem;
+	newitem.rsp  =rsp;
+	newitem.times=times;
+	items.push_back(newitem);
+	if (current==-1) current++; // current being valid if previous not valid.
+endfunction
+
 class RhQLpiConfig extends uvm_object;
 
 	bool isDevice;
@@ -14,15 +72,6 @@ class RhQLpiConfig extends uvm_object;
 
 	virtual RhQLpiIf vif;
 
-	`uvm_object_utils_begin(RhQLpiConfig)
-		`uvm_field_enum(bool,isDevice,UVM_ALL_ON)
-		`uvm_field_enum(bool,autoPowerUp,UVM_ALL_ON)
-		`uvm_field_enum(uvm_active_passive_enum,isActive,UVM_ALL_ON)
-		`uvm_field_int(lpMin,UVM_ALL_ON)
-		`uvm_field_int(lpMax,UVM_ALL_ON)
-	`uvm_object_utils_end
-
-
 
 // public:
 
@@ -34,6 +83,10 @@ class RhQLpiConfig extends uvm_object;
 		lpMin=0;lpMax=0;
 		isActive=UVM_ACTIVE;
 		initState=QStopped;
+		devMRsp=new();
+		qactive=1'bz;
+		respCycleMin=1;respCycleMax=100;
+		qactiveCycleMin=1;qactiveCycleMax=100;
 	endfunction
 
 	// to set the lpMin,lpMax, and set autoPowerUp to true
@@ -74,12 +127,112 @@ class RhQLpiConfig extends uvm_object;
 	// only available when autoPowerUp is true, or else will return -1
 	extern function int genLpDuration ();
 
+
+	// device configurations
+	extern function void setAcceptPercentage (int percent);
+	extern function void setManualDeviceResp (resp_t rsp,int times);
+
+	extern function void fixedActive (logic val);
+	extern function void randomActive (int min,int max);
+
+	// genQActive, called by driver to get the qactive value, if is fixed value,
+	// then config will return a logic bit that not equal to 'bz
+	extern function logic genQActive ();
+	extern function int genQActiveCycle ();
+
+	// generate manual response if it has, or else generate a random response according
+	// to the acceptPercent
+	extern function resp_t genResponse ();
+	// response will last a random cycle of active value.
+	extern function int genRespCycle ();
+	extern function void driveQActive (logic val);
+	extern function void driveQAcceptn (logic val);
+	extern function void driveQDeny (logic val);
+
 // private:
 
 	// local API:  initializeInterface, to init the interface state according is device or power mode.
 	extern local function void initializeInterface();
 	extern local function logic signalFilterFromState(state_t s,string signame);
+
+	local int acceptPercent = 50; // default is 50
+	local DeviceRespSeries devMRsp;
+	local int respCycleMin,respCycleMax;
+	// the fixed value of qactive, if it's not 'bz, then means this device will use fix qactive
+	// instead of random qactive.
+	local logic qactive;
+	// for random qactive
+	local int qactiveCycleMin,qactiveCycleMax;
+
+
+
+	`uvm_object_utils_begin(RhQLpiConfig)
+		`uvm_field_enum(bool,isDevice,UVM_ALL_ON)
+		`uvm_field_enum(bool,autoPowerUp,UVM_ALL_ON)
+		`uvm_field_enum(uvm_active_passive_enum,isActive,UVM_ALL_ON)
+		`uvm_field_int(acceptPercent,UVM_ALL_ON|UVM_DEC)
+		`uvm_field_int(lpMin,UVM_ALL_ON|UVM_DEC)
+		`uvm_field_int(lpMax,UVM_ALL_ON|UVM_DEC)
+		`uvm_field_int(respCycleMin,UVM_ALL_ON|UVM_DEC)
+		`uvm_field_int(respCycleMax,UVM_ALL_ON|UVM_DEC)
+		`uvm_field_int(qactiveCycleMin,UVM_ALL_ON|UVM_DEC)
+		`uvm_field_int(qactiveCycleMax,UVM_ALL_ON|UVM_DEC)
+	`uvm_object_utils_end
+
+
 endclass
+
+function void RhQLpiConfig::driveQAcceptn (logic val);
+	vif.QACCEPTn = val;
+endfunction
+
+function void RhQLpiConfig::driveQDeny (logic val);
+	vif.QDENY = val;
+endfunction
+
+function void RhQLpiConfig::driveQActive (logic val);
+	vif.QACTIVE = val;
+endfunction
+
+function int RhQLpiConfig::genRespCycle ();
+	return $urandom_range(respCycleMin,respCycleMax);
+endfunction
+
+function resp_t RhQLpiConfig::genResponse ();
+	resp_t rsp;
+	if (devMRsp.pop(rsp)==true) return rsp;
+	else begin
+		std::randomize(rsp) with {
+			rsp dist {QLpiAccept := acceptPercent, QLpiDeny := (100-acceptPercent)};
+		};
+		return rsp;
+	end
+endfunction
+
+function int RhQLpiConfig::genQActiveCycle ();
+	return $urandom_range(qactiveCycleMin,qactiveCycleMax);
+endfunction
+
+function logic RhQLpiConfig::genQActive ();
+	return qactive;
+endfunction
+
+function void RhQLpiConfig::randomActive (int min,int max);
+	qactiveCycleMax=max;qactiveCycleMin=min;
+endfunction
+
+function void RhQLpiConfig::fixedActive (logic val);
+	qactive = val;
+endfunction
+
+function void RhQLpiConfig::setManualDeviceResp (resp_t rsp,int times);
+	devMRsp.add(rsp,times);
+endfunction
+
+function void RhQLpiConfig::setAcceptPercentage (int percent);
+	if (percent<0) return; // not < 0 permitted.
+	acceptPercent=percent;
+endfunction
 
 function int RhQLpiConfig::genLpDuration ();
 	int duration = -1;
@@ -103,8 +256,8 @@ endfunction
 
 function void RhQLpiConfig::initializeInterface();
 	if (isDevice) begin
-		// TODO,
-		`uvm_warning(get_type_name(),"Vip currently not support initialize the device mode.")
+		// `uvm_warning(get_type_name(),"Vip currently not support initialize the device mode.")
+		driveQAcceptn(0);driveQDeny(0);driveQActive(0);
 	end else begin
 		vif.QREQn = signalFilterFromState(initState,"QREQn");
 	end
@@ -171,7 +324,7 @@ endtask
 task RhQLpiConfig::waitResetNotEqualTo(logic t=1'bx);
 	logic c=vif.resetn;
 	// wait reset value changed async
-	wait (c!==t);
+	wait (vif.resetn!==t);
 endtask
 
 function logic RhQLpiConfig::getReset();

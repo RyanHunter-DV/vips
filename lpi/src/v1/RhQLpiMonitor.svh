@@ -49,7 +49,27 @@ class RhQLpiMonitor#(type REQ=stateTrans_t,RSP=REQ) extends RhVipMonitorBase#(RE
 
 	// local API to send the transaction from monitor
 	extern local task monitorTrans(uvm_analysis_port#(REQ) port,state_t to);
+	extern local function void initializeState ();
+	extern local task waitResetInactiveSyncd ();
 endclass
+
+function void RhQLpiMonitor::initializeState ();
+	logic qreqn   = config.getQReqn();
+	logic qacceptn= config.getQAcceptn();
+	logic qdeny   = config.getQDeny();
+	case({qreqn,qacceptn,qdeny})
+		'b011: currentState = QDenied;
+		'b111: currentState = QContinue;
+		'b100: currentState = QExit;
+		'b000: currentState = QStopped;
+		default: begin
+			string msg="cannot recognize init state: ";
+			`uvm_warning("INITW",$sformatf("%s{qreqn,qacceptn,qdeny} => {%0b,%0b,%0b}",msg,qreqn,qacceptn,qdeny))
+			currentState=config.initState;
+		end
+	endcase
+	return;
+endfunction
 
 function void RhQLpiMonitor::updateCurrentState(state_t s);
 	currentState = s;
@@ -68,7 +88,7 @@ task RhQLpiMonitor::reqMonitor();
 			return;
 		end
 	endcase
-	//TODO, `RhdInfo($sformatf("get QREQn(%0d), state changed to(%s)",config.getQReqn(),to.name()));
+	`RhdInfo($sformatf("get QREQn(%0d), state changed to(%s)",config.getQReqn(),to.name()));
 	monitorTrans(reqPort,to);
 endtask
 
@@ -91,7 +111,7 @@ task RhQLpiMonitor::monitorAccept();
 			return;
 		end
 	endcase
-	//TODO, `RhdInfo($sformatf("get QACCEPTn(%0d), state changed to(%s)",config.getQAcceptn(),to.name()));
+	`RhdInfo($sformatf("get QACCEPTn(%0d), state changed to(%s)",config.getQAcceptn(),to.name()));
 	monitorTrans(rspPort,to);
 endtask
 task RhQLpiMonitor::monitorDeny();
@@ -105,7 +125,7 @@ task RhQLpiMonitor::monitorDeny();
 			return;
 		end
 	endcase
-	//TODO, `RhdInfo($sformatf("get QDENY(%0d), state changed to(%s)",config.getQDeny(),to.name()));
+	`RhdInfo($sformatf("get QDENY(%0d), state changed to(%s)",config.getQDeny(),to.name()));
 	monitorTrans(rspPort,to);
 endtask
 
@@ -126,20 +146,27 @@ function void RhQLpiMonitor::build();
 	currentState=config.initState;
 endfunction
 
+task RhQLpiMonitor::waitResetInactiveSyncd ();
+	while (RhResetStateEnum'(config.getReset())!=RhResetInactive)
+		config.sync(1);
+endtask
+
 task RhQLpiMonitor::waitResetStateChanged(
 	input RhResetStateEnum c,
 	output RhResetStateEnum s
 );
 	logic csi = logic'(c);
 
-	//TODO, `RhdInfo($sformatf("wait reset changed, current(%s)",c.name()));
-	config.waitResetNotEqualTo(csi);
+	`RhdInfo($sformatf("wait reset changed, current(%s)",c.name()));
+	if (c==RhResetActive) waitResetInactiveSyncd();
+	else config.waitResetNotEqualTo(csi);
 	s = RhResetStateEnum'(config.getReset());
-	//TODO, `RhdInfo($sformatf("reset changed, to(%s)",s.name()))
+	`RhdInfo($sformatf("reset changed, to(%s)",s.name()))
 	return;
 endtask
 
 task RhQLpiMonitor::mainProcess();
+	initializeState();
 	fork
 		forever reqMonitor();
 		forever rspMonitor();

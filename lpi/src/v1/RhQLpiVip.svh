@@ -52,6 +52,25 @@ class RhQLpiVip extends uvm_agent;
 	// Set the interface with given path.
 	extern function void setIf(string path);
 
+	// APIs for device mode.
+	// acceptRandomly, set a random percent that a device will accept the power off request
+	extern function void acceptRandomly (int percent);
+
+	// acceptManually, set next response while incoming the power request.
+	// rsp -> the state for next response
+	// times->how many times for the response will be produced.
+	// call of manual aaceptance will override the random setting for the next <times>
+	// times.
+	extern function void acceptManually (resp_t rsp,int times);
+
+	// activeRandomly, randomly setup the active output, with the specified min,max cycle.
+	// this api will be overridden by activeManually.
+	extern function void activeRandomly (int min,int max);
+
+	// activeManually, set permanently a fixed value for QACTIVE.
+	extern function void activeManually (logic val);
+
+
 // private
 	// private APIs qualifier with local
 	extern local function uvm_active_passive_enum uvmActiveFilter(mode_t m);
@@ -65,10 +84,36 @@ class RhQLpiVip extends uvm_agent;
 	// A function to connect in/out ports of this agent to monitor according to different
 	// device mode.
 	extern local function void connectPorts();
+
+
+	extern local function void updateConfigFullname ();
 endclass
+
+function void RhQLpiVip::updateConfigFullname ();
+	string orig = config.get_full_name();
+	config.set_name($sformatf("%s.%s",this.get_full_name(),orig));
+endfunction
+
+function void RhQLpiVip::activeManually (logic val);
+	config.fixedActive(val);
+endfunction
+
+function void RhQLpiVip::activeRandomly (int min,int max);
+	config.randomActive(min,max);
+endfunction
+
+function void RhQLpiVip::acceptManually (resp_t rsp,int times);
+	config.setManualDeviceResp(rsp,times);
+endfunction
+
+function void RhQLpiVip::acceptRandomly (int percent);
+	config.setAcceptPercentage(percent);
+endfunction
 
 function void RhQLpiVip::end_of_elaboration_phase(uvm_phase phase);
 	config.applyInterface();
+	`RhdInfo($sformatf("Topology info print"))
+	`RhdInfo($sformatf("-- configure table setup:\n%s",config.sprint()))
 endfunction
 
 function void RhQLpiVip::setIf(string path);
@@ -119,6 +164,7 @@ function void RhQLpiVip::build_phase(uvm_phase phase);
 	mon.config = config;
 	// TODO, `RhdCall(declarePorts());
 	declarePorts();
+	updateConfigFullname();
 	// TODO, `RhdInfo("Leaving build ... ...");
 endfunction
 
