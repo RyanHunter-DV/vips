@@ -55,34 +55,34 @@ class RhQLpiScoreboard extends uvm_component;
 endclass
 
 function void RhQLpiScoreboard::write_dev0In (trans_t tr);
-	`uvm_info("TESTPORT",$sformatf("get trans from dev0In",tr.sprint()),UVM_LOW)
+	`uvm_info("TESTPORT",$sformatf("get trans from dev0In\n%s",tr.sprint()),UVM_LOW)
 endfunction
 function void RhQLpiScoreboard::write_dev0Out (trans_t tr);
-	`uvm_info("TESTPORT",$sformatf("get trans from dev0Out",tr.sprint()),UVM_LOW)
+	`uvm_info("TESTPORT",$sformatf("get trans from dev0Out\n%s",tr.sprint()),UVM_LOW)
 endfunction
 function void RhQLpiScoreboard::write_dev1In (trans_t tr);
-	`uvm_info("TESTPORT",$sformatf("get trans from dev1In",tr.sprint()),UVM_LOW)
+	`uvm_info("TESTPORT",$sformatf("get trans from dev1In\n%s",tr.sprint()),UVM_LOW)
 endfunction
 function void RhQLpiScoreboard::write_dev1Out (trans_t tr);
-	`uvm_info("TESTPORT",$sformatf("get trans from dev1Out",tr.sprint()),UVM_LOW)
+	`uvm_info("TESTPORT",$sformatf("get trans from dev1Out\n%s",tr.sprint()),UVM_LOW)
 endfunction
 function void RhQLpiScoreboard::write_dev2In (trans_t tr);
-	`uvm_info("TESTPORT",$sformatf("get trans from dev2In",tr.sprint()),UVM_LOW)
+	`uvm_info("TESTPORT",$sformatf("get trans from dev2In\n%s",tr.sprint()),UVM_LOW)
 endfunction
 function void RhQLpiScoreboard::write_dev2Out (trans_t tr);
-	`uvm_info("TESTPORT",$sformatf("get trans from dev2Out",tr.sprint()),UVM_LOW)
+	`uvm_info("TESTPORT",$sformatf("get trans from dev2Out\n%s",tr.sprint()),UVM_LOW)
 endfunction
 function void RhQLpiScoreboard::write_dev3In (trans_t tr);
-	`uvm_info("TESTPORT",$sformatf("get trans from dev3In",tr.sprint()),UVM_LOW)
+	`uvm_info("TESTPORT",$sformatf("get trans from dev3In\n%s",tr.sprint()),UVM_LOW)
 endfunction
 function void RhQLpiScoreboard::write_dev3Out (trans_t tr);
-	`uvm_info("TESTPORT",$sformatf("get trans from dev3Out",tr.sprint()),UVM_LOW)
+	`uvm_info("TESTPORT",$sformatf("get trans from dev3Out\n%s",tr.sprint()),UVM_LOW)
 endfunction
 function void RhQLpiScoreboard::write_pcIn(trans_t tr);
-	`uvm_info("TESTPORT",$sformatf("get trans from pcIn",tr.sprint()),UVM_LOW)
+	`uvm_info("TESTPORT",$sformatf("get trans from pcIn\n%s",tr.sprint()),UVM_LOW)
 endfunction
 function void RhQLpiScoreboard::write_pcOut(trans_t tr);
-	`uvm_info("TESTPORT",$sformatf("get trans from pcOut",tr.sprint()),UVM_LOW)
+	`uvm_info("TESTPORT",$sformatf("get trans from pcOut\n%s",tr.sprint()),UVM_LOW)
 endfunction
 
 function void RhQLpiScoreboard::createPorts ();
