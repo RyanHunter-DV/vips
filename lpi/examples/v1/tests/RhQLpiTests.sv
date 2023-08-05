@@ -4,6 +4,7 @@
 package RhQLpiTests;
 
 	import uvm_pkg::*;
+	import RhLpiVip::*;
 	import RhQLpiEnv::*; // env has imported vip package.
 
 	`include "RhQLpiTestBase.svh"
