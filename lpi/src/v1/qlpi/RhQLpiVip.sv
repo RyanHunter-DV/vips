@@ -1,13 +1,13 @@
-`ifndef RhLpiVip__sv
-`define RhLpiVip__sv
+`ifndef RhQLpiVip__sv
+`define RhQLpiVip__sv
 
 `include "RhQLpiIf.sv"
 
-package RhLpiVip;
+package RhQLpiVip;
 	`include "uvm_macros.svh"
 	`include "rhlib.svh"
-	`include "RhVipBase.svh"
-	`include "RhLpiType.svh"
+	// `include "RhVipBase.svh"
+	`include "RhQLpiType.svh"
 
 	import uvm_pkg::*;
 	import RhDebugger::*;

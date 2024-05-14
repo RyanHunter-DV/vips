@@ -1,5 +1,5 @@
-`ifndef RhLpiType__svh
-`define RhLpiType__svh
+`ifndef RhQLpiType__svh
+`define RhQLpiType__svh
 
 
 typedef enum int {
