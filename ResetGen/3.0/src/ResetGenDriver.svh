@@ -55,8 +55,8 @@ task ResetGenDriver::run_phase(uvm_phase phase); //##{{{
 	// 2.after init process done, then entering the sequence processing threads
 	while (1) begin
 		seq_item_port.get_next_item(req);
-		if (threads.isBusy(req.name)) threads.waitCurrentResetDone(req.name);
-		threads.dispatch(req.name,req.stat,req.duration);
+		if (threads.isBusy(req.index)) threads.waitCurrentResetDone(req.index);
+		threads.dispatch(req.index,req.stat,req.duration);
 		seq_item_port.item_done();
 	end
 

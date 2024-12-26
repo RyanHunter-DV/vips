@@ -12,17 +12,23 @@ package ResetGen;
 
 	`include "ResetGenTrans.svh"
 
-	`include "ResetGenConfig.svh"
 
+	`include "ResetGenConfig.svh"
+	`include "ResetGenThreadsControl.svh"
+
+	`include "ResetGenSeqr.svh"
 	`include "ResetGenDriver.svh"
 	`include "ResetGenMonitor.svh"
 
-	`include "ResetGen.svh"
 
 	// seqlib
 	`include "seqlib/ResetGenBaseSeq.svh"
 	`include "seqlib/ResetGenSanityActiveSeq.svh"
 	`include "seqlib/ResetGenRandomActiveSeq.svh"
+
+
+	`include "ResetGen.svh"
+
 
 endpackage
 

@@ -18,11 +18,11 @@ class ActiveResetWithRandomDuration extends ResetGenExampleBaseTest;
 endclass
 
 task ActiveResetWithRandomDuration::testRun; // ##{{{
-		begin
+	begin
 		ResetGenRandomActiveSeq s=new("s");
-		s.add("refReset",1,600);s.add("dutReset",100,400);
+		s.add(refReset,1,600);s.add(dutReset,100,400);
 		s.drainTime=100us;
-		s.start(env.rg.seqr);
+		s.start(env.rg.sequencer);
 	end
 endtask // ##}}}
 

@@ -1,8 +1,7 @@
 `ifndef ResetGenBaseSeq__svh
 `define ResetGenBaseSeq__svh
 
-class ResetGenBaseSeq extends uvm_sequence;
-	parameter type TR=ResetGenTrans;
+class ResetGenBaseSeq#(type TR=ResetGenTrans) extends uvm_sequence;
 
 	realtime drainTime=100us;
 
@@ -13,9 +12,7 @@ class ResetGenBaseSeq extends uvm_sequence;
 		super.new(name);
 	endfunction
 
-	extern virtual task body();
+	//virtual task body(); endtask
 endclass
-task ResetGenBaseSeq::body(); //##{{{
-endtask // ##}}}
 
 `endif

@@ -6,7 +6,13 @@ package ResetGenExampleEnv;
 */
 	import uvm_pkg::*;
 	`include "rhlib.svh"
+	import ResetGen::*;
 	
+	// define a new reset enum with signal index
+	typedef enum {
+		refReset = 0,
+		dutReset = 1
+	} reset_t;
 
 	`include "ResetGenExampleEnv.svh"
 	`include "ResetGenExampleBaseTest.svh"

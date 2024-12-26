@@ -1,7 +1,7 @@
 `ifndef ResetGen__svh
 `define ResetGen__svh
 
-class ResetGen extends RhVipAgent;
+class ResetGen extends uvm_agent;
 
 	parameter type TR = ResetGenTrans;
 
@@ -14,7 +14,7 @@ class ResetGen extends RhVipAgent;
 	uvm_analysis_export#(TR) port;
 
 	`uvm_component_utils_begin(ResetGen)
-		`uvm_object_field(config,UVM_ALL_ON)
+		`uvm_field_object(config,UVM_ALL_ON)
 	`uvm_component_utils_end
 // public
 	function new(string name="ResetGen",uvm_component parent=null);
@@ -35,11 +35,13 @@ class ResetGen extends RhVipAgent;
 	// -maxInactiveDuration -> default selection, randomly gen a duration for simulation startup
 	// -manualInactiveDuration -> for manual setting the startup default stat -> invert stat. duration
 	// this API shall not be called after connect_phase.
-	extern  function void init(
-		string name,ResetPolarity polarity,
-		realtime maxInactiveDuration = 200,
+	function void init(
+		int index,ResetPolarity polarity,
+		int maxInactiveDuration = 200, realtime timeUnit=1ns,
 		realtime manualInactiveDuration = 0ns
-	);
+	); // ##{{{
+		config.updateInitTable(index,polarity,maxInactiveDuration,timeUnit,manualInactiveDuration);
+	endfunction // ##}}}
 	// createConfig -> ResetGenConfig, called by parent env, to create a config object of
 	// this field and return to caller
 	extern  function ResetGenConfig createConfig;
@@ -48,7 +50,11 @@ class ResetGen extends RhVipAgent;
 	extern  function void setInterfacePath(string path);
 	// reset(string name,realtime duration), API can be called by test,
 	// to trigger a reset event by the given name and duration
-	extern task reset(string name,realtime duration);
+	task reset(int index,realtime duration); // ##{{{
+		ResetGenSanityActiveSeq seq=new("reset");
+		seq.add(index,duration);
+		seq.start(sequencer);
+	endtask // ##}}}
 	// activeValue(string name,bit val) -> void, 
 	// api called by user before run_phase, to set the specified reset's active value
 	extern  function void activeValue(string name,bit val);
@@ -58,13 +64,6 @@ function void ResetGen::activeValue(string name,bit val); // ##{{{
 	config.setActivePolarityValue(name,val);
 endfunction // ##}}}
 
-task ResetGen::reset(string name,realtime duration); // ##{{{
-	ResetActiveBaseSeq seq=new("reset");
-	seq.name = name;
-	seq.duration=duration;
-	seq.stat=ResetActive;
-	seq.start(sequencer);
-endtask // ##}}}
 
 function void ResetGen::setInterfacePath(string path); // ##{{{
 	if (!uvm_config_db#(virtual ResetGenIf)::get(null,path,"ResetGenIf",config.vif))
@@ -76,13 +75,6 @@ function ResetGenConfig ResetGen::createConfig; // ##{{{
 	return config;
 endfunction // ##}}}
 
-function void ResetGen::init(
-	string name,ResetPolarity polarity,
-	int maxInactiveDuration = 200, realtime timeUnit=1ns,
-	realtime manualInactiveDuration = 0ns
-); // ##{{{
-	config.updateInitTable(name,polarity,maxInactiveDuration,timeUnit,manualInactiveDuration);
-endfunction // ##}}}
 
 function void ResetGen::build_phase(uvm_phase phase); //##{{{
 	super.build_phase(phase);
@@ -92,6 +84,7 @@ function void ResetGen::build_phase(uvm_phase phase); //##{{{
 		driver.config=config;
 	end
 	monitor = ResetGenMonitor::type_id::create("monitor",this);
+	monitor.config=config;
 	port=new("mPort",this);
 endfunction //##}}}
 function void ResetGen::connect_phase(uvm_phase phase); //##{{{

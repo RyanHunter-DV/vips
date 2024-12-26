@@ -16,7 +16,7 @@ class ResetGenTrans extends uvm_sequence_item;
 	// Usually for triggering a reset stimulus, the stat will be ResetActive
 	rand ResetPolarity stat;
 	// the target reset name, which must be specified
-	string name;
+	int index;
 	realtime duration;
 	realtime stime,etime;
 
@@ -25,7 +25,7 @@ class ResetGenTrans extends uvm_sequence_item;
 
 	`uvm_object_utils_begin(ResetGenTrans);
 		`uvm_field_enum(ResetPolarity,stat,UVM_ALL_ON)
-		`uvm_field_string(name,UVM_ALL_ON)
+		`uvm_field_int(index,UVM_ALL_ON|UVM_DEC)
 		`uvm_field_real(duration,UVM_ALL_ON)
 	`uvm_object_utils_end
 	//  Group: Functions

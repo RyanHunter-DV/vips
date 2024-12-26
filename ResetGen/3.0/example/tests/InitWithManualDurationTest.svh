@@ -20,8 +20,8 @@ function void InitWithManualDurationTest::build_phase(uvm_phase phase); //##{{{
 endfunction //##}}}
 function void InitWithManualDurationTest::connect_phase(uvm_phase phase); //##{{{
 	super.connect_phase(phase);
-	rg.init("refReset",ResetActive,.manualInactiveDuration(400ns));
-	rg.init("dutReset",ResetActive,.manualInactiveDuration(800ns));
+	env.rg.init(refReset,ResetActive,.manualInactiveDuration(400ns));
+	env.rg.init(dutReset,ResetActive,.manualInactiveDuration(800ns));
 endfunction //##}}}
 
 

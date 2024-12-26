@@ -8,6 +8,7 @@
 class ResetGenMonitor#(type TR=ResetGenTrans) extends uvm_monitor;
 
 	uvm_analysis_port#(TR) port;
+	ResetGenConfig config;
 	
 	`uvm_component_utils_begin(ResetGenMonitor#(TR))
 	`uvm_component_utils_end
@@ -16,7 +17,6 @@ class ResetGenMonitor#(type TR=ResetGenTrans) extends uvm_monitor;
 		super.new(name,parent);
 	endfunction
 	extern virtual function void build_phase(uvm_phase phase);
-	extern virtual function void connect_phase(uvm_phase phase);
 	extern virtual task run_phase(uvm_phase phase);
 // private
 	// startMonitorOneReset(string name,bit active), 
@@ -33,14 +33,11 @@ function void ResetGenMonitor::build_phase(uvm_phase phase); //##{{{
 	super.build_phase(phase);
 	port=new("port",this);
 endfunction //##}}}
-function void ResetGenMonitor::connect_phase(uvm_phase phase); //##{{{
-	super.connect_phase(phase);
-endfunction //##}}}
 
 task ResetGenMonitor::startMonitorOneReset(ResetAttributes o); // ##{{{
 	ResetPolarity current=ResetUnknown;
-	string name = o.name;
-	`uvm_info(reportId("DEBUG"),$sformatf("start monitor thread of reset(%s)",name),UVM_HIGH)
+	int name = o.name;
+	`uvm_info(("MONITOR-DEBUG"),$sformatf("start monitor thread of reset(%s)",name),UVM_HIGH)
 	while (1) begin
 		logic next;
 		TR tr=new("monTr");
@@ -49,7 +46,7 @@ task ResetGenMonitor::startMonitorOneReset(ResetAttributes o); // ##{{{
 		current = o.convertValueToStat(next);
 		tr.etime=$realtime;
 		tr.stat=current;
-		tr.name=name;
+		tr.index=name;
 		port.write(tr);
 	end
 endtask // ##}}}

@@ -16,8 +16,14 @@ class ResetGenExampleEnv extends uvm_env;
 	extern virtual function void build_phase(uvm_phase phase);
 	extern virtual function void connect_phase(uvm_phase phase);
 	extern virtual task run_phase(uvm_phase phase);
+	// write(ResetGenTrans tr) -> void, description
+	extern  function void write(ResetGenTrans tr);
 // private
 endclass
+function void ResetGenExampleEnv::write(ResetGenTrans tr); // ##{{{
+	//TODO
+	`uvm_info("TEST",$sformatf("get monitor reset trans:\n%s",tr.sprint()),UVM_LOW)
+endfunction // ##}}}
 
 function void ResetGenExampleEnv::build_phase(uvm_phase phase); //##{{{
 	super.build_phase(phase);
@@ -25,14 +31,14 @@ function void ResetGenExampleEnv::build_phase(uvm_phase phase); //##{{{
 	begin
 		ResetGenConfig rgc=rg.createConfig();
 		rg.setInterfacePath("tb.rif");
-		rg.init("refReset",ResetActive,500);
-		rg.init("dutReset",ResetActive,800);
+		rg.init(0,ResetActive,500);
+		rg.init(1,ResetActive,800);
 	end
 	mImp=new("mImp",this);
 endfunction //##}}}
 function void ResetGenExampleEnv::connect_phase(uvm_phase phase); //##{{{
 	super.connect_phase(phase);
-	rg.mPort.connect(mImp);
+	rg.port.connect(mImp);
 endfunction //##}}}
 task ResetGenExampleEnv::run_phase(uvm_phase phase); //##{{{
 	super.run_phase(phase);

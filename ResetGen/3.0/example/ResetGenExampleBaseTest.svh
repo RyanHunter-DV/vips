@@ -21,7 +21,7 @@ task ResetGenExampleBaseTest::testRun; // ##{{{
 		ResetGenSanityActiveSeq s=new("s");
 		s.add("refReset",399ns);s.add("dutReset",600ns);
 		s.drainTime=99us;
-		s.start(env.rg.seqr);
+		s.start(env.rg.sequencer);
 
 		// another wayt to trigger active reset sequence.
 		// using reset api to trigger a typical reset action.

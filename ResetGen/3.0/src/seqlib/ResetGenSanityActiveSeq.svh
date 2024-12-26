@@ -5,9 +5,9 @@
 //
 class ResetGenSanityActiveSeq extends ResetGenBaseSeq;
 
-	realtime names[string];
+	realtime resets[int];
 
-	`uvm_object_utils(ResetGenSanityActiveSeq#(TR));
+	`uvm_object_utils(ResetGenSanityActiveSeq);
 	`uvm_declare_p_sequencer(ResetGenSeqr)
 
 	//  Constructor: new
@@ -44,11 +44,11 @@ class ResetGenSanityActiveSeq extends ResetGenBaseSeq;
 	//  Task: body
 	//  This is the user-defined task where the main sequence code resides.
 	virtual task body(); // ##{{{
-		foreach (names[n]) begin
-			TR t=new(n);
-			t.name=n;
-			t.duration=names[n];
-			`uvm_info(get_type_name(),$sformatf("sending trans:\n%s"t.sprint()),UVM_HIGH)
+		foreach (resets[n]) begin
+			TR t=new($sformatf("seq-%0d",n));
+			t.index=n;
+			t.duration=resets[n];
+			`uvm_info(get_type_name(),$sformatf("sending trans:\n%s",t.sprint()),UVM_HIGH)
 			start_item(t);
 			finish_item(t);
 		end
@@ -74,12 +74,11 @@ class ResetGenSanityActiveSeq extends ResetGenBaseSeq;
 	
 	// add(string n) -> void, 
 	// add a new reset name to be drive by active sequence
-	extern  function void add(string n);
+	function void add(int i,realtime d); // ##{{{
+		if (resets.exists(i)) return;
+		resets[i]=d;
+	endfunction // ##}}}
 endclass: ResetGenSanityActiveSeq
 
-function void ResetGenSanityActiveSeq::add(string n,realtime d); // ##{{{
-	if (names.exists(n)) return;
-	names[n]=d;
-endfunction // ##}}}
 
 `endif

@@ -25,45 +25,37 @@ class ResetAttributes;
 	realtime initDuration=0ns;
 	// genInitDuration -> realtime, 
 	// generate a init duration time by given time unit or use the fixed value
-	extern  function realtime genInitDuration;
+	function realtime genInitDuration; // ##{{{
+		int tnum = 0;
+		realtime duration;
+		if (!randomInit) return initDuration;
+		tnum = $urandom_range(maxInitDuration, 1);
+		duration = tnum*timeUnit;
+		return duration;
+	endfunction // ##}}}
 	// getSignalValue(ResetPolarity p) -> bit, 
 	// according to the polarity, return the corresponding vector value for the given polarity
 	// fo this reset
-	extern  function logic getSignalValue(ResetPolarity p);
+	function logic getSignalValue(ResetPolarity p); // ##{{{
+		if (p==ResetUnknown) return 'bx;
+		if (p==ResetActive) return activeValue;
+		else return ~activeValue;
+	endfunction // ##}}}
 	// setActiveValue(bit v) -> void, 
 	// set this reset's signal value that represent the active stat.
-	extern  function void setActiveValue(bit v);
+	function void setActiveValue(bit v); // ##{{{
+		activeValue=v;
+	endfunction // ##}}}
 	// convertValueToStat -> ResetPolarity, 
 	// according to the given logic value, return the corresponding reset stat
-	extern  function ResetPolarity convertValueToStat(logic v);
+	function ResetPolarity convertValueToStat(logic v); // ##{{{
+		if (v===1'bx || v===1'bz) return ResetUnknown;
+		if (v===activeValue) return ResetActive;
+		return ResetInactive;
+
+	endfunction // ##}}}
+
 endclass
-
-function ResetPolarity ResetGenConfig::convertValueToStat(logic v); // ##{{{
-	if (v===1'bx || v===1'bz) return ResetUnknown;
-	if (v===activeValue) return ResetActive;
-	return ResetInactive;
-
-endfunction // ##}}}
-
-function void ResetGenConfig::setActiveValue(bit v); // ##{{{
-	activeValue=v;
-endfunction // ##}}}
-
-function logic ResetGenConfig::getSignalValue(ResetPolarity p); // ##{{{
-	if (p==ResetUnknown) return 'bx;
-	if (p==ResetActive) return activeValue;
-	else return ~activeValue;
-endfunction // ##}}}
-
-function realtime ResetGenConfig::genInitDuration; // ##{{{
-	int tnum = 0;
-	realtime duration;
-	if (!randomInit) return initDuration;
-	tnum = $urandom_range(maxInitDuration, 1);
-	duration = tnum*timeUnit;
-	return duration;
-endfunction // ##}}}
-
 
 //  Class: ResetGenConfig
 //
@@ -72,14 +64,16 @@ class ResetGenConfig extends uvm_object;
 	virtual ResetGenIf vif;
 
 	// field to store the certain reset's active value, legal value can only be 0 or 1.
-	ResetAttributes resets[string];
+	ResetAttributes resets[int];
 
 	`uvm_object_utils(ResetGenConfig);
 
 	//  Group: Functions
 	// setActiveValue(bit v=0) -> void, a setup config to set the specified
 	// reset's active polarity value
-	extern function void setActivePolarityValue(string name,bit v=0);
+	function void setActivePolarityValue(int index,bit v=0); // ##{{{
+		resets[index].setActiveValue(v);
+	endfunction // ##}}}
 
 	//  Constructor: new
 	function new(string name = "ResetGenConfig");
@@ -92,31 +86,27 @@ class ResetGenConfig extends uvm_object;
 	//- realtime manualInactiveDuration
 	//) -> void, 
 	// add init table and setup a reset that will be supported by this UVC
-	extern  function void updateInitTable(
-		string name, ResetPolarity start,
+	function void updateInitTable (
+		int index, ResetPolarity start,
 		int maxInactiveDuration=100,realtime timeUnit=1ns,
 		realtime manualInactiveDuration=0ns
-	);
-endclass: ResetGenConfig
+	); // ##{{{
+		ResetAttributes attr=new(index,timeUnit);
+		if (resets.exists(index))
+			`uvm_warning("MULT-INIT",$sformatf("reset %0d already been inited, will replace the old one",index))
+		resets[index] = attr;
+		attr.defaultStat=start;
+		if (manualInactiveDuration>0) begin
+			attr.randomInit=0;
+			attr.initDuration=manualInactiveDuration;
+		end else begin
+			attr.maxInitDuration= maxInactiveDuration;
+		end
+	endfunction // ##}}}
 
-function void ResetGenConfig::updateInitTable
-	string name, ResetPolarity start,
-	int maxInactiveDuration=100,realtime timeUnit=1ns,
-	realtime manualInactiveDuration=0ns
-); // ##{{{
-	if (!resets.exists(name)) resets[name] = new(name,timeUnit);
-	resets[name].defaultStat=start;
-	if (manualInactiveDuration>0) begin
-		resets[name].randomInit=0;
-		resets[name].initDuration=manualInactiveDuration;
-	end else begin
-		resets[name].maxInitDuration= maxInactiveDuration;
-	end
-endfunction // ##}}}
+endclass
 
-function void ResetGenConfig::setActivePolarityValue(string name,bit v=0); // ##{{{
-	resets[name].setActiveValue(v);
-endfunction // ##}}}
+
 
 
 
