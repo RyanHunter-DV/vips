@@ -1,0 +1,5 @@
+design 'RH/vips/ResetGen/3.0' do ##{{{
+	instance 'ResetGen/example/env/1.0', :as => :env
+	instance 'ResetGen/example/tb/1.0', :as => :tb
+	instance 'ResetGen/example/test/1.0', :as => :tests
+end ##}}}
