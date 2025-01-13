@@ -22,9 +22,9 @@ package ResetGen;
 
 
 	// seqlib
-	`include "seqlib/ResetGenBaseSeq.svh"
-	`include "seqlib/ResetGenSanityActiveSeq.svh"
-	`include "seqlib/ResetGenRandomActiveSeq.svh"
+	`include "ResetGenBaseSeq.svh"
+	`include "ResetGenSanityActiveSeq.svh"
+	`include "ResetGenRandomActiveSeq.svh"
 
 
 	`include "ResetGen.svh"

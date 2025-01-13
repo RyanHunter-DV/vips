@@ -1,0 +1,35 @@
+component 'RH/vips/ResetGen/3.0' do
+	
+	view :vip do ##{{{
+		fileSet 'vip'
+	end ##}}}
+	fileSet 'vip' do ##{{{
+		root 'src' #TODO, tool need recognize the relative path format and translate to the absolute path.
+
+		sv 'ResetGen.svh', :filelist=>false
+		sv 'ResetGenTrans.svh', :filelist=>false
+		sv 'ResetGenThreadsControl.svh', :filelist=>false
+		sv 'ResetGenSeqr.svh', :filelist=>false
+		sv 'ResetGenMonitor.svh', :filelist=>false
+		sv 'ResetGenIf.sv', :filelist=>false
+		sv 'ResetGenDriver.svh', :filelist=>false
+		sv 'ResetGenConfig.svh', :filelist=>false
+		sv 'seqlib/ResetGenSanityActiveSeq.svh', :filelist=>false
+		sv 'seqlib/ResetGenRandomActiveSeq.svh', :filelist=>false
+		sv 'seqlib/ResetGenBaseSeq.svh', :filelist=>false
+
+		sv 'ResetGen.sv', :filelist=>true
+	end ##}}}
+	fileSet 'example' do ##{{{
+		root 'example' #TODO, root path will be added to filelist.
+		sv 'ResetGenExampleEnv.sv',:filelist=>true
+		sv 'Tb.sv', :filelist=>true
+	end ##}}}
+
+	view :example do ##{{{
+		fileSet 'vip'
+		fileSet 'example'
+	end ##}}}
+end
+
+rhload 'example/node' if ENV.has_key?('RESET_GEN_TEST')

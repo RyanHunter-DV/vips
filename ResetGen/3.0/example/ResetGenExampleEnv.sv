@@ -20,13 +20,13 @@ package ResetGenExampleEnv;
 	// tests
 	// TODO, need build tests
 	// to init resets with manual duration to change from active to inactive.
-	`include "tests/InitWithManualDurationTest.svh"
+	`include "InitWithManualDurationTest.svh"
 	// to init resets that active value is 1
 	// drive active after init done.
-	`include "tests/ActiveHighResetTest.svh"
+	`include "ActiveHighResetTest.svh"
 
 	// start an active sequence with random duration.
-	`include "tests/ActiveResetWithRandomDuration.svh"
+	`include "ActiveResetWithRandomDuration.svh"
 
 endpackage
 

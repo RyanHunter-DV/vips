@@ -1,12 +1,13 @@
 # the config node
-config 'RH/vips/ResetGen/3.0' do ##{{{
-	design 'RH/vips/ResetGen/3.0' # design ref
-	need design.env, :bfm
-	need design.tb, :bfm
-	need design.tests, :base
+config :common do
+	design 'rh/vips/ResetGen/3.0' # design ref
+	need 'vip',:vip
+	need 'env', :bfm
+	need 'tb', :bfm
+	need 'tests', :base
 
 	# specify vcs simulator
 	simulator :vcs do ##{{{
 		# TODO, simulator options
 	end ##}}}
-end ##}}}
+end

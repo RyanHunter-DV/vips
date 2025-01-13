@@ -1,27 +1,32 @@
-component 'ResetGen/example/tb/1.0' do ##{{{
+component 'ResetGen/example/tb/1.0' do
 	view :bfm do ##{{{
 		fileSet 'dv'
 	end ##}}}
 	fileSet 'dv' do ##{{{
 		sv 'Tb.sv'
 	end ##}}}
-end ##}}}
-component 'ResetGen/example/env/1.0' do ##{{{
+end
+component 'ResetGen/example/env/1.0' do
 	view :bfm do ##{{{
 		fileSet 'dv'
 	end ##}}}
 	fileSet 'dv' do ##{{{
-		sv 'ResetGenExampleEnv.sv'
+		sv 'ResetGenExampleBaseTest.svh', :filelist=>false
+		sv 'ResetGenExampleEnv.svh', :filelist=>false
+		sv 'ResetGenExampleEnv.sv', :filelist=>true
 	end ##}}}
-end ##}}}
-component 'ResetGen/example/test/1.0' do ##{{{
+end
+component 'ResetGen/example/test/1.0' do
 	view :base do ##{{{
 		fileSet 'dv'
 	end ##}}}
 	fileSet 'dv' do ##{{{
 		root 'tests'
-		sv 'ActiveHighResetTest.svh'
-		sv 'ActiveResetWithRandomDuration.svh'
-		sv 'InitWithManualDurationTest.svh'
+		sv 'ActiveHighResetTest.svh',:filelist=>false
+		sv 'ActiveResetWithRandomDuration.svh',:filelist=>false
+		sv 'InitWithManualDurationTest.svh',:filelist=>false
 	end ##}}}
-end ##}}}
+end
+
+rhload 'design'
+rhload 'config'
