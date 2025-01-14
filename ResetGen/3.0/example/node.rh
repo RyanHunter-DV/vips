@@ -30,3 +30,4 @@ end
 
 rhload 'design'
 rhload 'config'
+rhload 'tests/node'

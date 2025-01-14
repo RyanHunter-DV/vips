@@ -9,5 +9,11 @@ config :common do
 	# specify vcs simulator
 	simulator :vcs do ##{{{
 		# TODO, simulator options
+		comp '-timescale=1ns/1ps','-sverilog'
+		# elab '-xxx','xxxx'
 	end ##}}}
+end
+config :testc do
+	design 'rh/vips/ResetGen/3.0' # design ref
+	
 end

@@ -1,0 +1,13 @@
+# this is the test node
+#
+suite :basic do
+	template :test_template do
+		config :common
+		flow :sim
+		#args "",""
+	end
+	test :ActiveHigh, :template => :test_template do
+		# run options for specific test, such as UVM_TESTNAME, VERBOSITY ...
+		args "+UVM_TESTNAME=ActiveHighResetTest"
+	end
+end
