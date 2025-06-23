@@ -25,7 +25,6 @@ class clockGen_config extends uvm_object; // {
 	extern function void setJitter(string name,real jitter);
 	extern function void elaborateConfigs;
 	extern task driveClockThroughInterface(string name,real freq,real skew,real jitter);
-	extern function 
 	
 
 	// internal methods
