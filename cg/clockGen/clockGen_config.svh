@@ -1,3 +1,6 @@
+`ifndef CLOCKGEN_CONFIG_SVH
+`define CLOCKGEN_CONFIG_SVH
+
 class clockGen_config extends uvm_object; // {
 	
 	real clockFreqs[string];
